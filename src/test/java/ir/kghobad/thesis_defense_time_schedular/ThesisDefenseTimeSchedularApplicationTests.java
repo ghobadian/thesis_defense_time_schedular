@@ -1,4 +1,4 @@
-package com.example.thesis_defense_time_schedular;
+package ir.kghobad.thesis_defense_time_schedular;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
