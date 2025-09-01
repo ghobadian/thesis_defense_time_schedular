@@ -1,0 +1,42 @@
+flowchart TD
+    Start([Start]) --> Draft[Student creates form]
+
+    Draft --> Submitted[Student submits form]
+
+    Submitted --> InstructorReview[Form sent to instructor]
+
+    InstructorReview --> InstructorRejected{Instructor rejects}
+    InstructorReview --> InstructorApproved{Instructor accepts}
+
+    InstructorRejected --> End1([Process Failed])
+
+    InstructorApproved --> AdminReview[Form sent to admin]
+
+    AdminReview --> AdminRejected{Admin rejects}
+    AdminReview --> AdminApproved{Admin accepts}
+
+    AdminRejected --> End1([Process Failed])
+
+    AdminApproved --> ManagerReview[Form sent to department manager]
+
+    ManagerReview --> ManagerRejected{Manager rejects}
+    ManagerReview --> JurySelection{Manager approves & suggests juries}
+
+    ManagerRejected --> End1([Process Failed])
+
+    JurySelection --> TimeCollection[Juries notified]
+
+    TimeCollection --> TimeCollectionInProgress[Each professor specifies available time periods<br/>1.5 hour slots from today to n weeks later]
+
+    TimeCollectionInProgress --> TimeCollectionComplete[All professors submitted times]
+
+    TimeCollectionComplete --> CommonTimesFound{Common slots available}
+    TimeCollectionComplete --> NoCommonTimes{No common slots}
+
+    NoCommonTimes --> End1[Process Failed]
+
+    CommonTimesFound --> StudentTimeSelection[Show options to student]
+
+    StudentTimeSelection --> Scheduled[Student selects time]
+
+    Scheduled --> End([Defense scheduled])

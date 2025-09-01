@@ -1,0 +1,118 @@
+classDiagram
+    class User {
+        <<abstract>>
+        +long id
+        +String email
+        +String phoneNumber
+        +Role role
+        +Department department
+        +login()
+    }
+
+    class Student {
+        <<abstract>>
+        +long studentNumber
+        +Professor instructor
+        +Field field
+        +createThesisForm()
+    }
+
+    class BachelorStudent {
+    }
+
+    class MasterStudent {
+    }
+
+    class PhDStudent {
+    }
+
+    class Professor {
+        +id id
+        +Department department
+        +boolean isManager
+        +acceptForm(ThesisForm form)
+        +rejectForm(ThesisForm form)
+        +suggestJuries(ThesisForm form)
+        +specifyAvailableTime(ThesisDefenseMeeting meeting)
+    }
+
+    class Admin {
+        +registerStudent(Student student)
+        +registerStudents(List~Student~ students)
+        +acceptForm(ThesisForm form)
+        +rejectForm(ThesisForm form)
+    }
+
+    class ThesisForm {
+        <<abstract>>
+        +long id
+        +Student student
+        +Professor instructor
+        +FormStatus status
+        +Date submissionDate
+        +List~Professor~ suggestedJuries
+    }
+
+    class BachelorThesisForm {
+    }
+
+    class MasterThesisForm {
+    }
+
+    class PhDThesisForm {
+    }
+
+    class Thesis {
+        +long id
+        +String title
+        +String abstract
+        +Student author
+        +Professor supervisor
+    }
+
+    class ThesisDefenseMeeting {
+        +long id
+        +ThesisForm thesisForm
+        +List~Professor~ juries
+        +Date selectedDate
+        +TimePeriod selectedTime
+        +List~TimeSlot~ availableSlots
+    }
+
+    class TimeSlot {
+        +Date date
+        +TimePeriod timePeriod
+        +List~Professor~ availableProfessors
+    }
+
+    class Department {
+        +Long id
+        +String name
+        +List~Student~ students
+        +List~Professor~ professors
+        +List~Admin~ admins
+    }
+
+    class Field {
+        +Long id
+    }
+
+
+    User <|-- Student
+    User <|-- Professor
+    User <|-- Admin
+    Student <|-- BachelorStudent
+    Student <|-- MasterStudent
+    Student <|-- PhDStudent
+    Student "1" --> "1" Professor : has instructor
+    ThesisForm <|-- BachelorThesisForm
+    ThesisForm <|-- MasterThesisForm
+    ThesisForm <|-- PhDThesisForm
+    ThesisForm "1" --> "1" Student : created by
+    ThesisForm "1" --> "1" Professor : supervised by
+    ThesisForm "1" --> "*" Professor : suggested juries
+    ThesisDefenseMeeting "1" --> "1" ThesisForm : for
+    ThesisDefenseMeeting "1" --> "*" TimeSlot : available slots
+    TimeSlot "*" --> "*" Professor : available professors
+    Thesis "1" --> "1" Student : written by
+    Thesis "1" --> "1" Professor : supervised by
