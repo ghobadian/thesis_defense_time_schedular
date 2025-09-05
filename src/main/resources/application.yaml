@@ -1,0 +1,36 @@
+jwt:
+  expiration: 86400000
+  secret: mySecretKeyForJWTShouldBeAtLeast256BitsLongForHS256Algorithm
+logging:
+  level:
+    ir:
+      kghobad: DEBUG
+spring:
+  application:
+    name: thesis-defense-time-schedular
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/myapp
+    username: postgres
+    password: dev123
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        format_sql: true
+    show-sql: true
+  sql:
+    init:
+      mode: never
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.xml
+    contexts: dev,prod
+    default-schema: public
+    drop-first: true
+    enabled: true
+  profiles:
+    active: dev
+server:
+  servlet:
+    context-path: /api/v1
