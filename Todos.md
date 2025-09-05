@@ -78,3 +78,8 @@ Suggested Improvements to the Document
     Create a proper roadmap with sprints
     Define MVP (Minimum Viable Product) features
     Set clear milestones and deliverables
+
+
+# TODO: create dml scripts to fill database
+# TODO: controllers
+# TODO: services
