@@ -1,11 +1,23 @@
 package ir.kghobad.thesis_defense_time_schedular.model.entity.user;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import ir.kghobad.thesis_defense_time_schedular.model.entity.Department;
+import ir.kghobad.thesis_defense_time_schedular.model.enums.Role;
 import jakarta.persistence.*;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Table(name = "users")
 @Inheritance(strategy = InheritanceType.JOINED)
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+@Getter
+@Setter
+@EqualsAndHashCode
+@ToString(of = {"firstName", "lastName"})
 public abstract class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,7 +42,10 @@ public abstract class User {
     @JoinColumn(name = "department_id")
     private Department department;
 
-    public User(Long id, String firstName, String lastName, String email, String phoneNumber, String password, Department department) {
+    @Column
+    private boolean enabled;
+
+    public User(Long id, String firstName, String lastName, String email, String phoneNumber, String password, Department department, boolean enabled) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -38,69 +53,16 @@ public abstract class User {
         this.phoneNumber = phoneNumber;
         this.password = password;
         this.department = department;
+        this.enabled = enabled;
     }
 
     public User() {
 
     }
 
-    public Long getId() {
-        return id;
-    }
+    public abstract Role getRole();
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public Department getDepartment() {
-        return department;
-    }
-
-    public void setDepartment(Department department) {
-        this.department = department;
-    }
-
-    public String getRole() {
-        return this.getClass().getSimpleName().toUpperCase();
+    public String getFullName() {
+        return this.getFirstName() + " " + this.getLastName();
     }
 }
