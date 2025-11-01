@@ -23,6 +23,7 @@ spring:
   sql:
     init:
       mode: never
+#      data-locations: classpath:data-prod.sql
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.xml
     contexts: dev,prod

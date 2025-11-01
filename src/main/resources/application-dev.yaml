@@ -29,6 +29,9 @@ spring:
   sql:
     init:
       mode: embedded
+#      data-locations: classpath:data-prod.sql
 server:
   servlet:
     context-path: /api/v1
+frontend:
+  url: http://localhost:3000
