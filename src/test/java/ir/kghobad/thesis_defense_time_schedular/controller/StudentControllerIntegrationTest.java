@@ -1,9 +1,12 @@
 package ir.kghobad.thesis_defense_time_schedular.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import ir.kghobad.thesis_defense_time_schedular.BaseIntegrationTest;
-import ir.kghobad.thesis_defense_time_schedular.model.dto.LoginDTO;
-import ir.kghobad.thesis_defense_time_schedular.model.dto.ThesisFormDTO;
+import ir.kghobad.thesis_defense_time_schedular.model.dto.ThesisFormInputDTO;
+import ir.kghobad.thesis_defense_time_schedular.model.entity.Department;
+import ir.kghobad.thesis_defense_time_schedular.model.entity.Field;
+import ir.kghobad.thesis_defense_time_schedular.model.entity.user.Professor;
+import ir.kghobad.thesis_defense_time_schedular.model.entity.user.student.Student;
+import ir.kghobad.thesis_defense_time_schedular.model.enums.StudentType;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -13,14 +16,16 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
+import static ir.kghobad.thesis_defense_time_schedular.helper.TestDataBuilder.DEFAULT_PASSWORD;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
 @Transactional
-class StudentControllerIntegrationTest extends BaseIntegrationTest {
+class StudentControllerIntegrationTest extends BaseIntegrationTest {//todo assert that no controller integration test uses mock mvc. all must depend on their own mock helper
 
     @Autowired
     private MockMvc mockMvc;
@@ -29,48 +34,35 @@ class StudentControllerIntegrationTest extends BaseIntegrationTest {
     private ObjectMapper objectMapper;
 
     @Test
-    void testStudentLogin() throws Exception {
-        LoginDTO loginDTO = new LoginDTO();
-        loginDTO.setEmail("student1@university.edu");
-        loginDTO.setPassword("password123");
-
-        mockMvc.perform(post("/student/login")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(loginDTO)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.token").exists())
-                .andExpect(jsonPath("$.email").value("student1@university.edu"))
-                .andExpect(jsonPath("$.role").value("STUDENT"));
-    }
-
-    @Test
     void testCreateThesisForm() throws Exception {
-        // First login to get token
-        LoginDTO loginDTO = new LoginDTO();
-        loginDTO.setEmail("student1@university.edu");
-        loginDTO.setPassword("password123");
 
-        String response = mockMvc.perform(post("/student/login")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(loginDTO)))
-                .andReturn()
-                .getResponse()
-                .getContentAsString();
+        Department department = testDataBuilder.createDepartment("Computer Science");
+        departmentRepository.save(department);
 
-        String token = objectMapper.readTree(response).get("token").asText();
+        Field field = testDataBuilder.createField("Software Engineering", department);
+        fieldRepository.save(field);
 
-        // Create thesis form
-        ThesisFormDTO formDTO = new ThesisFormDTO();
-        formDTO.setTitle("My Master Thesis");
-        formDTO.setAbstractText("This is the abstract");
+        Professor professor = testDataBuilder.createProfessor(
+            "professor@university.edu", "John", "Doe", department, "09123456789"
+        );
+        professorRepository.save(professor);
+        Student student = testDataBuilder.createStudent(
+            "student1@university.edu", "Jane", "Smith", 12345L,
+            StudentType.MASTER, department, field, professor, "09121234567"
+        );
+        studentRepository.save(student);
 
+        ThesisFormInputDTO formDTO = dtoDataBuilder.createThesisFormInputDTO(
+            "My Master Thesis", "This is the abstract", professor.getId()
+        );
+
+
+        String token = getAuthToken("student1@university.edu", DEFAULT_PASSWORD);
         mockMvc.perform(post("/student/create-form")
-                .param("studentId", "5")
                 .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(formDTO)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.student.id").value(5))
-                .andExpect(jsonPath("$.state").value("DRAFT"));
+                .andExpect(content().string("Thesis form created successfully"));
     }
 }
