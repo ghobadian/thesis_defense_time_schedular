@@ -1,10 +1,8 @@
 package ir.kghobad.thesis_defense_time_schedular.controller;
 
-import ir.kghobad.thesis_defense_time_schedular.model.dto.LoginDTO;
-import ir.kghobad.thesis_defense_time_schedular.model.dto.ThesisFormDTO;
-import ir.kghobad.thesis_defense_time_schedular.model.entity.thesisform.ThesisForm;
+import ir.kghobad.thesis_defense_time_schedular.model.dto.ThesisFormInputDTO;
+import ir.kghobad.thesis_defense_time_schedular.model.dto.TimeSlotSelectionInputDTO;
 import ir.kghobad.thesis_defense_time_schedular.service.StudentService;
-import ir.kghobad.thesis_defense_time_schedular.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,24 +10,30 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/student")
 public class StudentController {
     private final StudentService studentService;
-    private final UserService userService;
-    
-    public StudentController(StudentService studentService, UserService userService) {
+
+    public StudentController(StudentService studentService) {
         this.studentService = studentService;
-        this.userService = userService;
-    }
-    
-    @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginDTO loginDTO) {
-        return ResponseEntity.ok(userService.login(loginDTO));
     }
     
     @PostMapping("/create-form")
-    public ResponseEntity<?> createForm(
-        @RequestParam Long studentId,
-        @RequestBody ThesisFormDTO formDTO
-    ) {
-        ThesisForm form = studentService.createThesisForm(studentId, formDTO);
-        return ResponseEntity.ok(form);
+    public ResponseEntity<?> createForm(@RequestBody ThesisFormInputDTO formDTO) {
+        studentService.createThesisForm(formDTO);
+        return ResponseEntity.ok("Thesis form created successfully");
+    }
+
+    @GetMapping("/meetings")
+    public ResponseEntity<?> listMeetings() {//todo add test to StudentControllerIntegrationTest
+        return ResponseEntity.ok(studentService.listMeetings());
+    }
+
+    @GetMapping("/meetings/{id}")
+    public ResponseEntity<?> getMeetingDetails(@PathVariable Long id) {
+        return ResponseEntity.ok(studentService.getMeetingDetails(id));
+    }
+
+    @PostMapping("/time-slots")
+    public ResponseEntity<?> chooseTimeSlot(@RequestBody TimeSlotSelectionInputDTO input) {
+        studentService.chooseTimeSlot(input);
+        return ResponseEntity.ok("Time slot chosen successfully");
     }
 }
