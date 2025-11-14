@@ -1,0 +1,190 @@
+export enum UserRole {
+    ADMIN = 'ADMIN',
+    PROFESSOR = 'PROFESSOR',
+    MANAGER = 'MANAGER',
+    STUDENT = 'STUDENT'
+}
+
+export enum StudentType {
+    BACHELOR = 'BACHELOR',
+    MASTER = 'MASTER',
+    PHD = 'PHD'
+}
+
+export enum FormState {
+    SUBMITTED = 'SUBMITTED',
+    INSTRUCTOR_APPROVED = 'INSTRUCTOR_APPROVED',
+    INSTRUCTOR_REJECTED = 'INSTRUCTOR_APPROVED',
+    ADMIN_APPROVED = 'ADMIN_APPROVED',
+    ADMIN_REJECTED = 'ADMIN_REJECTED',
+    MANAGER_APPROVED = 'MANAGER_APPROVED',
+    MANAGER_REJECTED = 'MANAGER_REJECTED',
+}
+
+export enum MeetingState {
+    JURY_SELECTION = 'JURY_SELECTION',
+    TIME_SELECTION = 'TIME_SELECTION',
+    SCHEDULED = 'SCHEDULED',
+    COMPLETED = 'COMPLETED',
+    CANCELED = 'CANCELED'
+}
+
+export enum TimePeriod {
+    PERIOD_7_30_9_00 = 'PERIOD_7_30_9_00',
+    PERIOD_9_00_10_30 = 'PERIOD_9_00_10_30',
+    PERIOD_10_30_12_00 = 'PERIOD_10_30_12_00',
+    PERIOD_13_30_15_00 = 'PERIOD_13_30_15_00',
+    PERIOD_15_30_17_00 = 'PERIOD_15_30_17_00'
+}
+
+export interface User {
+    id: number;
+    email: string;
+    firstName: string;
+    lastName: string;
+    phoneNumber: string;
+    role: UserRole;
+    enabled: boolean;
+}
+
+export interface Student extends User {
+    studentNumber: number;
+    studentType: StudentType;
+    department: DepartmentSummary;
+    field: Field;
+    instructor: Professor;
+}
+
+export interface StudentRegistration {
+    firstName: String;
+    lastName: String;
+    phoneNumber: String;
+    studentNumber: number;
+    studentType: StudentType;
+    departmentId: number;
+    fieldId: number;
+    instructorId: number;
+    password: string;
+}
+
+export interface Professor extends User {
+    department: DepartmentSummary;
+    isManager: boolean;
+}
+
+export interface Admin extends User {}
+
+export interface DepartmentSummary {
+    id: number;
+    name: string;
+}
+
+export interface DepartmentDetail {
+    id: number;
+    name: string;
+    studentCount: number;
+    professorCount: number;
+    fieldCount: number;
+    activeThesisCount: number;
+}
+
+export interface Field {
+    id: number;
+    name: string;
+    department: DepartmentSummary;
+}
+
+export interface ThesisForm {
+    fieldName: String;
+    id: number;
+    title: string;
+    abstractText: string;
+    studentId: string;
+    studentNumber: number;
+    studentFirstName: string;
+    studentLastName: string;
+    studentEmail: string;
+    instructorFirstName: string;
+    instructorLastName: string;
+    field: Field;
+    state: FormState;
+    suggestedJuryIds: number[];
+    createdAt: string;
+    updatedAt: string;
+}
+
+export interface TimeSlot {
+    date: string;
+    timePeriod: TimePeriod;
+}
+
+
+export interface Meeting {
+    id: number;
+    thesis: ThesisForm;
+    state: MeetingState;
+    selectedTimeSlot?: TimeSlot;
+    location?: string;
+    juryMembers: Array<{
+        id: number;
+        firstName: string;
+        lastName: string;
+    }>;
+    createdAt: string;
+}
+
+export interface AvailableTime {
+    meetingId: number;
+    timeSlots: TimeSlot[];
+}
+
+
+export interface LoginRequest {
+    email: string;
+    password: string;
+}
+
+export interface LoginResponse {
+    role: UserRole;
+    userId: number;
+    email: string;
+    accessToken: string;
+    refreshToken: string;
+    expiresIn: number;
+}
+
+export interface ThesisFormInput {
+    title: string;
+    abstractText: string;
+    studentId: number;
+    instructorId: number;
+}
+
+export interface TimeSlotSelectionInput {
+    meetingId: number;
+    timeSlotId: number;
+}
+
+
+
+export interface ProfessorTimeSlots {
+    user: SimpleUser;
+    timeslots: TimeSlot[];
+}
+
+interface SimpleUser {
+    id: number;
+    firstName: string;
+    lastName: string;
+}
+
+export interface MeetingTimeSlotsResponse {
+    meetingId: number;
+    juryMemberTimeSlots: ProfessorTimeSlots[];
+    intersections: TimeSlot[];
+}
+
+export interface TimeSlotsComparisonProps {
+    juryMemberTimeSlots: ProfessorTimeSlots[];
+    intersections: TimeSlot[];
+}
