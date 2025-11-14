@@ -15,5 +15,4 @@ public class ThesisFormInputDTO {
     private String title;
     private String abstractText;
     private Long instructorId;
-    private Set<Long> suggestedJuryIds;
 }

@@ -31,7 +31,7 @@ public class Field {
     @Getter
     @Setter
     private Department department;
-    
+
     @OneToMany(mappedBy = "field")
     private final Set<Student> students = new HashSet<>();
 

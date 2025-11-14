@@ -1,6 +1,7 @@
 package ir.kghobad.thesis_defense_time_schedular.service;
 
 import ir.kghobad.thesis_defense_time_schedular.dao.*;
+import ir.kghobad.thesis_defense_time_schedular.exception.ThesisFormLimitExceededException;
 import ir.kghobad.thesis_defense_time_schedular.model.dto.*;
 import ir.kghobad.thesis_defense_time_schedular.model.entity.Department;
 import ir.kghobad.thesis_defense_time_schedular.model.entity.Field;
@@ -17,6 +18,7 @@ import ir.kghobad.thesis_defense_time_schedular.model.enums.MeetingState;
 import ir.kghobad.thesis_defense_time_schedular.security.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -39,10 +41,11 @@ public class StudentService {
     private final ProfessorRepository professorRepository;
     private final ThesisFormRepository thesisFormRepository;
     private final ThesisDefenseMeetingRepository thesisDefenseMeetingRepository;
-
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
     private final TimeSlotRepository timeSlotRepository;
+    @Value("${rate-limit.max-submitted-forms}")
+    private int maxSubmittedForms;
 
 
     public void registerStudent(StudentRegistrationInputDTO dto) {
@@ -82,7 +85,17 @@ public class StudentService {
     }
     
     public void createThesisForm(ThesisFormInputDTO dto) {
-        Student student = studentRepository.findById(jwtUtil.getCurrentUserId()).orElseThrow(() -> new RuntimeException("Student not found"));
+        Long studentId = jwtUtil.getCurrentUserId();
+        double submittedFormsCount = thesisFormRepository.countByStudentIdAndState(studentId, FormState.SUBMITTED);
+        if (submittedFormsCount >= maxSubmittedForms) {
+            throw new ThesisFormLimitExceededException(
+                    String.format("Maximum limit of %d submitted forms reached. " +
+                                    "Please wait for your existing forms to be processed.",
+                            maxSubmittedForms)
+            );
+        }
+        Student student = studentRepository.findById(studentId).orElseThrow(() -> new RuntimeException("Student not found"));
+
         Professor thesisInstructor = professorRepository.findById(dto.getInstructorId()).orElseThrow(() -> new RuntimeException("Instructor not found"));
 
         ThesisForm form = new ThesisForm();
@@ -92,6 +105,7 @@ public class StudentService {
         form.setInstructor(thesisInstructor);
         form.setState(FormState.SUBMITTED);
         form.setSubmissionDate(new Date());
+        form.setUpdateDate(new Date());
         form.setStudentType(student.getStudentType());
         form.setField(student.getField());
 
@@ -141,5 +155,17 @@ public class StudentService {
 
         meeting.setSelectedTimeSlot(timeslot);
         thesisDefenseMeetingRepository.save(meeting);
+    }
+
+    public List<ThesisFormOutputDTO> getThesisForms() {
+        return thesisFormRepository.findByStudentId(jwtUtil.getCurrentUserId()).stream()
+                .map(ThesisFormOutputDTO::from).toList();
+    }
+
+    public List<SimpleUserOutputDto> listProfessors() {
+        Long currentUserId = jwtUtil.getCurrentUserId();
+        Student student = studentRepository.findById(currentUserId).orElseThrow();
+        return professorRepository.findAllByDepartmentId(student.getDepartment().getId())
+                .stream().map(SimpleUserOutputDto::from).toList();
     }
 }

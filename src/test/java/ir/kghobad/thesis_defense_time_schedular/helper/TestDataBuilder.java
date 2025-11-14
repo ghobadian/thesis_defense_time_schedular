@@ -124,6 +124,7 @@ public class TestDataBuilder {
         thesisForm.setInstructor(instructor);
         thesisForm.setState(state);
         thesisForm.setSubmissionDate(submissionDate);
+        thesisForm.setUpdateDate(submissionDate);
         thesisForm.setField(field);
         thesisForm.setStudentType(student.getStudentType());
         return thesisForm;

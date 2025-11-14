@@ -2,6 +2,7 @@ package ir.kghobad.thesis_defense_time_schedular.model.entity.user.student;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import ir.kghobad.thesis_defense_time_schedular.model.dto.ThesisFormOutputDTO;
 import ir.kghobad.thesis_defense_time_schedular.model.entity.Department;
 import ir.kghobad.thesis_defense_time_schedular.model.entity.Field;
 import ir.kghobad.thesis_defense_time_schedular.model.entity.thesisform.ThesisForm;
@@ -15,6 +16,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 
@@ -92,6 +94,10 @@ public abstract class Student extends User {
     @Override
     public Role getRole() {
         return Role.STUDENT;
+    }
+
+    public List<ThesisFormOutputDTO> getThesisForms() {
+        return thesisForms.stream().map(ThesisFormOutputDTO::from).toList();
     }
 
 

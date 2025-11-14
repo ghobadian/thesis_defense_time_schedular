@@ -58,6 +58,12 @@ public class ThesisForm {
     @Getter
     private Date submissionDate;
 
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "update_date")
+    @Setter
+    @Getter
+    private Date updateDate;
+
     @OneToOne(mappedBy = "thesisForm", cascade = CascadeType.ALL, orphanRemoval = true)
     @Setter
     @Getter
@@ -74,23 +80,6 @@ public class ThesisForm {
     @Setter
     @Getter
     private StudentType studentType;
-
-    public ThesisForm(Long id,
-                      Student student,
-                      Professor instructor,
-                      FormState state,
-                      Date submissionDate,
-                      ThesisDefenseMeeting defenseMeeting,
-                      Field field) {
-        this.id = id;
-        this.student = student;
-        this.instructor = instructor;
-        this.state = state;
-        this.submissionDate = submissionDate;
-        this.defenseMeeting = defenseMeeting;
-        this.field = field;
-        this.studentType = student.getStudentType();
-    }
 
     public ThesisForm() {
 
