@@ -418,7 +418,7 @@ public class ThesisDefenseWorkflowIntegrationTest extends BaseIntegrationTest {
                 "Deep Learning Applications in Medical Image Analysis",
                 "This thesis investigates the use of convolutional neural networks and transformer architectures " +
                         "for automated disease detection in medical imaging, specifically focusing on early cancer detection.",
-                hamedKhanmirza.getId(),null
+                hamedKhanmirza.getId()
         );
 
         mockMvc.perform(post("/student/create-form")

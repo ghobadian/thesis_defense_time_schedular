@@ -1,10 +1,6 @@
 package ir.kghobad.thesis_defense_time_schedular.controller;
 
-import ir.kghobad.thesis_defense_time_schedular.model.dto.AvailableTimeInputDTO;
-import ir.kghobad.thesis_defense_time_schedular.model.dto.FormSuggestionInputDTO;
-import ir.kghobad.thesis_defense_time_schedular.model.dto.MeetingCompletionInputDTO;
-import ir.kghobad.thesis_defense_time_schedular.model.dto.ThesisFormOutputDTO;
-import ir.kghobad.thesis_defense_time_schedular.security.JwtUtil;
+import ir.kghobad.thesis_defense_time_schedular.model.dto.*;
 import ir.kghobad.thesis_defense_time_schedular.service.ProfessorService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,12 +11,9 @@ import java.util.List;
 @RequestMapping("/professor")
 public class ProfessorController {
     private final ProfessorService service;
-    private final JwtUtil jwtUtil;
 
-    public ProfessorController(ProfessorService service,
-                               JwtUtil jwtUtil) {
+    public ProfessorController(ProfessorService service) {
         this.service = service;
-        this.jwtUtil = jwtUtil;
     }
 
     @GetMapping("/forms")
@@ -28,11 +21,12 @@ public class ProfessorController {
         return ResponseEntity.ok(service.getThesisForms());
     }
 
-    @PostMapping("/accept-form/{formId}")
+    @PostMapping("/approve-form/{formId}")
     public ResponseEntity<?> acceptForm(@PathVariable Long formId) {
         service.acceptForm(formId);
         return ResponseEntity.ok("Form accepted");
     }
+
 
     @PostMapping("/reject-form/{formId}")
     public ResponseEntity<?> rejectForm(@PathVariable Long formId) {
@@ -41,8 +35,13 @@ public class ProfessorController {
     }
 
     @GetMapping("/meetings")
-    public ResponseEntity<?> getMeetings() {
+    public ResponseEntity<List<ThesisDefenseMeetingOutputDTO>> getMeetings() {
         return ResponseEntity.ok(service.getMeetings());
+    }
+
+    @GetMapping("/meetings/{id}")
+    public ResponseEntity<ThesisDefenseMeetingOutputDTO> getMeeting(@PathVariable Long id) {
+        return ResponseEntity.ok(service.getMeeting(id));
     }
 
 
@@ -58,9 +57,14 @@ public class ProfessorController {
         return ResponseEntity.ok("Time slot added");
     }
 
-    @PostMapping("/schedule-meeting/{meetingId}")
-    public ResponseEntity<?> scheduleMeeting(@PathVariable Long meetingId) {
-        service.scheduleMeeting(meetingId);
+    @GetMapping("/timeslots")
+    public ResponseEntity<List<TimeSlotDTO>> getTimeslots() {
+        return ResponseEntity.ok(service.getTimeslots());
+    }
+
+    @PostMapping("/schedule-meeting/")
+    public ResponseEntity<?> scheduleMeeting(@RequestBody MeetingScheduleInputDTO input) {
+        service.scheduleMeeting(input);
         return ResponseEntity.ok("Meeting scheduled");
     }
 
@@ -74,6 +78,22 @@ public class ProfessorController {
     public ResponseEntity<?> completeMeeting(@RequestBody MeetingCompletionInputDTO input) {
         service.completeMeeting(input);
         return ResponseEntity.ok("Meeting completed");
+    }
+
+
+    @GetMapping("/students")
+    public ResponseEntity<?> students() {
+        return ResponseEntity.ok(service.getStudents());
+    }
+
+    @GetMapping("/meetings/{meetingId}/timeslots")
+    public ResponseEntity<MeetingTimeSlotsOutputDto> getMeetingTimeSlots(@PathVariable Long meetingId){
+        return ResponseEntity.ok(service.getMeetingTimeSlots(meetingId));
+    }
+
+    @GetMapping("/meetings/{meetingId}/my-timeslots")
+    public ResponseEntity<List<TimeSlotDTO>> getMyMeetingTimeSlots(@PathVariable Long meetingId){
+        return ResponseEntity.ok(service.getMyMeetingTimeSlots(meetingId));
     }
 
 }

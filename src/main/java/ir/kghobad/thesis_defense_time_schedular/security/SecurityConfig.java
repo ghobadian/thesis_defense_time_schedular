@@ -70,10 +70,14 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/auth/**").permitAll()
                 .requestMatchers("/admin/**").hasAuthority(Role.ADMIN.getValue())
-                .requestMatchers("/professor/**").hasAuthority(Role.PROFESSOR.getValue())
+                .requestMatchers("/professor/**").hasAnyAuthority(Role.PROFESSOR.getValue(), Role.MANAGER.getValue())
                 .requestMatchers("/student/**").hasAuthority(Role.STUDENT.getValue())
+                .requestMatchers("/h2-console/**").permitAll()
                 .anyRequest().authenticated()
             )
+                .headers(headers -> headers
+                        .frameOptions(frame -> frame.sameOrigin())
+                )
                 .authenticationProvider(authenticationProvider());
 
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

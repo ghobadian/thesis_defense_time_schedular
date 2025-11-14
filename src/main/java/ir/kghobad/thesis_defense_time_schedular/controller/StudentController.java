@@ -1,10 +1,14 @@
 package ir.kghobad.thesis_defense_time_schedular.controller;
 
+import ir.kghobad.thesis_defense_time_schedular.model.dto.SimpleUserOutputDto;
 import ir.kghobad.thesis_defense_time_schedular.model.dto.ThesisFormInputDTO;
+import ir.kghobad.thesis_defense_time_schedular.model.dto.ThesisFormOutputDTO;
 import ir.kghobad.thesis_defense_time_schedular.model.dto.TimeSlotSelectionInputDTO;
 import ir.kghobad.thesis_defense_time_schedular.service.StudentService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/student")
@@ -21,9 +25,19 @@ public class StudentController {
         return ResponseEntity.ok("Thesis form created successfully");
     }
 
+    @GetMapping("/forms")
+    public ResponseEntity<List<ThesisFormOutputDTO>> getThesisForms() {
+        return ResponseEntity.ok(studentService.getThesisForms());
+    }
+
     @GetMapping("/meetings")
     public ResponseEntity<?> listMeetings() {//todo add test to StudentControllerIntegrationTest
         return ResponseEntity.ok(studentService.listMeetings());
+    }
+
+    @GetMapping("/professors")
+    public ResponseEntity<List<SimpleUserOutputDto>> listProfessors() {//todo add test to StudentControllerIntegrationTest
+        return ResponseEntity.ok(studentService.listProfessors());
     }
 
     @GetMapping("/meetings/{id}")

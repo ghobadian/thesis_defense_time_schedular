@@ -1,9 +1,6 @@
 package ir.kghobad.thesis_defense_time_schedular.service;
 
-import ir.kghobad.thesis_defense_time_schedular.dao.ProfessorRepository;
-import ir.kghobad.thesis_defense_time_schedular.dao.ThesisDefenseMeetingRepository;
-import ir.kghobad.thesis_defense_time_schedular.dao.ThesisFormRepository;
-import ir.kghobad.thesis_defense_time_schedular.dao.TimeSlotRepository;
+import ir.kghobad.thesis_defense_time_schedular.dao.*;
 import ir.kghobad.thesis_defense_time_schedular.model.dto.*;
 import ir.kghobad.thesis_defense_time_schedular.model.entity.ThesisDefenseMeeting;
 import ir.kghobad.thesis_defense_time_schedular.model.entity.TimeSlot;
@@ -21,7 +18,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Clock;
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @Transactional
@@ -34,6 +33,8 @@ public class ProfessorService {
     private final ThesisDefenseMeetingRepository defenseMeetingRepository;
     private final JwtUtil jwtUtil;
     private final Clock clock;
+    private final StudentRepository studentRepository;
+    private final ThesisDefenseMeetingRepository thesisDefenseMeetingRepository;
 
 
     @Value("${app.max-future-days:30}")
@@ -61,12 +62,15 @@ public class ProfessorService {
 
             form.setState(FormState.MANAGER_APPROVED);
             form.setDefenseMeeting(meeting);
+            form.setUpdateDate(new Date());
+
             defenseMeetingRepository.save(meeting);
         } else if (professor.equals(form.getInstructor())) {
             if (form.getState() != FormState.SUBMITTED) {// TODO use state design pattern instead
                 throw new IllegalStateException("Form is not in a state that can be approved by instructor. Valid state: %s. Current state: %s".formatted(FormState.SUBMITTED, form.getState()));
             }
             form.setState(FormState.INSTRUCTOR_APPROVED);
+            form.setUpdateDate(new Date());
         }
         
         thesisFormRepository.save(form);
@@ -86,7 +90,8 @@ public class ProfessorService {
         } else {
             throw new AuthorizationDeniedException("You are not allowed to reject this form");
         }
-        
+        form.setUpdateDate(new Date());
+
         thesisFormRepository.save(form);
     }
 
@@ -101,12 +106,14 @@ public class ProfessorService {
 
         List<Professor> juries = professorRepository.findAllById(input.getJuryIds());
         meeting.addJury(juries);
+        meeting.setUpdateDate(new Date());
 
         defenseMeetingRepository.save(meeting);
     }
 
     public void specifyAvailableTime(AvailableTimeInputDTO dto) {
-        Professor professor = professorRepository.findById(jwtUtil.getCurrentUserId())
+        Long currentUserId = jwtUtil.getCurrentUserId();
+        Professor professor = professorRepository.findById(currentUserId)
             .orElseThrow(() -> new RuntimeException("Professor not found"));
             
         ThesisDefenseMeeting meeting = defenseMeetingRepository.findById(dto.getMeetingId())
@@ -116,9 +123,11 @@ public class ProfessorService {
             throw new AuthorizationDeniedException("You are not allowed to add time slot for this meeting");
         }
 
+        timeSlotRepository.deleteAssociationsByDefenseMeetingIdAndProfessorId(dto.getMeetingId(), currentUserId);
+//        timeSlotRepository.deleteAllByDefenseMeetingIdAndProfessorId(dto.getMeetingId(), currentUserId);
+
         dto.getTimeSlots().forEach(timeSlotDTO -> {
             validateTimeSlot(timeSlotDTO);
-
 
             TimeSlot timeSlot = timeSlotRepository
                     .findByDateAndTimePeriodAndDefenseMeeting_Id(
@@ -133,11 +142,6 @@ public class ProfessorService {
                         return timeSlotRepository.save(newSlot);
                     });
 
-            if (timeSlot.hasProfessor(professor)) {
-                throw new IllegalArgumentException("You have already specified this time slot");
-            }
-
-
             timeSlot.addAvailableProfessor(professor);
             timeSlotRepository.save(timeSlot);
             addTimeSlot(meeting, timeSlot);
@@ -150,7 +154,9 @@ public class ProfessorService {
         boolean allJuriesSpecified = meeting.getSuggestedJuriesIds().stream()
                 .allMatch(juryId -> timeSlotRepository.existsByMeetingIdAndJuryId(meeting.getId(), juryId));
         if (allJuriesSpecified) {
+            log.debug("All juries are specified. changing meeting state to TIME_SELECTION");
             meeting.setState(MeetingState.TIME_SELECTION);
+            meeting.setUpdateDate(new Date());
             defenseMeetingRepository.save(meeting);
         }
     }
@@ -165,23 +171,6 @@ public class ProfessorService {
         log.info("Timeslot given. Meeting: {}, timeslot: {}, professor id: {}", meeting, timeSlot, jwtUtil.getCurrentUserId());
     }
 
-    private static TimeSlot updateTimeSlot(TimeSlot ts, Professor professor) {
-        if (ts.hasProfessor(professor)) {
-            throw new IllegalArgumentException("You have already specified this time slot");
-        }
-        ts.addAvailableProfessor(professor);
-        return ts;
-    }
-
-    private TimeSlot createTimeSlot(TimeSlotDTO timeSlotDTO, ThesisDefenseMeeting meeting, Professor professor) {
-        TimeSlot ts = new TimeSlot();
-        ts.setDate(timeSlotDTO.getDate());
-        ts.setTimePeriod(timeSlotDTO.getTimePeriod());
-        ts.setDefenseMeeting(meeting);
-        ts.addAvailableProfessor(professor);
-        return ts;
-    }
-
     private void validateTimeSlot(TimeSlotDTO timeSlot) {
         if (timeSlot.getDate().isAfter(LocalDate.now(clock).plusDays(maxFutureDays))) {
             throw new IllegalArgumentException("Time slot date must be within %d days from now".formatted(maxFutureDays));
@@ -194,18 +183,23 @@ public class ProfessorService {
 
     public List<ThesisFormOutputDTO> getThesisForms() {
         Long currentUserId = jwtUtil.getCurrentUserId();
-        FormState formState = professorRepository.isManager(currentUserId) ? FormState.ADMIN_APPROVED : FormState.SUBMITTED;
-        return thesisFormRepository.findAllByInstructorIdAndState(currentUserId, formState)
+
+        if (professorRepository.isManager(currentUserId)) {
+            return thesisFormRepository.findAllByManagerId(currentUserId).stream()
+                    .map(ThesisFormOutputDTO::from).toList();
+        }
+
+        return thesisFormRepository.findAllByInstructorId(currentUserId)
                 .stream().map(ThesisFormOutputDTO::from).toList();
     }
 
-    public void scheduleMeeting(Long meetingId) {
+    public void scheduleMeeting(MeetingScheduleInputDTO input) {
         Professor manager = professorRepository.findById(jwtUtil.getCurrentUserId()).orElseThrow();
         if (!manager.isManager()) {
             throw new AuthorizationDeniedException("Only managers can schedule meetings");
         }
 
-        ThesisDefenseMeeting meeting = defenseMeetingRepository.findById(meetingId)
+        ThesisDefenseMeeting meeting = defenseMeetingRepository.findById(input.getMeetingId())
                 .orElseThrow(() -> new RuntimeException("Meeting not found"));
 
         if (meeting.getState() != MeetingState.TIME_SELECTION) {
@@ -217,6 +211,8 @@ public class ProfessorService {
         }
 
         meeting.setState(MeetingState.SCHEDULED);
+        meeting.setUpdateDate(new Date());
+        meeting.setLocation(input.getLocation());
         defenseMeetingRepository.save(meeting);
     }
 
@@ -234,6 +230,7 @@ public class ProfessorService {
         }
 
         meeting.setState(MeetingState.CANCELED);
+        meeting.setUpdateDate(new Date());
         defenseMeetingRepository.save(meeting);
     }
 
@@ -263,6 +260,7 @@ public class ProfessorService {
         }
 
         meeting.setState(MeetingState.COMPLETED);
+        meeting.setUpdateDate(new Date());
         meeting.setScore(input.getScore());
         defenseMeetingRepository.save(meeting);
     }
@@ -271,5 +269,53 @@ public class ProfessorService {
         Long currentUserId = jwtUtil.getCurrentUserId();
         return defenseMeetingRepository.findByJuryId(currentUserId)
                 .stream().map(ThesisDefenseMeetingOutputDTO::from).toList();
+    }
+
+    public List<StudentOutputDTO> getStudents() {
+        Long currentUserId = jwtUtil.getCurrentUserId();
+        return studentRepository.findByInstructorId(currentUserId).stream().map(StudentOutputDTO::from).toList();
+    }
+
+    public List<TimeSlotDTO> getTimeslots() {
+        Long currentUserId = jwtUtil.getCurrentUserId();
+        return timeSlotRepository.findByJuryId(currentUserId).stream().map(TimeSlotDTO::from).toList();
+    }
+
+    public ThesisDefenseMeetingOutputDTO getMeeting(Long id) {
+        return ThesisDefenseMeetingOutputDTO.from(defenseMeetingRepository.findById(id).orElseThrow());
+    }
+
+    @Transactional(readOnly = true)
+    public MeetingTimeSlotsOutputDto getMeetingTimeSlots(Long meetingId) {
+        ThesisDefenseMeeting meeting = thesisDefenseMeetingRepository.findById(meetingId)
+                .orElseThrow(() -> new RuntimeException("Meeting not found"));
+
+        Professor currentProfessor = professorRepository.findById(jwtUtil.getCurrentUserId())
+                .orElseThrow(() -> new RuntimeException("Professor not found"));
+
+        Set<Long> suggestedJuriesIds = meeting.getSuggestedJuriesIds();
+        if (!suggestedJuriesIds.contains(currentProfessor.getId())) {
+            throw new AuthorizationDeniedException("You are not allowed to view this meeting");
+        }
+
+        List<SimpleUserOutputDto> juryMembers = meeting.getSuggestedJuries();
+
+        List<JuryMemberAvailability> juryMemberTimeSlots = juryMembers.stream()
+                .map(jury -> {
+                    List<TimeSlotDTO> juryTimeSlots = timeSlotRepository.findByDefenseMeetingIdAndJuryId(meetingId, jury.getId()).stream().map(TimeSlotDTO::from).toList();
+                    return new JuryMemberAvailability(jury, juryTimeSlots);
+                }).toList();
+
+        List<TimeSlotDTO> intersections = timeSlotRepository.findIntersections(suggestedJuriesIds, suggestedJuriesIds.size())
+                .stream()
+                .map(TimeSlotDTO::from)
+                .toList();
+
+        return new MeetingTimeSlotsOutputDto(meeting.getId(), juryMemberTimeSlots, intersections);
+    }
+
+    public List<TimeSlotDTO> getMyMeetingTimeSlots(Long meetingId) {
+        return timeSlotRepository.findByDefenseMeetingIdAndJuryId(meetingId, jwtUtil.getCurrentUserId())
+                .stream().map(TimeSlotDTO::from).toList();
     }
 }
