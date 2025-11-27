@@ -26,12 +26,17 @@ public class Field {
     @Setter
     private String name;
 
+    @Column(nullable = false)
+    @Getter
+    @Setter
+    private boolean active = true;
+
     @ManyToOne
     @JoinColumn(name = "department_id")
     @Getter
     @Setter
     private Department department;
-    
+
     @OneToMany(mappedBy = "field")
     private final Set<Student> students = new HashSet<>();
 

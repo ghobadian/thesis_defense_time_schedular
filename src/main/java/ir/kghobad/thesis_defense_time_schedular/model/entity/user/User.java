@@ -5,10 +5,9 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import ir.kghobad.thesis_defense_time_schedular.model.entity.Department;
 import ir.kghobad.thesis_defense_time_schedular.model.enums.Role;
 import jakarta.persistence.*;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
+
+import java.util.Date;
 
 @Entity
 @Table(name = "users")
@@ -18,6 +17,7 @@ import lombok.ToString;
 @Setter
 @EqualsAndHashCode
 @ToString(of = {"firstName", "lastName"})
+@AllArgsConstructor
 public abstract class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,19 +42,11 @@ public abstract class User {
     @JoinColumn(name = "department_id")
     private Department department;
 
-    @Column
+    @Column(name = "enabled")
     private boolean enabled;
 
-    public User(Long id, String firstName, String lastName, String email, String phoneNumber, String password, Department department, boolean enabled) {
-        this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.phoneNumber = phoneNumber;
-        this.password = password;
-        this.department = department;
-        this.enabled = enabled;
-    }
+    @Column(name = "creation_date", nullable = false)
+    private Date creationDate = new Date();
 
     public User() {
 

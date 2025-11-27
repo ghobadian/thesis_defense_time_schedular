@@ -1,7 +1,7 @@
 package ir.kghobad.thesis_defense_time_schedular.controller;
 
-import ir.kghobad.thesis_defense_time_schedular.model.dto.AvailableTimeInputDTO;
-import ir.kghobad.thesis_defense_time_schedular.model.dto.FormSuggestionInputDTO;
+import ir.kghobad.thesis_defense_time_schedular.model.dto.meeting.AvailableTimeInputDTO;
+import ir.kghobad.thesis_defense_time_schedular.model.dto.form.FormSuggestionInputDTO;
 import ir.kghobad.thesis_defense_time_schedular.model.dto.TimeSlotDTO;
 import ir.kghobad.thesis_defense_time_schedular.model.entity.Department;
 import ir.kghobad.thesis_defense_time_schedular.model.entity.Field;
