@@ -1,6 +1,6 @@
 package ir.kghobad.thesis_defense_time_schedular.helper;
 
-import ir.kghobad.thesis_defense_time_schedular.model.dto.StudentRegistrationInputDTO;
+import ir.kghobad.thesis_defense_time_schedular.model.dto.student.StudentRegistrationInputDTO;
 import ir.kghobad.thesis_defense_time_schedular.model.entity.Department;
 import ir.kghobad.thesis_defense_time_schedular.model.entity.Field;
 import ir.kghobad.thesis_defense_time_schedular.model.entity.ThesisDefenseMeeting;

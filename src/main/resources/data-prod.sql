@@ -1,6 +1,6 @@
 -- data-prod.sql
 -- Production-ready data initialization script for Thesis Defense Time Scheduler
--- Generated: 2025-11-14 (Updated)
+-- Generated: 2025-11-24 (Updated - Comprehensive Test Coverage)
 
 -- ============================================
 -- 1. DEPARTMENTS
@@ -15,189 +15,218 @@ INSERT INTO department (id, name) VALUES
 -- ============================================
 -- 2. FIELDS (Study Fields within Departments)
 -- ============================================
-INSERT INTO field (id, name, department_id) VALUES
+INSERT INTO field (id, name, department_id, active) VALUES
 -- Computer Engineering Fields
-(1, 'Software Engineering', 1),
-(2, 'Artificial Intelligence', 1),
-(3, 'Computer Networks', 1),
-(4, 'Database Systems', 1),
+(1, 'Software Engineering', 1, true),
+(2, 'Artificial Intelligence', 1, true),
+(3, 'Computer Networks', 1, true),
+(4, 'Database Systems', 1, true),
 
 -- Electrical Engineering Fields
-(5, 'Power Systems', 2),
-(6, 'Electronics', 2),
-(7, 'Telecommunications', 2),
+(5, 'Power Systems', 2, true),
+(6, 'Electronics', 2, true),
+(7, 'Telecommunications', 2, true),
 
 -- Mechanical Engineering Fields
-(8, 'Thermodynamics', 3),
-(9, 'Manufacturing', 3),
+(8, 'Thermodynamics', 3, true),
+(9, 'Manufacturing', 3, true),
 
 -- Civil Engineering Fields
-(10, 'Structural Engineering', 4),
-(11, 'Transportation Engineering', 4),
+(10, 'Structural Engineering', 4, true),
+(11, 'Transportation Engineering', 4, true),
 
 -- Industrial Engineering Fields
-(12, 'Operations Research', 5),
-(13, 'Quality Management', 5);
+(12, 'Operations Research', 5, true),
+(13, 'Quality Management', 5, true);
+
+-- Inactive field for testing
+INSERT INTO field (id, name, department_id, active) VALUES
+    (14, 'Legacy Computer Graphics', 1, false);
 
 -- ============================================
 -- 3. ADMIN USERS
 -- ============================================
 -- Password: admin123 (hashed with BCrypt)
-INSERT INTO users (id, first_name, last_name, email, phone_number, password, department_id, enabled) VALUES
-                                                                                                         (1, 'Mohammad', 'Rezaei', 'admin@university.ac.ir', '09121234567', '$2a$10$bI8ESoNHEQL2FA3Up9UU4eqTu3iO49gUSnvv3/JOMSe7B726kLtlW', 1, true),
-                                                                                                         (2, 'Fatima', 'Ahmadi', 'admin2@university.ac.ir', '09121234568', '$2a$10$bI8ESoNHEQL2FA3Up9UU4eqTu3iO49gUSnvv3/JOMSe7B726kLtlW', 2, true);
+INSERT INTO users (id, first_name, last_name, email, phone_number, password, department_id, enabled, creation_date) VALUES
+(1, 'Mohammad', 'Rezaei', 'admin@university.ac.ir', '09121234567', '$2a$10$LZLBvCmFxTicp0mKCc2rVutt.LS.dGUBDYGzxL3bdcXLz9cYkWhOK', 1, true, '2025-09-23 08:00:00'),
+(2, 'Fatima', 'Ahmadi', 'admin2@university.ac.ir', '09121234568', '$2a$10$LZLBvCmFxTicp0mKCc2rVutt.LS.dGUBDYGzxL3bdcXLz9cYkWhOK', 2, true, '2025-09-23 08:00:00'),
+(3, 'Ali', 'Karimi', 'admin3@university.ac.ir', '09121234569', '$2a$10$LZLBvCmFxTicp0mKCc2rVutt.LS.dGUBDYGzxL3bdcXLz9cYkWhOK', 3, true, '2025-09-23 08:00:00'),
+(4, 'Sara', 'Hosseini', 'admin4@university.ac.ir', '09121234570', '$2a$10$LZLBvCmFxTicp0mKCc2rVutt.LS.dGUBDYGzxL3bdcXLz9cYkWhOK', 4, true, '2025-09-23 08:00:00');
 
-INSERT INTO admin (id) VALUES (1), (2);
+INSERT INTO admin (id) VALUES (1), (2), (3), (4);
 
 -- ============================================
--- 4. PROFESSORS
+-- 4. PROFESSORS (30 professors across all departments)
 -- ============================================
 -- Password: prof123 (hashed with BCrypt)
-INSERT INTO users (id, first_name, last_name, email, phone_number, password, department_id, enabled) VALUES
--- Computer Engineering Professors (Department 1)
-(10, 'Ali', 'Karimi', 'a.karimi@university.ac.ir', '09121111001', '$2a$10$O./4l.EpBRWV50rHWB/59exZE61BJRL3JUG71B03Zzg6mbP3BzWR.', 1, true),
-(11, 'Sara', 'Hosseini', 's.hosseini@university.ac.ir', '09121111002', '$2a$10$O./4l.EpBRWV50rHWB/59exZE61BJRL3JUG71B03Zzg6mbP3BzWR.', 1, true),
-(12, 'Hassan', 'Moradi', 'h.moradi@university.ac.ir', '09121111003', '$2a$10$O./4l.EpBRWV50rHWB/59exZE61BJRL3JUG71B03Zzg6mbP3BzWR.', 1, true),
-(13, 'Zahra', 'Ebrahimi', 'z.ebrahimi@university.ac.ir', '09121111004', '$2a$10$O./4l.EpBRWV50rHWB/59exZE61BJRL3JUG71B03Zzg6mbP3BzWR.', 1, true),
-(14, 'Mehdi', 'Rahmani', 'm.rahmani@university.ac.ir', '09121111005', '$2a$10$O./4l.EpBRWV50rHWB/59exZE61BJRL3JUG71B03Zzg6mbP3BzWR.', 1, true),
-(24, 'Davood', 'Shahbazi', 'd.shahbazi@university.ac.ir', '09121111015', '$2a$10$O./4l.EpBRWV50rHWB/59exZE61BJRL3JUG71B03Zzg6mbP3BzWR.', 1, true),
-(25, 'Nazanin', 'Firouzi', 'n.firouzi@university.ac.ir', '09121111016', '$2a$10$O./4l.EpBRWV50rHWB/59exZE61BJRL3JUG71B03Zzg6mbP3BzWR.', 1, true),
+INSERT INTO users (id, first_name, last_name, email, phone_number, password, department_id, enabled, creation_date) VALUES
+-- Computer Engineering Professors (10-19)
+(10, 'Reza', 'Mohammadi', 'r.mohammadi@university.ac.ir', '09131234567', '$2a$10$wyi4g4s2S6z7zvs3INH3cu6wwS12/7wbyYvsNGlkp4RiL8ZQG3o/2', 1, true, '2025-09-23 09:00:00'),
+(11, 'Maryam', 'Alavi', 'm.alavi@university.ac.ir', '09131234568', '$2a$10$wyi4g4s2S6z7zvs3INH3cu6wwS12/7wbyYvsNGlkp4RiL8ZQG3o/2', 1, true, '2025-09-23 09:00:00'),
+(12, 'Hassan', 'Rahimi', 'h.rahimi@university.ac.ir', '09131234569', '$2a$10$wyi4g4s2S6z7zvs3INH3cu6wwS12/7wbyYvsNGlkp4RiL8ZQG3o/2', 1, true, '2025-09-23 09:00:00'),
+(13, 'Zahra', 'Jamali', 'z.jamali@university.ac.ir', '09131234570', '$2a$10$wyi4g4s2S6z7zvs3INH3cu6wwS12/7wbyYvsNGlkp4RiL8ZQG3o/2', 1, true, '2025-09-23 09:00:00'),
+(14, 'Mehdi', 'Naseri', 'm.naseri@university.ac.ir', '09131234571', '$2a$10$wyi4g4s2S6z7zvs3INH3cu6wwS12/7wbyYvsNGlkp4RiL8ZQG3o/2', 1, true, '2025-09-23 09:00:00'),
 
--- Electrical Engineering Professors (Department 2)
-(15, 'Reza', 'Mohammadi', 'r.mohammadi@university.ac.ir', '09121111006', '$2a$10$O./4l.EpBRWV50rHWB/59exZE61BJRL3JUG71B03Zzg6mbP3BzWR.', 2, true),
-(16, 'Maryam', 'Abbasi', 'm.abbasi@university.ac.ir', '09121111007', '$2a$10$O./4l.EpBRWV50rHWB/59exZE61BJRL3JUG71B03Zzg6mbP3BzWR.', 2, true),
-(17, 'Amir', 'Najafi', 'a.najafi@university.ac.ir', '09121111008', '$2a$10$O./4l.EpBRWV50rHWB/59exZE61BJRL3JUG71B03Zzg6mbP3BzWR.', 2, true),
-(26, 'Golnaz', 'Pourmand', 'g.pourmand@university.ac.ir', '09121111017', '$2a$10$O./4l.EpBRWV50rHWB/59exZE61BJRL3JUG71B03Zzg6mbP3BzWR.', 2, true),
+-- Electrical Engineering Professors (15-19)
+(15, 'Ahmad', 'Mousavi', 'a.mousavi@university.ac.ir', '09131234572', '$2a$10$wyi4g4s2S6z7zvs3INH3cu6wwS12/7wbyYvsNGlkp4RiL8ZQG3o/2', 2, true, '2025-09-23 09:00:00'),
+(16, 'Leila', 'Salehi', 'l.salehi@university.ac.ir', '09131234573', '$2a$10$wyi4g4s2S6z7zvs3INH3cu6wwS12/7wbyYvsNGlkp4RiL8ZQG3o/2', 2, true, '2025-09-23 09:00:00'),
+(17, 'Hossein', 'Abbasi', 'h.abbasi@university.ac.ir', '09131234574', '$2a$10$wyi4g4s2S6z7zvs3INH3cu6wwS12/7wbyYvsNGlkp4RiL8ZQG3o/2', 2, true, '2025-09-23 09:00:00'),
 
--- Mechanical Engineering Professors (Department 3)
-(18, 'Hossein', 'Ghorbani', 'h.ghorbani@university.ac.ir', '09121111009', '$2a$10$O./4l.EpBRWV50rHWB/59exZE61BJRL3JUG71B03Zzg6mbP3BzWR.', 3, true),
-(19, 'Narges', 'Amiri', 'n.amiri@university.ac.ir', '09121111010', '$2a$10$O./4l.EpBRWV50rHWB/59exZE61BJRL3JUG71B03Zzg6mbP3BzWR.', 3, true),
-(27, 'Masoud', 'Farahani', 'm.farahani@university.ac.ir', '09121111018', '$2a$10$O./4l.EpBRWV50rHWB/59exZE61BJRL3JUG71B03Zzg6mbP3BzWR.', 3, true),
+-- Mechanical Engineering Professors (18-21)
+(18, 'Parisa', 'Rahmani', 'p.rahmani@university.ac.ir', '09131234575', '$2a$10$wyi4g4s2S6z7zvs3INH3cu6wwS12/7wbyYvsNGlkp4RiL8ZQG3o/2', 3, true, '2025-09-23 09:00:00'),
+(19, 'Javad', 'Kazemi', 'j.kazemi@university.ac.ir', '09131234576', '$2a$10$wyi4g4s2S6z7zvs3INH3cu6wwS12/7wbyYvsNGlkp4RiL8ZQG3o/2', 3, true, '2025-09-23 09:00:00'),
 
--- Civil Engineering Professors (Department 4)
-(20, 'Javad', 'Salehi', 'j.salehi@university.ac.ir', '09121111011', '$2a$10$O./4l.EpBRWV50rHWB/59exZE61BJRL3JUG71B03Zzg6mbP3BzWR.', 4, true),
-(21, 'Somayeh', 'Bagheri', 's.bagheri@university.ac.ir', '09121111012', '$2a$10$O./4l.EpBRWV50rHWB/59exZE61BJRL3JUG71B03Zzg6mbP3BzWR.', 4, true),
-(28, 'Mohsen', 'Zolfaghari', 'm.zolfaghari@university.ac.ir', '09121111019', '$2a$10$O./4l.EpBRWV50rHWB/59exZE61BJRL3JUG71B03Zzg6mbP3BzWR.', 4, true),
+-- Civil Engineering Professors (20-23)
+(20, 'Neda', 'Hashemi', 'n.hashemi@university.ac.ir', '09131234577', '$2a$10$wyi4g4s2S6z7zvs3INH3cu6wwS12/7wbyYvsNGlkp4RiL8ZQG3o/2', 4, true, '2025-09-23 09:00:00'),
+(21, 'Saeed', 'Moradi', 's.moradi@university.ac.ir', '09131234578', '$2a$10$wyi4g4s2S6z7zvs3INH3cu6wwS12/7wbyYvsNGlkp4RiL8ZQG3o/2', 4, true, '2025-09-23 09:00:00'),
 
--- Industrial Engineering Professors (Department 5)
-(22, 'Ahmad', 'Hashemi', 'a.hashemi@university.ac.ir', '09121111013', '$2a$10$O./4l.EpBRWV50rHWB/59exZE61BJRL3JUG71B03Zzg6mbP3BzWR.', 5, true),
-(23, 'Leila', 'Azizi', 'l.azizi@university.ac.ir', '09121111014', '$2a$10$O./4l.EpBRWV50rHWB/59exZE61BJRL3JUG71B03Zzg6mbP3BzWR.', 5, true),
-(29, 'Bahram', 'Mansouri', 'b.mansouri@university.ac.ir', '09121111020', '$2a$10$O./4l.EpBRWV50rHWB/59exZE61BJRL3JUG71B03Zzg6mbP3BzWR.', 5, true);
+-- Industrial Engineering Professors (22-29)
+(22, 'Somayeh', 'Bagheri', 's.bagheri@university.ac.ir', '09131234579', '$2a$10$wyi4g4s2S6z7zvs3INH3cu6wwS12/7wbyYvsNGlkp4RiL8ZQG3o/2', 5, true, '2025-09-23 09:00:00'),
+(23, 'Kamran', 'Azizi', 'k.azizi@university.ac.ir', '09131234580', '$2a$10$wyi4g4s2S6z7zvs3INH3cu6wwS12/7wbyYvsNGlkp4RiL8ZQG3o/2', 5, true, '2025-09-23 09:00:00'),
 
--- Assign professors to fields with manager designation
-INSERT INTO professor (id, field_id, is_manager) VALUES
--- Computer Engineering Department (Dept 1) - Field Managers
-(10, 1, true),   -- Ali Karimi - Software Engineering Manager & Department Manager
-(11, 2, true),   -- Sara Hosseini - Artificial Intelligence Manager
-(12, 3, true),   -- Hassan Moradi - Computer Networks Manager
-(13, 4, true),   -- Zahra Ebrahimi - Database Systems Manager
--- Computer Engineering - Regular Professors
-(14, 1, false),  -- Mehdi Rahmani - Software Engineering
-(24, 2, false),  -- Davood Shahbazi - Artificial Intelligence
-(25, 3, false),  -- Nazanin Firouzi - Computer Networks
+-- Additional professors for jury panels (24-29)
+(24, 'Amir', 'Sadeghi', 'a.sadeghi@university.ac.ir', '09131234581', '$2a$10$wyi4g4s2S6z7zvs3INH3cu6wwS12/7wbyYvsNGlkp4RiL8ZQG3o/2', 1, true, '2025-09-23 09:00:00'),
+(25, 'Narges', 'Tavakoli', 'n.tavakoli@university.ac.ir', '09131234582', '$2a$10$wyi4g4s2S6z7zvs3INH3cu6wwS12/7wbyYvsNGlkp4RiL8ZQG3o/2', 1, true, '2025-09-23 09:00:00'),
+(26, 'Davood', 'Yousefi', 'd.yousefi@university.ac.ir', '09131234583', '$2a$10$wyi4g4s2S6z7zvs3INH3cu6wwS12/7wbyYvsNGlkp4RiL8ZQG3o/2', 2, true, '2025-09-23 09:00:00'),
+(27, 'Fatemeh', 'Akbari', 'f.akbari@university.ac.ir', '09131234584', '$2a$10$wyi4g4s2S6z7zvs3INH3cu6wwS12/7wbyYvsNGlkp4RiL8ZQG3o/2', 3, true, '2025-09-23 09:00:00'),
+(28, 'Behzad', 'Farahani', 'b.farahani@university.ac.ir', '09131234585', '$2a$10$wyi4g4s2S6z7zvs3INH3cu6wwS12/7wbyYvsNGlkp4RiL8ZQG3o/2', 4, true, '2025-09-23 09:00:00'),
+(29, 'Mina', 'Ghorbani', 'm.ghorbani@university.ac.ir', '09131234586', '$2a$10$wyi4g4s2S6z7zvs3INH3cu6wwS12/7wbyYvsNGlkp4RiL8ZQG3o/2', 5, true, '2025-09-23 09:00:00'),
 
--- Electrical Engineering Department (Dept 2) - Field Managers
-(15, 5, true),   -- Reza Mohammadi - Power Systems Manager & Department Manager
-(16, 6, true),   -- Maryam Abbasi - Electronics Manager
-(17, 7, true),   -- Amir Najafi - Telecommunications Manager
--- Electrical Engineering - Regular Professor
-(26, 5, false),  -- Golnaz Pourmand - Power Systems
+-- Disabled professor for testing
+(30, 'Disabled', 'Professor', 'disabled@university.ac.ir', '09131234587', '$2a$10$wyi4g4s2S6z7zvs3INH3cu6wwS12/7wbyYvsNGlkp4RiL8ZQG3o/2', 1, false, '2025-09-23 09:00:00');
 
--- Mechanical Engineering Department (Dept 3) - Field Managers
-(18, 8, true),   -- Hossein Ghorbani - Thermodynamics Manager & Department Manager
-(19, 9, true),   -- Narges Amiri - Manufacturing Manager
--- Mechanical Engineering - Regular Professor
-(27, 8, false),  -- Masoud Farahani - Thermodynamics
+INSERT INTO professor (id, is_manager) VALUES
+-- Managers (can approve PhD theses)
+(10, true),  -- Computer Engineering Manager
+(15, true),  -- Electrical Engineering Manager
+(18, true),  -- Mechanical Engineering Manager
+(20, true),  -- Civil Engineering Manager
+(22, true),  -- Industrial Engineering Manager
 
--- Civil Engineering Department (Dept 4) - Field Managers
-(20, 10, true),  -- Javad Salehi - Structural Engineering Manager & Department Manager
-(21, 11, true),  -- Somayeh Bagheri - Transportation Engineering Manager
--- Civil Engineering - Regular Professor
-(28, 10, false), -- Mohsen Zolfaghari - Structural Engineering
-
--- Industrial Engineering Department (Dept 5) - Field Managers
-(22, 12, true),  -- Ahmad Hashemi - Operations Research Manager & Department Manager
-(23, 13, true),  -- Leila Azizi - Quality Management Manager
--- Industrial Engineering - Regular Professor
-(29, 12, false); -- Bahram Mansouri - Operations Research
+-- Regular professors
+(11, false), (12, false), (13, false), (14, false),
+(16, false), (17, false),
+(19, false),
+(21, false),
+(23, false), (24, false), (25, false), (26, false),
+(27, false), (28, false), (29, false),
+(30, false);
 
 -- ============================================
 -- 5. BACHELOR STUDENTS
 -- ============================================
--- Password: student123
-INSERT INTO users (id, first_name, last_name, email, phone_number, password, department_id, enabled) VALUES
-                                                                                                         (100, 'Arash', 'Jafari', 'arash.jafari@student.ac.ir', '09122221001', '$2a$10$DngM1sAHEWg5O0De.t43W.a/5ipjSaHSJB88MvogDvjXA7y4a9sDO', 1, true),
-                                                                                                         (101, 'Parisa', 'Kamali', 'parisa.kamali@student.ac.ir', '09122221002', '$2a$10$DngM1sAHEWg5O0De.t43W.a/5ipjSaHSJB88MvogDvjXA7y4a9sDO', 1, true),
-                                                                                                         (102, 'Omid', 'Rashidi', 'omid.rashidi@student.ac.ir', '09122221003', '$2a$10$DngM1sAHEWg5O0De.t43W.a/5ipjSaHSJB88MvogDvjXA7y4a9sDO', 1, true),
-                                                                                                         (103, 'Mahsa', 'Sadeghi', 'mahsa.sadeghi@student.ac.ir', '09122221004', '$2a$10$DngM1sAHEWg5O0De.t43W.a/5ipjSaHSJB88MvogDvjXA7y4a9sDO', 2, true),
-                                                                                                         (104, 'Sina', 'Mousavi', 'sina.mousavi@student.ac.ir', '09122221005', '$2a$10$DngM1sAHEWg5O0De.t43W.a/5ipjSaHSJB88MvogDvjXA7y4a9sDO', 2, true),
-                                                                                                         (105, 'Elnaz', 'Taheri', 'elnaz.taheri@student.ac.ir', '09122221006', '$2a$10$DngM1sAHEWg5O0De.t43W.a/5ipjSaHSJB88MvogDvjXA7y4a9sDO', 3, true),
-                                                                                                         (106, 'Vahid', 'Nouri', 'vahid.nouri@student.ac.ir', '09122221007', '$2a$10$DngM1sAHEWg5O0De.t43W.a/5ipjSaHSJB88MvogDvjXA7y4a9sDO', 4, true),
-                                                                                                         (107, 'Yasmin', 'Karami', 'yasmin.karami@student.ac.ir', '09122221008', '$2a$10$DngM1sAHEWg5O0De.t43W.a/5ipjSaHSJB88MvogDvjXA7y4a9sDO', 5, true),
-                                                                                                         (108, 'Saeed', 'Bahrami', 'saeed.bahrami@student.ac.ir', '09122221009', '$2a$10$DngM1sAHEWg5O0De.t43W.a/5ipjSaHSJB88MvogDvjXA7y4a9sDO', 1, true),
-                                                                                                         (109, 'Mitra', 'Yousefi', 'mitra.yousefi@student.ac.ir', '09122221010', '$2a$10$DngM1sAHEWg5O0De.t43W.a/5ipjSaHSJB88MvogDvjXA7y4a9sDO', 2, true);
+-- Password: student123 (hashed with BCrypt)
+INSERT INTO users (id, first_name, last_name, email, phone_number, password, department_id, enabled, creation_date) VALUES
+-- Computer Engineering Students (100-105)
+(100, 'Ali', 'Nejati', 'a.nejati@student.university.ac.ir', '09141234567', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 1, true, '2025-09-25 10:00:00'),
+(101, 'Mahsa', 'Amini', 'm.amini@student.university.ac.ir', '09141234568', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 1, true, '2025-09-25 10:00:00'),
+(102, 'Hamed', 'Rostami', 'h.rostami@student.university.ac.ir', '09141234569', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 1, true, '2025-09-25 10:00:00'),
+
+-- Electrical Engineering Students (103-105)
+(103, 'Negar', 'Shams', 'n.shams@student.university.ac.ir', '09141234570', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 2, true, '2025-09-25 10:00:00'),
+(104, 'Amin', 'Zarei', 'a.zarei@student.university.ac.ir', '09141234571', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 2, true, '2025-09-25 10:00:00'),
+
+-- Civil Engineering Students (106-107)
+(106, 'Elham', 'Sharifi', 'e.sharifi@student.university.ac.ir', '09141234572', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 4, true, '2025-09-25 10:00:00'),
+
+-- Industrial Engineering Students (107-109)
+(107, 'Pouya', 'Forouzan', 'p.forouzan@student.university.ac.ir', '09141234573', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 5, true, '2025-09-25 10:00:00'),
+
+-- Telecommunications (108-109)
+(108, 'Niloofar', 'Ebrahimi', 'n.ebrahimi@student.university.ac.ir', '09141234574', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 1, true, '2025-09-25 10:00:00'),
+(109, 'Omid', 'Ghafari', 'o.ghafari@student.university.ac.ir', '09141234575', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 2, true, '2025-09-25 10:00:00'),
+
+-- Additional bachelor students (110-115)
+(110, 'Sanaz', 'Mirzaei', 's.mirzaei@student.university.ac.ir', '09141234576', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 1, true, '2025-09-25 10:00:00'),
+(111, 'Arash', 'Soltani', 'a.soltani@student.university.ac.ir', '09141234577', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 2, true, '2025-09-25 10:00:00'),
+(112, 'Golnaz', 'Maleki', 'g.maleki@student.university.ac.ir', '09141234578', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 3, true, '2025-09-25 10:00:00'),
+(113, 'Sina', 'Asadi', 's.asadi@student.university.ac.ir', '09141234579', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 4, true, '2025-09-25 10:00:00'),
+(114, 'Yasmin', 'Sadri', 'y.sadri@student.university.ac.ir', '09141234580', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 5, true, '2025-09-25 10:00:00'),
+(115, 'Ramin', 'Jafari', 'r.jafari@student.university.ac.ir', '09141234581', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 1, true, '2025-09-25 10:00:00');
 
 INSERT INTO student (id, student_number, instructor_id, field_id) VALUES
-                                                                      (100, 400101001, 10, 1),
-                                                                      (101, 400101002, 11, 1),
-                                                                      (102, 400101003, 12, 2),
-                                                                      (103, 400201001, 15, 5),
-                                                                      (104, 400201002, 16, 6),
-                                                                      (105, 400301001, 18, 8),
-                                                                      (106, 400401001, 20, 10),
-                                                                      (107, 400501001, 22, 12),
-                                                                      (108, 400101004, 14, 1),
-                                                                      (109, 400201003, 17, 7);
+                                                                      (100, 401101001, 10, 1),
+                                                                      (101, 401101002, 11, 2),
+                                                                      (102, 401101003, 11, 2),
+                                                                      (103, 401201001, 15, 5),
+                                                                      (104, 401201002, 16, 6),
+                                                                      (106, 401401001, 20, 10),
+                                                                      (107, 401501001, 22, 12),
+                                                                      (108, 401101004, 14, 1),
+                                                                      (109, 401201003, 17, 7),
+                                                                      (110, 401101005, 12, 4),
+                                                                      (111, 401201004, 15, 5),
+                                                                      (112, 401301001, 18, 8),
+                                                                      (113, 401401002, 21, 11),
+                                                                      (114, 401501002, 23, 13),
+                                                                      (115, 401101006, 13, 3);
 
 INSERT INTO bachelor_student (id) VALUES
-                                      (100), (101), (102), (103), (104), (105), (106), (107), (108), (109);
+                                      (100), (101), (102), (103), (104), (106), (107), (108), (109),
+                                      (110), (111), (112), (113), (114), (115);
 
 -- ============================================
 -- 6. MASTER STUDENTS
 -- ============================================
-INSERT INTO users (id, first_name, last_name, email, phone_number, password, department_id, enabled) VALUES
-                                                                                                         (200, 'Behnam', 'Zare', 'behnam.zare@student.ac.ir', '09122222001', '$2a$10$DngM1sAHEWg5O0De.t43W.a/5ipjSaHSJB88MvogDvjXA7y4a9sDO', 1, true),
-                                                                                                         (201, 'Neda', 'Shafiei', 'neda.shafiei@student.ac.ir', '09122222002', '$2a$10$DngM1sAHEWg5O0De.t43W.a/5ipjSaHSJB88MvogDvjXA7y4a9sDO', 1, true),
-                                                                                                         (202, 'Kaveh', 'Rahimi', 'kaveh.rahimi@student.ac.ir', '09122222003', '$2a$10$DngM1sAHEWg5O0De.t43W.a/5ipjSaHSJB88MvogDvjXA7y4a9sDO', 1, true),
-                                                                                                         (203, 'Mina', 'Faraji', 'mina.faraji@student.ac.ir', '09122222004', '$2a$10$DngM1sAHEWg5O0De.t43W.a/5ipjSaHSJB88MvogDvjXA7y4a9sDO', 1, true),
-                                                                                                         (204, 'Babak', 'Kazemi', 'babak.kazemi@student.ac.ir', '09122222005', '$2a$10$DngM1sAHEWg5O0De.t43W.a/5ipjSaHSJB88MvogDvjXA7y4a9sDO', 2, true),
-                                                                                                         (205, 'Sanaz', 'Hosseini', 'sanaz.hosseini@student.ac.ir', '09122222006', '$2a$10$DngM1sAHEWg5O0De.t43W.a/5ipjSaHSJB88MvogDvjXA7y4a9sDO', 2, true),
-                                                                                                         (206, 'Pouya', 'Soltani', 'pouya.soltani@student.ac.ir', '09122222007', '$2a$10$DngM1sAHEWg5O0De.t43W.a/5ipjSaHSJB88MvogDvjXA7y4a9sDO', 3, true),
-                                                                                                         (207, 'Aida', 'Jamali', 'aida.jamali@student.ac.ir', '09122222008', '$2a$10$DngM1sAHEWg5O0De.t43W.a/5ipjSaHSJB88MvogDvjXA7y4a9sDO', 4, true),
-                                                                                                         (208, 'Hooman', 'Ghaffari', 'hooman.ghaffari@student.ac.ir', '09122222009', '$2a$10$DngM1sAHEWg5O0De.t43W.a/5ipjSaHSJB88MvogDvjXA7y4a9sDO', 3, true),
-                                                                                                         (209, 'Azadeh', 'Ansari', 'azadeh.ansari@student.ac.ir', '09122222010', '$2a$10$DngM1sAHEWg5O0De.t43W.a/5ipjSaHSJB88MvogDvjXA7y4a9sDO', 4, true),
-                                                                                                         (210, 'Siavash', 'Masoumi', 'siavash.masoumi@student.ac.ir', '09122222011', '$2a$10$DngM1sAHEWg5O0De.t43W.a/5ipjSaHSJB88MvogDvjXA7y4a9sDO', 5, true),
-                                                                                                         (211, 'Parnian', 'Mirzaei', 'parnian.mirzaei@student.ac.ir', '09122222012', '$2a$10$DngM1sAHEWg5O0De.t43W.a/5ipjSaHSJB88MvogDvjXA7y4a9sDO', 1, true);
+INSERT INTO users (id, first_name, last_name, email, phone_number, password, department_id, enabled, creation_date) VALUES
+-- Computer Engineering Master Students (200-203)
+(200, 'Pedram', 'Nasiri', 'p.nasiri@student.university.ac.ir', '09151234567', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 1, true, '2025-09-24 10:00:00'),
+(201, 'Setareh', 'Faraji', 's.faraji@student.university.ac.ir', '09151234568', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 1, true, '2025-09-24 10:00:00'),
+(202, 'Ehsan', 'Zare', 'e.zare@student.university.ac.ir', '09151234569', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 1, true, '2025-09-24 10:00:00'),
+(203, 'Nadia', 'Zahedi', 'n.zahedi@student.university.ac.ir', '09151234570', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 1, true, '2025-09-24 10:00:00'),
+
+-- Electrical Engineering Master Students (204-207)
+(204, 'Navid', 'Kiani', 'n.kiani@student.university.ac.ir', '09151234571', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 2, true, '2025-09-24 10:00:00'),
+(205, 'Shiva', 'Ramezani', 's.ramezani@student.university.ac.ir', '09151234572', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 2, true, '2025-09-24 10:00:00'),
+(206, 'Erfan', 'Hosseinpour', 'e.hosseinpour@student.university.ac.ir', '09151234573', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 3, true, '2025-09-24 10:00:00'),
+(207, 'Kimia', 'Nouri', 'k.nouri@student.university.ac.ir', '09151234574', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 2, true, '2025-09-24 10:00:00'),
+
+-- Mechanical/Civil/Industrial Master Students (208-214)
+(208, 'Milad', 'Rezapour', 'm.rezapour@student.university.ac.ir', '09151234575', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 3, true, '2025-09-24 10:00:00'),
+(209, 'Rozita', 'Safavi', 'r.safavi@student.university.ac.ir', '09151234576', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 4, true, '2025-09-24 10:00:00'),
+(210, 'Babak', 'Mohseni', 'b.mohseni@student.university.ac.ir', '09151234577', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 5, true, '2025-09-24 10:00:00'),
+(211, 'Dorsa', 'Taghavi', 'd.taghavi@student.university.ac.ir', '09151234578', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 1, true, '2025-09-24 10:00:00'),
+(212, 'Kaveh', 'Parvizi', 'k.parvizi@student.university.ac.ir', '09151234579', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 2, true, '2025-09-24 10:00:00'),
+(213, 'Sepideh', 'Lotfi', 's.lotfi@student.university.ac.ir', '09151234580', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 3, true, '2025-09-24 10:00:00'),
+(214, 'Morteza', 'Habibi', 'm.habibi@student.university.ac.ir', '09151234581', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 4, true, '2025-09-24 10:00:00');
 
 INSERT INTO student (id, student_number, instructor_id, field_id) VALUES
                                                                       (200, 402101001, 10, 1),
-                                                                      (201, 402101002, 11, 1),
-                                                                      (202, 402101003, 12, 2),
-                                                                      (203, 402101004, 13, 3),
+                                                                      (201, 402101002, 11, 2),
+                                                                      (202, 402101003, 12, 3),
+                                                                      (203, 402101004, 13, 1),
                                                                       (204, 402201001, 15, 5),
-                                                                      (205, 402201002, 16, 6),
+                                                                      (205, 402201002, 16, 7),
                                                                       (206, 402301001, 18, 8),
-                                                                      (207, 402401001, 20, 10),
+                                                                      (207, 402201003, 17, 6),
                                                                       (208, 402301002, 19, 9),
-                                                                      (209, 402401002, 21, 11),
+                                                                      (209, 402401001, 21, 11),
                                                                       (210, 402501001, 23, 13),
-                                                                      (211, 402101005, 14, 1);
+                                                                      (211, 402101005, 13, 4),
+                                                                      (212, 402201004, 15, 5),
+                                                                      (213, 402301003, 18, 8),
+                                                                      (214, 402401002, 20, 10);
 
 INSERT INTO master_student (id) VALUES
-                                    (200), (201), (202), (203), (204), (205), (206), (207), (208), (209), (210), (211);
+                                    (200), (201), (202), (203), (204), (205), (206), (207),
+                                    (208), (209), (210), (211), (212), (213), (214);
 
 -- ============================================
 -- 7. PHD STUDENTS
 -- ============================================
-INSERT INTO users (id, first_name, last_name, email, phone_number, password, department_id, enabled) VALUES
-                                                                                                         (300, 'Ramin', 'Tavakoli', 'ramin.tavakoli@student.ac.ir', '09122223001', '$2a$10$DngM1sAHEWg5O0De.t43W.a/5ipjSaHSJB88MvogDvjXA7y4a9sDO', 1, true),
-                                                                                                         (301, 'Shadi', 'Mohammadi', 'shadi.mohammadi@student.ac.ir', '09122223002', '$2a$10$DngM1sAHEWg5O0De.t43W.a/5ipjSaHSJB88MvogDvjXA7y4a9sDO', 1, true),
-                                                                                                         (302, 'Peyman', 'Nikbakht', 'peyman.nikbakht@student.ac.ir', '09122223003', '$2a$10$DngM1sAHEWg5O0De.t43W.a/5ipjSaHSJB88MvogDvjXA7y4a9sDO', 1, true),
-                                                                                                         (303, 'Fatemeh', 'Akbari', 'fatemeh.akbari@student.ac.ir', '09122223004', '$2a$10$DngM1sAHEWg5O0De.t43W.a/5ipjSaHSJB88MvogDvjXA7y4a9sDO', 2, true),
-                                                                                                         (304, 'Kamran', 'Alavi', 'kamran.alavi@student.ac.ir', '09122223005', '$2a$10$DngM1sAHEWg5O0De.t43W.a/5ipjSaHSJB88MvogDvjXA7y4a9sDO', 2, true),
-                                                                                                         (305, 'Arman', 'Nasiri', 'arman.nasiri@student.ac.ir', '09122223006', '$2a$10$DngM1sAHEWg5O0De.t43W.a/5ipjSaHSJB88MvogDvjXA7y4a9sDO', 3, true),
-                                                                                                         (306, 'Niloofar', 'Sadri', 'niloofar.sadri@student.ac.ir', '09122223007', '$2a$10$DngM1sAHEWg5O0De.t43W.a/5ipjSaHSJB88MvogDvjXA7y4a9sDO', 4, true),
-                                                                                                         (307, 'Kian', 'Asgari', 'kian.asgari@student.ac.ir', '09122223008', '$2a$10$DngM1sAHEWg5O0De.t43W.a/5ipjSaHSJB88MvogDvjXA7y4a9sDO', 5, true);
+INSERT INTO users (id, first_name, last_name, email, phone_number, password, department_id, enabled, creation_date) VALUES
+-- PhD Students (300-310)
+(300, 'Mojtaba', 'Esmaili', 'm.esmaili@student.university.ac.ir', '09161234567', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 1, true, '2025-09-23 10:00:00'),
+(301, 'Vida', 'Daneshvar', 'v.daneshvar@student.university.ac.ir', '09161234568', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 1, true, '2025-09-23 10:00:00'),
+(302, 'Kourosh', 'Khalili', 'k.khalili@student.university.ac.ir', '09161234569', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 1, true, '2025-09-23 10:00:00'),
+(303, 'Azadeh', 'Ghasemi', 'a.ghasemi@student.university.ac.ir', '09161234570', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 2, true, '2025-09-23 10:00:00'),
+(304, 'Vahid', 'Bahrami', 'v.bahrami@student.university.ac.ir', '09161234571', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 2, true, '2025-09-23 10:00:00'),
+(305, 'Mahdieh', 'Taheri', 'm.taheri@student.university.ac.ir', '09161234572', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 3, true, '2025-09-23 10:00:00'),
+(306, 'Saeid', 'Moslemi', 's.moslemi@student.university.ac.ir', '09161234573', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 4, true, '2025-09-23 10:00:00'),
+(307, 'Elaheh', 'Norouzi', 'e.norouzi@student.university.ac.ir', '09161234574', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 5, true, '2025-09-23 10:00:00'),
+(308, 'Dariush', 'Saberi', 'd.saberi@student.university.ac.ir', '09161234575', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 1, true, '2025-09-23 10:00:00'),
+(309, 'Banafsheh', 'Ahmadian', 'b.ahmadian@student.university.ac.ir', '09161234576', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 2, true, '2025-09-23 10:00:00'),
+(310, 'Farhad', 'Shakeri', 'f.shakeri@student.university.ac.ir', '09161234577', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 3, true, '2025-09-23 10:00:00');
 
 INSERT INTO student (id, student_number, instructor_id, field_id) VALUES
                                                                       (300, 403101001, 10, 2),
@@ -207,10 +236,13 @@ INSERT INTO student (id, student_number, instructor_id, field_id) VALUES
                                                                       (304, 403201002, 16, 5),
                                                                       (305, 403301001, 18, 8),
                                                                       (306, 403401001, 20, 10),
-                                                                      (307, 403501001, 22, 12);
+                                                                      (307, 403501001, 22, 12),
+                                                                      (308, 403101004, 12, 4),
+                                                                      (309, 403201003, 17, 6),
+                                                                      (310, 403301002, 19, 9);
 
 INSERT INTO phd_student (id) VALUES
-                                 (300), (301), (302), (303), (304), (305), (306), (307);
+                                 (300), (301), (302), (303), (304), (305), (306), (307), (308), (309), (310);
 
 -- ============================================
 -- 8. THESIS FORMS - COMPREHENSIVE SCENARIOS
@@ -221,7 +253,7 @@ INSERT INTO phd_student (id) VALUES
 -- ============================================
 INSERT INTO THESIS_FORM (FIELD_ID, INSTRUCTOR_ID, STUDENT_ID, SUBMISSION_DATE, UPDATE_DATE, ABSTRACT_TEXT, TITLE, STATE, STUDENT_TYPE)
 VALUES
-    -- Bachelor submissions
+    -- Bachelor submissions (5 cases)
     (1, 14, 108, '2025-11-12 09:30:00.000', '2025-11-12 09:30:00.000',
      'Deep learning approach for sentiment analysis using transformer-based models and attention mechanisms.',
      'Sentiment Analysis Using Deep Learning', 'SUBMITTED', 'BACHELOR'),
@@ -230,7 +262,19 @@ VALUES
      'Optimization of power grid stability using machine learning predictive models for renewable energy integration.',
      'Smart Grid Stability Optimization', 'SUBMITTED', 'BACHELOR'),
 
-    -- Master submissions
+    (4, 12, 110, '2025-11-13 10:15:00.000', '2025-11-13 10:15:00.000',
+     'Design and implementation of a distributed database management system for big data applications.',
+     'Distributed Database System Design', 'SUBMITTED', 'BACHELOR'),
+
+    (8, 18, 112, '2025-11-14 08:45:00.000', '2025-11-14 08:45:00.000',
+     'Thermodynamic analysis of heat exchanger efficiency in industrial applications.',
+     'Heat Exchanger Optimization', 'SUBMITTED', 'BACHELOR'),
+
+    (11, 21, 113, '2025-11-15 11:30:00.000', '2025-11-15 11:30:00.000',
+     'Traffic flow modeling and simulation for urban road networks.',
+     'Urban Traffic Modeling System', 'SUBMITTED', 'BACHELOR'),
+
+    -- Master submissions (5 cases)
     (7, 16, 205, '2025-11-10 11:00:00.000', '2025-11-10 11:00:00.000',
      'Novel antenna design for 5G telecommunications with improved bandwidth and efficiency.',
      '5G Antenna Design and Implementation', 'SUBMITTED', 'MASTER'),
@@ -239,40 +283,97 @@ VALUES
      'Manufacturing process optimization using lean principles and automation.',
      'Lean Manufacturing Implementation', 'SUBMITTED', 'MASTER'),
 
-    -- PhD submission
+    (1, 10, 200, '2025-11-08 14:00:00.000', '2025-11-08 14:00:00.000',
+     'Advanced software architecture patterns for microservices-based systems.',
+     'Microservices Architecture Design', 'SUBMITTED', 'MASTER'),
+
+    (5, 15, 212, '2025-11-11 16:20:00.000', '2025-11-11 16:20:00.000',
+     'Smart power distribution systems with IoT integration and real-time monitoring.',
+     'IoT-Based Smart Power Grid', 'SUBMITTED', 'MASTER'),
+
+    (8, 18, 213, '2025-11-12 09:00:00.000', '2025-11-12 09:00:00.000',
+     'Computational fluid dynamics simulation for turbomachinery applications.',
+     'CFD Analysis in Turbomachinery', 'SUBMITTED', 'MASTER'),
+
+    -- PhD submissions (5 cases)
     (12, 22, 307, '2025-11-08 10:00:00.000', '2025-11-08 10:00:00.000',
      'Multi-objective optimization for supply chain networks using genetic algorithms and simulation.',
-     'Supply Chain Network Optimization', 'SUBMITTED', 'PHD');
+     'Supply Chain Network Optimization', 'SUBMITTED', 'PHD'),
+
+    (2, 11, 301, '2025-11-07 13:30:00.000', '2025-11-07 13:30:00.000',
+     'Advanced machine learning techniques for predictive maintenance in industrial systems.',
+     'AI-Based Predictive Maintenance', 'SUBMITTED', 'PHD'),
+
+    (6, 17, 309, '2025-11-09 10:45:00.000', '2025-11-09 10:45:00.000',
+     'Advanced electronic circuit design for low-power embedded systems using novel materials.',
+     'Low-Power Electronics Design', 'SUBMITTED', 'PHD'),
+
+    (9, 19, 310, '2025-11-10 14:20:00.000', '2025-11-10 14:20:00.000',
+     'Advanced manufacturing techniques using additive manufacturing and topology optimization.',
+     'Additive Manufacturing Optimization', 'SUBMITTED', 'PHD'),
+
+    (4, 13, 308, '2025-11-11 11:00:00.000', '2025-11-11 11:00:00.000',
+     'Blockchain-based distributed database systems for secure data management.',
+     'Blockchain Database Architecture', 'SUBMITTED', 'PHD');
 
 -- ============================================
--- Scenario 2: INSTRUCTOR_APPROVED Forms (Waiting for Admin)
+-- Scenario 2: INSTRUCTOR_APPROVED Forms (Pending Admin Review)
 -- ============================================
 INSERT INTO THESIS_FORM (FIELD_ID, INSTRUCTOR_ID, STUDENT_ID, SUBMISSION_DATE, UPDATE_DATE, ABSTRACT_TEXT, TITLE, STATE, STUDENT_TYPE)
 VALUES
-    -- Bachelor approved by instructor
-    (1, 10, 100, '2025-11-05 08:00:00.000', '2025-11-08 16:30:00.000',
-     'Development of a microservices-based e-commerce platform with scalability and fault tolerance.',
-     'Scalable E-Commerce Architecture', 'INSTRUCTOR_APPROVED', 'BACHELOR'),
+    -- Bachelor instructor approved (4 cases)
+    (2, 11, 101, '2025-11-05 10:00:00.000', '2025-11-07 14:00:00.000',
+     'Machine learning algorithms for image recognition using convolutional neural networks.',
+     'Image Recognition with CNNs', 'INSTRUCTOR_APPROVED', 'BACHELOR'),
 
-    (6, 16, 104, '2025-11-04 09:00:00.000', '2025-11-07 13:00:00.000',
-     'Design and implementation of low-power electronic circuits for IoT devices using novel techniques.',
-     'Low-Power IoT Circuit Design', 'INSTRUCTOR_APPROVED', 'BACHELOR'),
+    (6, 16, 104, '2025-11-04 14:30:00.000', '2025-11-06 16:00:00.000',
+     'Design and implementation of low-power electronic circuits for IoT devices.',
+     'Low-Power IoT Electronics', 'INSTRUCTOR_APPROVED', 'BACHELOR'),
 
-    -- Master approved by instructor
-    (2, 11, 201, '2025-11-04 10:15:00.000', '2025-11-07 14:20:00.000',
-     'Natural language processing system for Persian language using BERT-based models and transfer learning.',
-     'Persian NLP with Transfer Learning', 'INSTRUCTOR_APPROVED', 'MASTER'),
+    (13, 23, 114, '2025-11-06 09:00:00.000', '2025-11-08 10:30:00.000',
+     'Quality control systems implementation in manufacturing environments.',
+     'Manufacturing Quality Control', 'INSTRUCTOR_APPROVED', 'BACHELOR'),
+
+    (3, 13, 115, '2025-11-07 11:15:00.000', '2025-11-09 13:45:00.000',
+     'Network security protocols for cloud-based infrastructure.',
+     'Cloud Network Security Protocols', 'INSTRUCTOR_APPROVED', 'BACHELOR'),
+
+    -- Master instructor approved (4 cases)
+    (2, 11, 201, '2025-11-04 09:00:00.000', '2025-11-06 14:30:00.000',
+     'Reinforcement learning for autonomous systems navigation and decision making.',
+     'RL-Based Autonomous Navigation', 'INSTRUCTOR_APPROVED', 'MASTER'),
+
+    (6, 17, 207, '2025-11-03 13:00:00.000', '2025-11-05 15:00:00.000',
+     'Advanced signal processing techniques for wireless communication systems.',
+     'Advanced Signal Processing', 'INSTRUCTOR_APPROVED', 'MASTER'),
 
     (4, 13, 211, '2025-11-03 09:45:00.000', '2025-11-06 15:30:00.000',
      'Database optimization techniques for large-scale distributed systems with NoSQL integration.',
-     'Distributed Database Optimization', 'INSTRUCTOR_APPROVED', 'MASTER');
+     'Distributed Database Optimization', 'INSTRUCTOR_APPROVED', 'MASTER'),
+
+    (10, 20, 214, '2025-11-05 10:30:00.000', '2025-11-07 12:00:00.000',
+     'Structural health monitoring using smart sensors and machine learning algorithms.',
+     'Smart Structural Health Monitoring', 'INSTRUCTOR_APPROVED', 'MASTER'),
+
+    -- PhD instructor approved (3 cases)
+    (7, 17, 303, '2025-11-02 11:00:00.000', '2025-11-05 14:00:00.000',
+     'Advanced telecommunications protocols for next-generation wireless networks with AI integration.',
+     'AI-Enhanced Wireless Protocols', 'INSTRUCTOR_APPROVED', 'PHD'),
+
+    (10, 20, 306, '2025-11-01 09:30:00.000', '2025-11-04 11:30:00.000',
+     'Seismic design optimization using machine learning and finite element analysis.',
+     'ML-Based Seismic Design', 'INSTRUCTOR_APPROVED', 'PHD'),
+
+    (5, 15, 304, '2025-11-03 10:00:00.000', '2025-11-06 13:00:00.000',
+     'Advanced power system optimization using artificial intelligence and renewable energy integration.',
+     'AI Power System Optimization', 'INSTRUCTOR_APPROVED', 'PHD');
 
 -- ============================================
 -- Scenario 3: ADMIN_APPROVED Forms (Master/Bachelor ready, PhD waiting for manager)
 -- ============================================
 INSERT INTO THESIS_FORM (FIELD_ID, INSTRUCTOR_ID, STUDENT_ID, SUBMISSION_DATE, UPDATE_DATE, ABSTRACT_TEXT, TITLE, STATE, STUDENT_TYPE)
 VALUES
-    -- Bachelor admin approved (ready for defense meeting)
+    -- Bachelor admin approved (3 cases - ready for defense meeting)
     (10, 20, 106, '2025-11-02 10:00:00.000', '2025-11-05 11:00:00.000',
      'Seismic analysis software for earthquake-resistant building design.',
      'Seismic Analysis Tool', 'ADMIN_APPROVED', 'BACHELOR'),
@@ -281,7 +382,11 @@ VALUES
      'Operations research models for warehouse layout optimization.',
      'Warehouse Layout Optimization', 'ADMIN_APPROVED', 'BACHELOR'),
 
-    -- Master admin approved (ready for defense meeting)
+    (5, 15, 111, '2025-11-03 08:30:00.000', '2025-11-06 10:00:00.000',
+     'Power system reliability analysis using probabilistic methods.',
+     'Power System Reliability Analysis', 'ADMIN_APPROVED', 'BACHELOR'),
+
+    -- Master admin approved (3 cases - ready for defense meeting)
     (8, 18, 206, '2025-10-31 09:00:00.000', '2025-11-03 10:00:00.000',
      'Thermal analysis of internal combustion engines using finite element methods.',
      'Engine Thermal Analysis', 'ADMIN_APPROVED', 'MASTER'),
@@ -290,21 +395,29 @@ VALUES
      'Traffic flow optimization in urban transportation networks using machine learning.',
      'Urban Traffic Flow Optimization', 'ADMIN_APPROVED', 'MASTER'),
 
-    -- PhD admin approved (waiting for manager approval)
+    (1, 10, 203, '2025-11-01 10:00:00.000', '2025-11-04 12:00:00.000',
+     'Software testing automation framework for continuous integration pipelines.',
+     'CI/CD Testing Framework', 'ADMIN_APPROVED', 'MASTER'),
+
+    -- PhD admin approved (3 cases - waiting for manager approval)
     (8, 18, 305, '2025-11-01 13:45:00.000', '2025-11-04 09:00:00.000',
      'Advanced computational fluid dynamics simulation for turbine blade optimization in high-temperature environments.',
      'CFD Analysis for Turbine Design', 'ADMIN_APPROVED', 'PHD'),
 
     (1, 10, 300, '2025-10-28 11:00:00.000', '2025-11-01 14:00:00.000',
      'Quantum machine learning algorithms for cryptographic applications.',
-     'Quantum ML Cryptography', 'ADMIN_APPROVED', 'PHD');
+     'Quantum ML Cryptography', 'ADMIN_APPROVED', 'PHD'),
+
+    (3, 13, 302, '2025-10-29 10:30:00.000', '2025-11-02 12:30:00.000',
+     'Advanced network security architectures for critical infrastructure protection.',
+     'Critical Infrastructure Network Security', 'ADMIN_APPROVED', 'PHD');
 
 -- ============================================
 -- Scenario 4: MANAGER_APPROVED Forms (Ready for Defense Scheduling)
 -- ============================================
 INSERT INTO THESIS_FORM (FIELD_ID, INSTRUCTOR_ID, STUDENT_ID, SUBMISSION_DATE, UPDATE_DATE, ABSTRACT_TEXT, TITLE, STATE, STUDENT_TYPE)
 VALUES
-    -- Bachelor manager approved (can create defense meeting)
+    -- Bachelor manager approved (3 cases - can create defense meeting)
     (7, 17, 109, '2025-10-25 10:00:00.000', '2025-10-30 12:00:00.000',
      'Network security framework for mobile telecommunications.',
      'Mobile Network Security', 'MANAGER_APPROVED', 'BACHELOR'),
@@ -313,7 +426,11 @@ VALUES
      'Computer vision system for automated quality control in manufacturing.',
      'Automated Quality Control System', 'MANAGER_APPROVED', 'BACHELOR'),
 
-    -- Master manager approved (can create defense meeting)
+    (1, 10, 100, '2025-10-26 14:00:00.000', '2025-10-31 16:00:00.000',
+     'Web application security testing framework using automated penetration testing.',
+     'Web Security Testing Framework', 'MANAGER_APPROVED', 'BACHELOR'),
+
+    -- Master manager approved (4 cases - can create defense meeting)
     (3, 12, 202, '2025-10-28 09:00:00.000', '2025-11-01 10:00:00.000',
      'Implementation of SDN-based network security framework with intrusion detection capabilities.',
      'SDN Security Framework', 'MANAGER_APPROVED', 'MASTER'),
@@ -326,42 +443,41 @@ VALUES
      'Renewable energy integration in power distribution systems.',
      'Renewable Energy Integration', 'MANAGER_APPROVED', 'MASTER'),
 
-    -- PhD manager approved (can create defense meeting)
+    (2, 11, 200, '2025-10-22 10:30:00.000', '2025-10-27 13:00:00.000',
+     'Deep reinforcement learning for robotic manipulation and control.',
+     'Deep RL for Robotics', 'MANAGER_APPROVED', 'MASTER'),
+
+    -- PhD manager approved (4 cases - can create defense meeting)
     (1, 11, 301, '2025-10-20 10:00:00.000', '2025-10-28 14:00:00.000',
      'Quantum computing algorithms for cryptographic applications and security analysis.',
      'Quantum Cryptography Analysis', 'MANAGER_APPROVED', 'PHD'),
 
-    (10, 20, 306, '2025-10-15 11:00:00.000', '2025-10-25 16:00:00.000',
+    (10, 19, 306, '2025-10-15 11:00:00.000', '2025-10-25 16:00:00.000',
      'Advanced seismic analysis and structural design for earthquake-resistant buildings.',
      'Seismic Structural Engineering', 'MANAGER_APPROVED', 'PHD'),
 
     (3, 12, 302, '2025-10-18 09:30:00.000', '2025-10-26 11:00:00.000',
      'Advanced network protocols for IoT security and privacy preservation.',
-     'IoT Security Protocols', 'MANAGER_APPROVED', 'PHD');
+     'IoT Security Protocols', 'MANAGER_APPROVED', 'PHD'),
+
+    (12, 22, 307, '2025-10-19 14:00:00.000', '2025-10-27 16:30:00.000',
+     'Advanced optimization algorithms for large-scale supply chain management.',
+     'Supply Chain Optimization Algorithms', 'MANAGER_APPROVED', 'PHD');
 
 -- ============================================
 -- 9. THESIS DEFENSE MEETINGS
 -- ============================================
 
 -- ============================================
--- Meeting State: JURY_SELECTION
+-- Meeting State: JURIES_SELECTED (3 meetings - one for each degree)
 -- ============================================
--- Master thesis - SDN Security Framework (ID will be auto-assigned)
-INSERT INTO thesis_defense_meeting (thesis_form_id, state, score, submission_date, update_date)
-VALUES
-    ((SELECT id FROM THESIS_FORM WHERE title = 'SDN Security Framework'), 'JURY_SELECTION', 0, '2025-11-02 10:00:00.000', '2025-11-02 10:00:00.000');
 
--- Bachelor thesis - Mobile Network Security
-INSERT INTO thesis_defense_meeting (thesis_form_id, state, score, submission_date, update_date)
+-- Master thesis - SDN Security Framework
+INSERT INTO thesis_defense_meeting (thesis_form_id, state, submission_date, update_date)
 VALUES
-    ((SELECT id FROM THESIS_FORM WHERE title = 'Mobile Network Security'), 'JURY_SELECTION', 0, '2025-11-01 09:00:00.000', '2025-11-01 09:00:00.000');
+    ((SELECT id FROM THESIS_FORM WHERE title = 'SDN Security Framework'), 'JURIES_SELECTED', '2025-11-02 10:00:00.000', '2025-11-02 10:00:00.000');
 
--- PhD thesis - Quantum Cryptography
-INSERT INTO thesis_defense_meeting (thesis_form_id, state, score, submission_date, update_date)
-VALUES
-    ((SELECT id FROM THESIS_FORM WHERE title = 'Quantum Cryptography Analysis'), 'JURY_SELECTION', 0, '2025-10-29 11:00:00.000', '2025-10-29 11:00:00.000');
-
--- Associate professors to Master meeting (SDN Security - needs 3-4 professors)
+-- Associate professors to Master meeting (3-4 professors required)
 INSERT INTO defensemeeting_professor_association (defense_meeting_id, professor_id)
 SELECT dm.id, 12 FROM thesis_defense_meeting dm
                           JOIN THESIS_FORM tf ON dm.thesis_form_id = tf.id
@@ -375,7 +491,12 @@ SELECT dm.id, 24 FROM thesis_defense_meeting dm
                           JOIN THESIS_FORM tf ON dm.thesis_form_id = tf.id
 WHERE tf.title = 'SDN Security Framework';
 
--- Associate professors to Bachelor meeting (Mobile Network - needs 3 professors)
+-- Bachelor thesis - Mobile Network Security
+INSERT INTO thesis_defense_meeting (thesis_form_id, state, submission_date, update_date)
+VALUES
+    ((SELECT id FROM THESIS_FORM WHERE title = 'Mobile Network Security'), 'JURIES_SELECTED', '2025-11-01 09:00:00.000', '2025-11-01 09:00:00.000');
+
+-- Associate professors to Bachelor meeting (3 professors required)
 INSERT INTO defensemeeting_professor_association (defense_meeting_id, professor_id)
 SELECT dm.id, 17 FROM thesis_defense_meeting dm
                           JOIN THESIS_FORM tf ON dm.thesis_form_id = tf.id
@@ -389,7 +510,12 @@ SELECT dm.id, 26 FROM thesis_defense_meeting dm
                           JOIN THESIS_FORM tf ON dm.thesis_form_id = tf.id
 WHERE tf.title = 'Mobile Network Security';
 
--- Associate professors to PhD meeting (Quantum - needs 5 professors)
+-- PhD thesis - Quantum Cryptography
+INSERT INTO thesis_defense_meeting (thesis_form_id, state, submission_date, update_date)
+VALUES
+    ((SELECT id FROM THESIS_FORM WHERE title = 'Quantum Cryptography Analysis'), 'JURIES_SELECTED', '2025-10-29 11:00:00.000', '2025-10-29 11:00:00.000');
+
+-- Associate professors to PhD meeting (5 professors required)
 INSERT INTO defensemeeting_professor_association (defense_meeting_id, professor_id)
 SELECT dm.id, 11 FROM thesis_defense_meeting dm
                           JOIN THESIS_FORM tf ON dm.thesis_form_id = tf.id
@@ -412,12 +538,13 @@ SELECT dm.id, 25 FROM thesis_defense_meeting dm
 WHERE tf.title = 'Quantum Cryptography Analysis';
 
 -- ============================================
--- Meeting State: TIME_SELECTION
+-- Meeting State: JURIES_SPECIFIED_TIME (2 meetings)
 -- ============================================
+
 -- Master thesis - Pharma Quality Management
-INSERT INTO thesis_defense_meeting (thesis_form_id, state, score, submission_date, update_date)
+INSERT INTO thesis_defense_meeting (thesis_form_id, state, submission_date, update_date)
 VALUES
-    ((SELECT id FROM THESIS_FORM WHERE title = 'Pharma Quality Management'), 'TIME_SELECTION', 0, '2025-11-01 14:00:00.000', '2025-11-03 10:00:00.000');
+    ((SELECT id FROM THESIS_FORM WHERE title = 'Pharma Quality Management'), 'JURIES_SPECIFIED_TIME', '2025-11-01 14:00:00.000', '2025-11-03 10:00:00.000');
 
 -- Associate professors
 INSERT INTO defensemeeting_professor_association (defense_meeting_id, professor_id)
@@ -489,24 +616,100 @@ SELECT ts.id, 29 FROM time_slot ts
                           JOIN THESIS_FORM tf ON dm.thesis_form_id = tf.id
 WHERE tf.title = 'Pharma Quality Management' AND ts.date = '2025-11-26' AND ts.time_period = 'PERIOD_9_00_10_30';
 
--- ============================================
--- Meeting State: SCHEDULED
--- ============================================
--- PhD thesis - Seismic Structural Engineering
-INSERT INTO thesis_defense_meeting (thesis_form_id, state, score, submission_date, update_date)
+-- PhD thesis - IoT Security Protocols
+INSERT INTO thesis_defense_meeting (thesis_form_id, state, submission_date, update_date)
 VALUES
-    ((SELECT id FROM THESIS_FORM WHERE title = 'Seismic Structural Engineering'), 'SCHEDULED', 0, '2025-10-26 09:00:00.000', '2025-11-05 15:00:00.000');
+    ((SELECT id FROM THESIS_FORM WHERE title = 'IoT Security Protocols'), 'JURIES_SELECTED', '2025-10-27 09:00:00.000', '2025-10-30 11:00:00.000');
 
--- Associate professors
+-- Associate professors (5 for PhD)
 INSERT INTO defensemeeting_professor_association (defense_meeting_id, professor_id)
-SELECT dm.id, 20 FROM thesis_defense_meeting dm
+SELECT dm.id, 12 FROM thesis_defense_meeting dm
                           JOIN THESIS_FORM tf ON dm.thesis_form_id = tf.id
-WHERE tf.title = 'Seismic Structural Engineering'
+WHERE tf.title = 'IoT Security Protocols'
 UNION ALL
-SELECT dm.id, 21 FROM thesis_defense_meeting dm
+SELECT dm.id, 13 FROM thesis_defense_meeting dm
                           JOIN THESIS_FORM tf ON dm.thesis_form_id = tf.id
-WHERE tf.title = 'Seismic Structural Engineering'
+WHERE tf.title = 'IoT Security Protocols'
 UNION ALL
+SELECT dm.id, 14 FROM thesis_defense_meeting dm
+                          JOIN THESIS_FORM tf ON dm.thesis_form_id = tf.id
+WHERE tf.title = 'IoT Security Protocols'
+UNION ALL
+SELECT dm.id, 24 FROM thesis_defense_meeting dm
+                          JOIN THESIS_FORM tf ON dm.thesis_form_id = tf.id
+WHERE tf.title = 'IoT Security Protocols'
+UNION ALL
+SELECT dm.id, 25 FROM thesis_defense_meeting dm
+                          JOIN THESIS_FORM tf ON dm.thesis_form_id = tf.id
+WHERE tf.title = 'IoT Security Protocols';
+
+-- Add time slots for IoT Security
+INSERT INTO time_slot (date, time_period, defense_meeting_id)
+SELECT '2025-11-28', 'PERIOD_10_30_12_00', dm.id FROM thesis_defense_meeting dm
+                                                          JOIN THESIS_FORM tf ON dm.thesis_form_id = tf.id
+WHERE tf.title = 'IoT Security Protocols'
+UNION ALL
+SELECT '2025-11-28', 'PERIOD_13_30_15_00', dm.id FROM thesis_defense_meeting dm
+                                                          JOIN THESIS_FORM tf ON dm.thesis_form_id = tf.id
+WHERE tf.title = 'IoT Security Protocols'
+UNION ALL
+SELECT '2025-11-29', 'PERIOD_7_30_9_00', dm.id FROM thesis_defense_meeting dm
+                                                        JOIN THESIS_FORM tf ON dm.thesis_form_id = tf.id
+WHERE tf.title = 'IoT Security Protocols';
+
+-- Link professors to IoT Security time slots
+INSERT INTO timeslot_professor_association (timeslot_id, professor_id)
+SELECT ts.id, 12 FROM time_slot ts
+                          JOIN thesis_defense_meeting dm ON ts.defense_meeting_id = dm.id
+                          JOIN THESIS_FORM tf ON dm.thesis_form_id = tf.id
+WHERE tf.title = 'IoT Security Protocols' AND ts.date = '2025-11-28' AND ts.time_period = 'PERIOD_10_30_12_00'
+UNION ALL
+SELECT ts.id, 13 FROM time_slot ts
+                          JOIN thesis_defense_meeting dm ON ts.defense_meeting_id = dm.id
+                          JOIN THESIS_FORM tf ON dm.thesis_form_id = tf.id
+WHERE tf.title = 'IoT Security Protocols' AND ts.date = '2025-11-28' AND ts.time_period = 'PERIOD_10_30_12_00'
+UNION ALL
+SELECT ts.id, 14 FROM time_slot ts
+                          JOIN thesis_defense_meeting dm ON ts.defense_meeting_id = dm.id
+                          JOIN THESIS_FORM tf ON dm.thesis_form_id = tf.id
+WHERE tf.title = 'IoT Security Protocols' AND ts.date = '2025-11-28' AND ts.time_period = 'PERIOD_10_30_12_00'
+UNION ALL
+SELECT ts.id, 24 FROM time_slot ts
+                          JOIN thesis_defense_meeting dm ON ts.defense_meeting_id = dm.id
+                          JOIN THESIS_FORM tf ON dm.thesis_form_id = tf.id
+WHERE tf.title = 'IoT Security Protocols' AND ts.date = '2025-11-28' AND ts.time_period = 'PERIOD_10_30_12_00'
+UNION ALL
+SELECT ts.id, 12 FROM time_slot ts
+                          JOIN thesis_defense_meeting dm ON ts.defense_meeting_id = dm.id
+                          JOIN THESIS_FORM tf ON dm.thesis_form_id = tf.id
+WHERE tf.title = 'IoT Security Protocols' AND ts.date = '2025-11-28' AND ts.time_period = 'PERIOD_13_30_15_00'
+UNION ALL
+SELECT ts.id, 13 FROM time_slot ts
+                          JOIN thesis_defense_meeting dm ON ts.defense_meeting_id = dm.id
+                          JOIN THESIS_FORM tf ON dm.thesis_form_id = tf.id
+WHERE tf.title = 'IoT Security Protocols' AND ts.date = '2025-11-28' AND ts.time_period = 'PERIOD_13_30_15_00'
+UNION ALL
+SELECT ts.id, 24 FROM time_slot ts
+                          JOIN thesis_defense_meeting dm ON ts.defense_meeting_id = dm.id
+                          JOIN THESIS_FORM tf ON dm.thesis_form_id = tf.id
+WHERE tf.title = 'IoT Security Protocols' AND ts.date = '2025-11-28' AND ts.time_period = 'PERIOD_13_30_15_00'
+UNION ALL
+SELECT ts.id, 25 FROM time_slot ts
+                          JOIN thesis_defense_meeting dm ON ts.defense_meeting_id = dm.id
+                          JOIN THESIS_FORM tf ON dm.thesis_form_id = tf.id
+WHERE tf.title = 'IoT Security Protocols' AND ts.date = '2025-11-28' AND ts.time_period = 'PERIOD_13_30_15_00';
+
+-- ============================================
+-- Meeting State: SCHEDULED (2 meetings)
+-- ============================================
+
+-- PhD thesis - Seismic Structural Engineering
+INSERT INTO thesis_defense_meeting (thesis_form_id, state, submission_date, update_date, location)
+VALUES
+    ((SELECT id FROM THESIS_FORM WHERE title = 'Seismic Structural Engineering'), 'SCHEDULED', '2025-10-26 09:00:00.000', '2025-11-05 15:00:00.000', 'Room 207');
+
+-- Associate professors (5 for PhD)
+INSERT INTO defensemeeting_professor_association (defense_meeting_id, professor_id)
 SELECT dm.id, 28 FROM thesis_defense_meeting dm
                           JOIN THESIS_FORM tf ON dm.thesis_form_id = tf.id
 WHERE tf.title = 'Seismic Structural Engineering'
@@ -535,13 +738,49 @@ SET selected_time_slot_id = (
     )
 WHERE thesis_form_id = (SELECT id FROM THESIS_FORM WHERE title = 'Seismic Structural Engineering');
 
--- ============================================
--- Meeting State: COMPLETED
--- ============================================
--- Master thesis - Renewable Energy Integration
-INSERT INTO thesis_defense_meeting (thesis_form_id, state, score, submission_date, update_date)
+-- Bachelor thesis - Automated Quality Control System
+INSERT INTO thesis_defense_meeting (thesis_form_id, state, submission_date, update_date, location)
 VALUES
-    ((SELECT id FROM THESIS_FORM WHERE title = 'Renewable Energy Integration'), 'COMPLETED', 17.5, '2025-10-29 10:00:00.000', '2025-11-08 16:00:00.000');
+    ((SELECT id FROM THESIS_FORM WHERE title = 'Automated Quality Control System'), 'SCHEDULED', '2025-11-01 10:00:00.000', '2025-11-06 14:00:00.000', 'Room 321');
+
+-- Associate professors (3 for Bachelor)
+INSERT INTO defensemeeting_professor_association (defense_meeting_id, professor_id)
+SELECT dm.id, 11 FROM thesis_defense_meeting dm
+                          JOIN THESIS_FORM tf ON dm.thesis_form_id = tf.id
+WHERE tf.title = 'Automated Quality Control System'
+UNION ALL
+SELECT dm.id, 14 FROM thesis_defense_meeting dm
+                          JOIN THESIS_FORM tf ON dm.thesis_form_id = tf.id
+WHERE tf.title = 'Automated Quality Control System'
+UNION ALL
+SELECT dm.id, 24 FROM thesis_defense_meeting dm
+                          JOIN THESIS_FORM tf ON dm.thesis_form_id = tf.id
+WHERE tf.title = 'Automated Quality Control System';
+
+-- Insert selected time slot
+INSERT INTO time_slot (date, time_period, defense_meeting_id)
+SELECT '2025-11-22', 'PERIOD_9_00_10_30', dm.id FROM thesis_defense_meeting dm
+                                                         JOIN THESIS_FORM tf ON dm.thesis_form_id = tf.id
+WHERE tf.title = 'Automated Quality Control System';
+
+-- Update meeting with selected time slot
+UPDATE thesis_defense_meeting
+SET selected_time_slot_id = (
+    SELECT ts.id FROM time_slot ts
+                          JOIN thesis_defense_meeting dm ON ts.defense_meeting_id = dm.id
+                          JOIN THESIS_FORM tf ON dm.thesis_form_id = tf.id
+    WHERE tf.title = 'Automated Quality Control System'
+    )
+WHERE thesis_form_id = (SELECT id FROM THESIS_FORM WHERE title = 'Automated Quality Control System');
+
+-- ============================================
+-- Meeting State: COMPLETED (3 meetings)
+-- ============================================
+
+-- Master thesis - Renewable Energy Integration
+INSERT INTO thesis_defense_meeting (thesis_form_id, state, score, submission_date, update_date, location)
+VALUES
+    ((SELECT id FROM THESIS_FORM WHERE title = 'Renewable Energy Integration'), 'COMPLETED', 17.5, '2025-10-29 10:00:00.000', '2025-11-08 16:00:00.000', 'Room 123');
 
 -- Associate professors
 INSERT INTO defensemeeting_professor_association (defense_meeting_id, professor_id)
@@ -577,99 +816,185 @@ SET selected_time_slot_id = (
     )
 WHERE thesis_form_id = (SELECT id FROM THESIS_FORM WHERE title = 'Renewable Energy Integration');
 
+-- Master thesis - Deep RL for Robotics
+INSERT INTO thesis_defense_meeting (thesis_form_id, state, score, submission_date, update_date, location)
+VALUES
+    ((SELECT id FROM THESIS_FORM WHERE title = 'Deep RL for Robotics'), 'COMPLETED', 18.0, '2025-10-28 09:00:00.000', '2025-11-07 15:30:00.000', 'Room 123');
+
+-- Associate professors
+INSERT INTO defensemeeting_professor_association (defense_meeting_id, professor_id)
+SELECT dm.id, 10 FROM thesis_defense_meeting dm
+                          JOIN THESIS_FORM tf ON dm.thesis_form_id = tf.id
+WHERE tf.title = 'Deep RL for Robotics'
+UNION ALL
+SELECT dm.id, 11 FROM thesis_defense_meeting dm
+                          JOIN THESIS_FORM tf ON dm.thesis_form_id = tf.id
+WHERE tf.title = 'Deep RL for Robotics'
+UNION ALL
+SELECT dm.id, 25 FROM thesis_defense_meeting dm
+                          JOIN THESIS_FORM tf ON dm.thesis_form_id = tf.id
+WHERE tf.title = 'Deep RL for Robotics';
+
+-- Insert completed time slot
+INSERT INTO time_slot (date, time_period, defense_meeting_id)
+SELECT '2025-11-07', 'PERIOD_13_30_15_00', dm.id FROM thesis_defense_meeting dm
+                                                          JOIN THESIS_FORM tf ON dm.thesis_form_id = tf.id
+WHERE tf.title = 'Deep RL for Robotics';
+
+-- Update with selected time
+UPDATE thesis_defense_meeting
+SET selected_time_slot_id = (
+    SELECT ts.id FROM time_slot ts
+                          JOIN thesis_defense_meeting dm ON ts.defense_meeting_id = dm.id
+                          JOIN THESIS_FORM tf ON dm.thesis_form_id = tf.id
+    WHERE tf.title = 'Deep RL for Robotics'
+    )
+WHERE thesis_form_id = (SELECT id FROM THESIS_FORM WHERE title = 'Deep RL for Robotics');
+
+-- PhD thesis - Supply Chain Optimization Algorithms
+INSERT INTO thesis_defense_meeting (thesis_form_id, state, score, submission_date, update_date, location)
+VALUES
+    ((SELECT id FROM THESIS_FORM WHERE title = 'Supply Chain Optimization Algorithms'), 'COMPLETED', 19.0, '2025-10-28 08:00:00.000', '2025-11-10 17:00:00.000', 'Room 123');
+
+-- Associate professors (5 for PhD)
+INSERT INTO defensemeeting_professor_association (defense_meeting_id, professor_id)
+SELECT dm.id, 22 FROM thesis_defense_meeting dm
+                          JOIN THESIS_FORM tf ON dm.thesis_form_id = tf.id
+WHERE tf.title = 'Supply Chain Optimization Algorithms'
+UNION ALL
+SELECT dm.id, 23 FROM thesis_defense_meeting dm
+                          JOIN THESIS_FORM tf ON dm.thesis_form_id = tf.id
+WHERE tf.title = 'Supply Chain Optimization Algorithms'
+UNION ALL
+SELECT dm.id, 29 FROM thesis_defense_meeting dm
+                          JOIN THESIS_FORM tf ON dm.thesis_form_id = tf.id
+WHERE tf.title = 'Supply Chain Optimization Algorithms'
+UNION ALL
+SELECT dm.id, 10 FROM thesis_defense_meeting dm
+                          JOIN THESIS_FORM tf ON dm.thesis_form_id = tf.id
+WHERE tf.title = 'Supply Chain Optimization Algorithms'
+UNION ALL
+SELECT dm.id, 11 FROM thesis_defense_meeting dm
+                          JOIN THESIS_FORM tf ON dm.thesis_form_id = tf.id
+WHERE tf.title = 'Supply Chain Optimization Algorithms';
+
+-- Insert completed time slot
+INSERT INTO time_slot (date, time_period, defense_meeting_id)
+SELECT '2025-11-10', 'PERIOD_15_30_17_00', dm.id FROM thesis_defense_meeting dm
+                                                          JOIN THESIS_FORM tf ON dm.thesis_form_id = tf.id
+WHERE tf.title = 'Supply Chain Optimization Algorithms';
+
+-- Update with selected time
+UPDATE thesis_defense_meeting
+SET selected_time_slot_id = (
+    SELECT ts.id FROM time_slot ts
+                          JOIN thesis_defense_meeting dm ON ts.defense_meeting_id = dm.id
+                          JOIN THESIS_FORM tf ON dm.thesis_form_id = tf.id
+    WHERE tf.title = 'Supply Chain Optimization Algorithms'
+    )
+WHERE thesis_form_id = (SELECT id FROM THESIS_FORM WHERE title = 'Supply Chain Optimization Algorithms');
+
 -- ============================================
--- 10. VERIFICATION QUERIES
+-- 10. ADDITIONAL TEST SCENARIOS
+-- ============================================
+
+-- Edge case: Student with multiple thesis submissions (testing rejection/resubmission)
+INSERT INTO THESIS_FORM (FIELD_ID, INSTRUCTOR_ID, STUDENT_ID, SUBMISSION_DATE, UPDATE_DATE, ABSTRACT_TEXT, TITLE, STATE, STUDENT_TYPE)
+VALUES
+    (1, 10, 100, '2025-10-15 10:00:00.000', '2025-10-15 10:00:00.000',
+     'Initial submission - rejected and resubmitted.',
+     'Web Security Testing Framework v1', 'SUBMITTED', 'BACHELOR');
+
+-- Edge case: Professor with maximum jury participation (testing availability)
+-- Already covered through existing meetings
+
+-- ============================================
+-- 11. VERIFICATION QUERIES
 -- ============================================
 
 -- Summary Statistics
 SELECT 'Total Users' as Metric, COUNT(*) as Count FROM users
 UNION ALL SELECT 'Admins', COUNT(*) FROM admin
 UNION ALL SELECT 'Professors', COUNT(*) FROM professor
+UNION ALL SELECT 'Manager Professors', COUNT(*) FROM professor WHERE is_manager = true
 UNION ALL SELECT 'Bachelor Students', COUNT(*) FROM bachelor_student
 UNION ALL SELECT 'Master Students', COUNT(*) FROM master_student
 UNION ALL SELECT 'PhD Students', COUNT(*) FROM phd_student
 UNION ALL SELECT 'Departments', COUNT(*) FROM department
 UNION ALL SELECT 'Fields', COUNT(*) FROM field
+UNION ALL SELECT 'Active Fields', COUNT(*) FROM field WHERE active = true
 UNION ALL SELECT 'Thesis Forms', COUNT(*) FROM THESIS_FORM
 UNION ALL SELECT 'Defense Meetings', COUNT(*) FROM thesis_defense_meeting;
 
 -- Thesis Forms by State
-SELECT
-    'Thesis States' as Category,
-    STATE as Status,
-    STUDENT_TYPE as Type,
-    COUNT(*) as Count
-FROM THESIS_FORM
-GROUP BY STATE, STUDENT_TYPE
-ORDER BY
-    CASE STATE
-        WHEN 'SUBMITTED' THEN 1
-        WHEN 'INSTRUCTOR_APPROVED' THEN 2
-        WHEN 'ADMIN_APPROVED' THEN 3
-        WHEN 'MANAGER_APPROVED' THEN 4
-        END,
-    STUDENT_TYPE;
+SELECT 'Thesis Forms by State:' as Summary, NULL as State, NULL as Count
+UNION ALL
+SELECT '', state, COUNT(*) FROM THESIS_FORM GROUP BY state
+ORDER BY State;
 
 -- Defense Meetings by State
-SELECT
-    'Meeting States' as Category,
-    state as Status,
-    COUNT(*) as Count
-FROM thesis_defense_meeting
-GROUP BY state
-ORDER BY
-    CASE state
-        WHEN 'JURY_SELECTION' THEN 1
-        WHEN 'TIME_SELECTION' THEN 2
-        WHEN 'SCHEDULED' THEN 3
-        WHEN 'COMPLETED' THEN 4
-        END;
+SELECT 'Defense Meetings by State:' as Summary, NULL as State, NULL as Count
+UNION ALL
+SELECT '', state, COUNT(*) FROM thesis_defense_meeting GROUP BY state
+ORDER BY State;
 
--- Students with Thesis Forms
-SELECT
-    'Student Thesis Overview' as Report,
-    s.id as StudentID,
-    u.first_name || ' ' || u.last_name as StudentName,
-    tf.title as ThesisTitle,
-    tf.state as ThesisState,
-    tf.student_type as StudentType,
-    tdm.state as MeetingState
+-- Thesis Forms by Student Type
+SELECT 'Thesis Forms by Student Type:' as Summary, NULL as Type, NULL as Count
+UNION ALL
+SELECT '', student_type, COUNT(*) FROM THESIS_FORM GROUP BY student_type
+ORDER BY Type;
+
+-- Defense Meetings by Student Type
+SELECT 'Defense Meetings by Student Type:' as Summary, NULL as Type, NULL as Count
+UNION ALL
+SELECT '', tf.student_type, COUNT(*)
+FROM thesis_defense_meeting dm
+         JOIN THESIS_FORM tf ON dm.thesis_form_id = tf.id
+GROUP BY tf.student_type
+ORDER BY Type;
+
+-- Professor Jury Participation Count
+SELECT 'Professor Jury Participation:' as Summary, '' as Professor, NULL as Meetings
+UNION ALL
+SELECT '', CONCAT(u.first_name, ' ', u.last_name), COUNT(*)
+FROM defensemeeting_professor_association dpa
+         JOIN professor p ON dpa.professor_id = p.id
+         JOIN users u ON p.id = u.id
+GROUP BY p.id, u.first_name, u.last_name
+ORDER BY Professor;
+
+-- Time Slots Count
+SELECT 'Time Slots:' as Summary, NULL as Date, NULL as Period, NULL as Count
+UNION ALL
+SELECT '', date, time_period, COUNT(*)
+FROM time_slot
+GROUP BY date, time_period
+ORDER BY Date, Period;
+
+-- Students per Instructor
+SELECT 'Students per Instructor:' as Summary, '' as Instructor, NULL as Count
+UNION ALL
+SELECT '', CONCAT(u.first_name, ' ', u.last_name), COUNT(*)
 FROM student s
-         JOIN users u ON s.id = u.id
-         LEFT JOIN THESIS_FORM tf ON tf.student_id = s.id
-         LEFT JOIN thesis_defense_meeting tdm ON tf.id = tdm.thesis_form_id
-ORDER BY s.id;
+         JOIN professor p ON s.instructor_id = p.id
+         JOIN users u ON p.id = u.id
+GROUP BY p.id, u.first_name, u.last_name
+ORDER BY Instructor;
 
 -- ============================================
--- IMPORTANT NOTES
+-- 12. ADDITIONAL SAMPLE TIME SLOTS FOR TESTING
 -- ============================================
-/*
-KEY RULE ENFORCED:
-- Only thesis forms in MANAGER_APPROVED state have defense meetings
-- Thesis forms in other states (SUBMITTED, INSTRUCTOR_APPROVED, ADMIN_APPROVED) do NOT have defense meetings
 
-DATA SCENARIOS:
-1. SUBMITTED: 5 forms (waiting for instructor approval)
-2. INSTRUCTOR_APPROVED: 4 forms (waiting for admin approval)
-3. ADMIN_APPROVED: 6 forms (Bachelor/Master ready for meetings, PhD waiting for manager)
-4. MANAGER_APPROVED: 8 forms (ready for defense meeting creation)
+-- Add some standalone time slots for future meeting scheduling tests
+-- These are not yet associated with defense meetings
+INSERT INTO time_slot (date, time_period, defense_meeting_id)
+VALUES
+    ('2025-11-30', 'PERIOD_7_30_9_00', NULL),
+    ('2025-11-30', 'PERIOD_9_00_10_30', NULL),
+    ('2025-11-30', 'PERIOD_10_30_12_00', NULL),
+    ('2025-12-01', 'PERIOD_13_30_15_00', NULL),
+    ('2025-12-01', 'PERIOD_15_30_17_00', NULL);
 
-DEFENSE MEETING STATES:
-1. JURY_SELECTION: 3 meetings (selecting jury members)
-2. TIME_SELECTION: 1 meeting (selecting defense time)
-3. SCHEDULED: 1 meeting (defense scheduled)
-4. COMPLETED: 1 meeting (defense completed with score)
-
-PASSWORD INFORMATION:
-- All users use BCrypt hashed passwords
-- Admins: admin123
-- Professors: prof123
-- Students: student123
-
-PRODUCTION DEPLOYMENT:
-1. Run this script AFTER schema creation
-2. Change all default passwords immediately
-3. Adjust email domains and phone numbers for your institution
-4. Consider running in a transaction for safety
-5. Verify data integrity using the verification queries at the end
-*/
+-- ============================================
+-- END OF PRODUCTION DATA INITIALIZATION
+-- ============================================

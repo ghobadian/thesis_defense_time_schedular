@@ -1,9 +1,10 @@
 package ir.kghobad.thesis_defense_time_schedular.controller;
 
 import ir.kghobad.thesis_defense_time_schedular.model.dto.SimpleUserOutputDto;
-import ir.kghobad.thesis_defense_time_schedular.model.dto.ThesisFormInputDTO;
-import ir.kghobad.thesis_defense_time_schedular.model.dto.ThesisFormOutputDTO;
-import ir.kghobad.thesis_defense_time_schedular.model.dto.TimeSlotSelectionInputDTO;
+import ir.kghobad.thesis_defense_time_schedular.model.dto.form.ThesisFormInputDTO;
+import ir.kghobad.thesis_defense_time_schedular.model.dto.form.ThesisFormOutputDTO;
+import ir.kghobad.thesis_defense_time_schedular.model.dto.meeting.ThesisDefenseMeetingDetailsOutputDTO;
+import ir.kghobad.thesis_defense_time_schedular.model.dto.meeting.TimeSlotSelectionInputDTO;
 import ir.kghobad.thesis_defense_time_schedular.service.StudentService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -41,7 +42,7 @@ public class StudentController {
     }
 
     @GetMapping("/meetings/{id}")
-    public ResponseEntity<?> getMeetingDetails(@PathVariable Long id) {
+    public ResponseEntity<ThesisDefenseMeetingDetailsOutputDTO> getMeetingDetails(@PathVariable Long id) {
         return ResponseEntity.ok(studentService.getMeetingDetails(id));
     }
 
