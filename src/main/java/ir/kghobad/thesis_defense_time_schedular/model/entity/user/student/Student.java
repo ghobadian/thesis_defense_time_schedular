@@ -2,7 +2,7 @@ package ir.kghobad.thesis_defense_time_schedular.model.entity.user.student;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import ir.kghobad.thesis_defense_time_schedular.model.dto.ThesisFormOutputDTO;
+import ir.kghobad.thesis_defense_time_schedular.model.dto.form.ThesisFormOutputDTO;
 import ir.kghobad.thesis_defense_time_schedular.model.entity.Department;
 import ir.kghobad.thesis_defense_time_schedular.model.entity.Field;
 import ir.kghobad.thesis_defense_time_schedular.model.entity.thesisform.ThesisForm;
@@ -15,6 +15,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -46,6 +47,11 @@ public abstract class Student extends User {
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ThesisForm> thesisForms = new HashSet<>(16);
 
+    @Column(name = "graduation_date")
+    @Getter
+    @Setter
+    private Date graduationDate;
+
 
     public Student(Long id,
                    String firstName,
@@ -58,7 +64,7 @@ public abstract class Student extends User {
                    Long studentNumber,
                    Professor instructor,
                    Field field) {
-        super(id, firstName, lastName, email, phoneNumber, password, department, enabled);
+        super(id, firstName, lastName, email, phoneNumber, password, department, enabled, new Date());
         this.studentNumber = studentNumber;
         this.instructor = instructor;
         this.field = field;

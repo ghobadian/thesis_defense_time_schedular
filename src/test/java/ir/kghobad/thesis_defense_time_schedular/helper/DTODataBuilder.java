@@ -1,6 +1,6 @@
 package ir.kghobad.thesis_defense_time_schedular.helper;
 
-import ir.kghobad.thesis_defense_time_schedular.model.dto.ThesisFormInputDTO;
+import ir.kghobad.thesis_defense_time_schedular.model.dto.form.ThesisFormInputDTO;
 import org.springframework.stereotype.Component;
 
 @Component

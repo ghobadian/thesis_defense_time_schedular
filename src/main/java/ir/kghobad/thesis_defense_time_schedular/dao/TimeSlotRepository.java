@@ -63,9 +63,10 @@ public interface TimeSlotRepository extends JpaRepository<TimeSlot, Long> {
 
     @Query("SELECT ts FROM TimeSlot ts " +
             "JOIN ts.timeSlotProfessorAssociations tspa " +
-            "WHERE tspa.professor.id IN :juryIds " +
+            "WHERE tspa.professor.id IN :juryIds AND ts.defenseMeeting.id = :meetingId " +
             "GROUP BY ts " +
             "HAVING COUNT(DISTINCT tspa.professor.id) = :juryCount")
     Collection<TimeSlot> findIntersections(@Param("juryIds") Set<Long> juryIds,
-                                           @Param("juryCount") long juryCount);
+                                           @Param("juryCount") long juryCount,
+                                           @Param("meetingId") Long meetingId);
 }

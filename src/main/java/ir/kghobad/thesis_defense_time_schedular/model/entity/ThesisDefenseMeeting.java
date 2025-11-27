@@ -49,16 +49,15 @@ public class ThesisDefenseMeeting {
 
     @Getter
     @Setter
-    private double score;
+    private Double score;
 
     @Getter
     @Setter
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private MeetingState state = MeetingState.JURY_SELECTION;
+    private MeetingState state = MeetingState.JURIES_SELECTED;
 
 
-    @Getter
     @Setter
     private String location;
 
@@ -150,5 +149,11 @@ public class ThesisDefenseMeeting {
         this.availableSlots.add(timeSlot);
     }
 
-
+    public String getLocation() {
+        if (List.of(MeetingState.SCHEDULED, MeetingState.COMPLETED).contains(state) && location == null) {
+            throw new RuntimeException("location can't be null for scheduled or completed meetings");
+        }
+        return location;
+    }
 }
+

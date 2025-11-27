@@ -81,6 +81,11 @@ public class ThesisForm {
     @Getter
     private StudentType studentType;
 
+    @Column(name = "comment")
+    @Setter
+    @Getter
+    private String comment;
+
     public ThesisForm() {
 
     }

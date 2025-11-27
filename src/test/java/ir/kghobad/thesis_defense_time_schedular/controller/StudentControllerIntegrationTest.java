@@ -1,7 +1,7 @@
 package ir.kghobad.thesis_defense_time_schedular.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import ir.kghobad.thesis_defense_time_schedular.model.dto.ThesisFormInputDTO;
+import ir.kghobad.thesis_defense_time_schedular.model.dto.form.ThesisFormInputDTO;
 import ir.kghobad.thesis_defense_time_schedular.model.entity.Department;
 import ir.kghobad.thesis_defense_time_schedular.model.entity.Field;
 import ir.kghobad.thesis_defense_time_schedular.model.entity.user.Professor;

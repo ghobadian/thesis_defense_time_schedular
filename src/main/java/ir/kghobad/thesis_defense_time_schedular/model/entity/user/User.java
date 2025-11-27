@@ -7,6 +7,8 @@ import ir.kghobad.thesis_defense_time_schedular.model.enums.Role;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.Date;
+
 @Entity
 @Table(name = "users")
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -40,8 +42,11 @@ public abstract class User {
     @JoinColumn(name = "department_id")
     private Department department;
 
-    @Column
+    @Column(name = "enabled")
     private boolean enabled;
+
+    @Column(name = "creation_date", nullable = false)
+    private Date creationDate = new Date();
 
     public User() {
 

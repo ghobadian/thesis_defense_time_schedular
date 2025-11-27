@@ -12,11 +12,13 @@ import java.time.LocalDate;
 @EqualsAndHashCode
 @ToString
 public class TimeSlotDTO {
+    private Long id;
     private LocalDate date;
     private TimePeriod timePeriod;
 
     public static TimeSlotDTO from(TimeSlot ts) {
         return new TimeSlotDTO(
+                ts.getId(),
                 ts.getDate(),
                 ts.getTimePeriod()
         );

@@ -18,6 +18,9 @@ public interface ThesisDefenseMeetingRepository extends JpaRepository<ThesisDefe
     List<ThesisDefenseMeeting> findByStudentId(Long sid, MeetingState state);
 
     @Query("SELECT tdm FROM ThesisDefenseMeeting tdm " +
+            "WHERE tdm.thesisForm.student.id = :sid ")
+    List<ThesisDefenseMeeting> findByStudentId(Long sid);
+    @Query("SELECT tdm FROM ThesisDefenseMeeting tdm " +
             "JOIN tdm.defenseMeetingProfessorAssociations dmpa " +
             "WHERE dmpa.professor.id = :juryId")
     List<ThesisDefenseMeeting> findByJuryId(Long juryId);
@@ -27,4 +30,8 @@ public interface ThesisDefenseMeetingRepository extends JpaRepository<ThesisDefe
     Long countUpcoming(@Param("date") LocalDate date, @Param("meetingState") MeetingState meetingState);
 
     Long countByState(MeetingState meetingState);
+
+    @Query("SELECT tdm FROM ThesisDefenseMeeting tdm " +
+            "WHERE tdm.thesisForm.field.department.id = (SELECT p.department.id FROM Professor p WHERE p.id = :managerId)")
+    List<ThesisDefenseMeeting> findByManagerId(Long managerId);
 }

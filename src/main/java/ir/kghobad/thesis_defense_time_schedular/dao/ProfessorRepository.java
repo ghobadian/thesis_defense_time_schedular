@@ -27,4 +27,12 @@ public interface ProfessorRepository extends JpaRepository<Professor, Long> {
     @Query("SELECT p.department.fields FROM Professor p " +
             "WHERE p.id = :professorId")
     List<Long> findFieldIdsByProfessorId(@Param("professorId")Long professorId);
+
+    @Query("SELECT p FROM Professor p " +
+            "WHERE p.department.id = " +
+            "(SELECT d.id FROM Department d INNER JOIN Professor pp ON d.id = p.department.id WHERE pp.id = :professorId)")
+    List<Professor> findAllColleagues(Long professorId);
+
+    @Query("SELECT COUNT(p) > 0 FROM Professor p WHERE p.id = :professorId AND p.manager = true")
+    boolean existsManagerById(Long professorId);
 }

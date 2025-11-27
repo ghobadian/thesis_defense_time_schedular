@@ -16,202 +16,187 @@ A comprehensive web-based system for managing thesis defense scheduling in acade
 
 ## Overview
 
-This system automates and streamlines the thesis defense scheduling process for Bachelor, Master, and PhD students. It handles form submissions, approvals, jury assignments, and time slot coordination among multiple stakeholders.
+This system automates and streamlines the thesis defense scheduling process for Bachelor, Master, and PhD students. It handles form submissions, approvals, jury assignments, and time slot coordination among multiple stakeholders to find the optimal defense time.
 
 ## Features
 
-- **Multi-level Approval Workflow**: Instructor → Admin → Department Manager
-- **Automated Time Slot Coordination**: Finds common availability among jury members
-- **Role-Based Access Control**: Different permissions for Students, Professors, Admins
-- **JWT Authentication**: Secure token-based authentication
-- **Support for Multiple Academic Levels**: Bachelor, Master, and PhD programs
-- **Department and Field Management**: Organized by academic departments and fields
+- **Multi-level Approval Workflow**: Instructor → Admin → Department Manager.
+- **Automated Time Slot Coordination**: Finds common availability among jury members (Instructors and Advisors).
+- **Role-Based Access Control (RBAC)**: distinct permissions for Students, Professors, Admins, and Department Managers.
+- **JWT Authentication**: Secure stateless authentication with Access and Refresh tokens.
+- **Support for Multiple Academic Levels**: Bachelor, Master, and PhD programs.
+- **Department and Field Management**: Organized by academic departments and specific fields of study.
+- **System Statistics**: Dashboard data for administrators to track form statuses and meeting schedules.
 
 ## System Architecture
 
 ### Technology Stack
-- **Backend**: Spring Boot (Java)
+- **Backend**: Spring Boot 3+ (Java 17+)
+- **Build Tool**: Maven
+- **Database**: 
+  - **Development/Prod**: PostgreSQL
+  - **Test**: H2 In-Memory Database
+- **Migration**: Liquibase
 - **Authentication**: JWT (JSON Web Tokens)
-- **Database**: Actually don't care right now
 - **API**: RESTful API (base path: `/api/v1`)
 
 ### Diagrams
-- [Class Diagram](src/main/resources/diagrams/classes.mmd) (Out of date: TODO update) 
-- [Workflow Flowchart](src/main/resources/diagrams/flowchart.mmd) (Out of date: TODO update)
+*See `src/main/resources/diagrams/` for Mermaid definitions.*
 
 ## Models
 
 ### Core Entities
 
-#### User Hierarchy (Abstract Base)
-- **User** (Abstract)
-  - `Student` (Abstract)
-    - `BachelorStudent`
-    - `MasterStudent`
-    - `PhDStudent`
-  - `Professor`
-  - `Admin`
+#### User Hierarchy
+- **User** (Abstract Base)
+  - `Student` (Abstract): BachelorStudent, MasterStudent, PhDStudent
+  - `Professor`: Can act as Instructor, Supervisor, Jury, or Department Manager
+  - `Admin`: System administrators
 
 #### Forms and Meetings
-- **ThesisForm** (Abstract)
-  - `BachelorThesisForm`
-  - `MasterThesisForm`
-  - `PhDThesisForm`
-- **ThesisDefenseMeeting**
-- **TimeSlot**
-
-#### Supporting Entities
-- **Thesis**
-- **Department**
-- **Field**
+- **ThesisForm**: The central document created by students.
+- **ThesisDefenseMeeting**: Represents the actual scheduled event.
+- **TimeSlot**: Represents a specific 1.5-hour block of availability.
 
 ### Key Relationships
-- Each `Student` has one `Professor` as instructor
-- Each `ThesisForm` is created by one `Student` and supervised by one `Professor`
-- Each `ThesisDefenseMeeting` has multiple jury `Professor`s
-- `TimeSlot`s track availability of multiple `Professor`s
+- A `Student` creates a `ThesisForm`.
+- A `Professor` (Instructor) approves the form initially.
+- An `Admin` verifies administrative requirements.
+- A `Department Manager` (Professor role) finalizes the jury selection.
+- A `ThesisDefenseMeeting` is generated upon final approval, triggering the scheduling phase.
 
 ### Enums
-- **Department**: Academic departments
-- **Role**: User roles for authorization (STUDENT, PROFESSOR, ADMIN)
-- **TimePeriod**: 1.5-hour time slots for meetings
-- **FormStatus**: DRAFT, SUBMITTED, INSTRUCTOR_APPROVED, ADMIN_APPROVED, MANAGER_APPROVED, REJECTED
+- **Role**: `STUDENT`, `PROFESSOR`, `ADMIN`
+- **FormStatus**: `DRAFT`, `SUBMITTED`, `INSTRUCTOR_APPROVED`, `ADMIN_APPROVED`, `MANAGER_APPROVED`, `REJECTED`
+- **MeetingState**: `PENDING_JURY_AVAILABILITY`, `PENDING_STUDENT_SELECTION`, `SCHEDULED`, `CANCELLED`
 
 ## Workflow
 
-### Master Thesis Scheduling Process
+### Defense Scheduling Process
 
-1. **Form Creation**: `MasterStudent` logs in and creates a `MasterThesisForm`
-2. **Instructor Review**: Form is sent to the student's instructor
-   - ✅ Accept → Proceed to Admin review
-   - ❌ Reject → Process ends (status: REJECTED)
-3. **Admin Review**: Approved forms are sent to `Admin`
-   - ✅ Accept → Proceed to Department Manager
-   - ❌ Reject → Process ends
-4. **Department Manager Review**: Manager (who is a `Professor`) reviews
-   - ✅ Accept → Suggest jury members and create `ThesisDefenseMeeting`
-   - ❌ Reject → Process ends
-5. **Jury Time Collection**: Each suggested professor specifies availability
-   - Login via `/auth/login`
-   - Specify available `TimePeriod`s and dates (1.5-hour slots)
-   - Time range: Today to n days later (configured in system)
-6. **Time Slot Resolution**:
-   - **Scenario A**: Common time slots found → Show all options to student
-   - **Scenario B**: No common time slots → Process halts (TODO: Sprint 2)
-7. **Final Scheduling**: Student selects preferred time and date
-8. **Finalization**: Manager finalizes the `ThesisDefenseMeeting`
-
-### Additional Features
-- Users can download project registration form (`tarif-project.pdf`)
+1.  **Form Creation**: Student logs in and submits a Thesis Form (Bachelor, Master, or PhD).
+2.  **Instructor Review**:
+    - ✅ Accept: Form moves to Admin.
+    - ❌ Reject: Process ends (Status: REJECTED).
+3.  **Admin Review**:
+    - ✅ Accept: Form moves to Department Manager.
+    - ❌ Reject: Process ends.
+4.  **Manager Review & Jury Selection**:
+    - Manager approves the form and assigns Jury members.
+    - A `ThesisDefenseMeeting` is created with state `PENDING_JURY_AVAILABILITY`.
+5.  **Availability Collection**:
+    - Professors (Jury members) log in and provide their available time slots for the upcoming days.
+6.  **Time Slot Resolution**:
+    - The system calculates intersections of availability between all jury members.
+    - State moves to `PENDING_STUDENT_SELECTION`.
+7.  **Student Selection**:
+    - Student views the intersecting time slots.
+    - Student selects one slot.
+8.  **Finalization**:
+    - The meeting is confirmed (`SCHEDULED`).
 
 ## API Endpoints
 
 **Base URL**: `/api/v1`
 
-### Authentication
-- `POST /auth/login`
-  - Input: `LoginInputDTO` (JSON)
-  - Output: `LoginOutputDTO`
-- `POST /auth/refresh`
-  - Input: `RefreshTokenRequestDTO` (JSON)
-  - Output: `LoginOutputDTO`
+### Authentication (`/auth`)
+- `POST /auth/login`: Authenticate and receive JWT access/refresh tokens.
+- `POST /auth/refresh`: Rotate refresh tokens.
 
-### Student Endpoints
-- `POST /student/create-form` - Create a new thesis form
+### Student (`/student`)
+- `POST /student/create-form`: Submit a new thesis form.
+- `GET /student/my-forms`: View status of submitted forms.
+- `POST /student/select-time`: Finalize a defense time slot.
 
-### Professor Endpoints
-- `GET /professor/{id}` - Get professor details
-- `POST /professor/give-time` - Specify available time slots
-- `GET /professor/` - List professors
-- Additional professor endpoints (to be documented)
+### Professor (`/professor`)
+- `GET /professor/`: List all professors.
+- `GET /professor/{id}`: Get details of a specific professor.
+- `POST /professor/give-time`: Submit availability for a specific meeting.
+- `GET /professor/pending-reviews`: List forms waiting for instructor approval.
+- `POST /professor/approve-form`: Approve a student's form.
 
-### Admin Endpoints
-- `POST /admin/register-student/` 
-  - Register a single student
-  - Input: `StudentRegistrationInputDTO` (JSON)
-- `POST /admin/register-students/`
-  - Register multiple students
-  - Input: `List<StudentRegistrationInputDTO>` (JSON)
+### Admin (`/admin`)
+- `POST /admin/register-student/`: Register a single student.
+- `POST /admin/register-students/`: Bulk register students via list.
+- `GET /admin/stats`: Get system-wide statistics (counts of forms, meetings, users).
+
+### Manager (`/manager`)
+- `GET /manager/pending-approvals`: List forms approved by Admin waiting for Manager.
+- `POST /manager/assign-jury`: Approve form and assign jury members.
+
+### Metadata
+- `GET /departments`: List available departments.
+- `GET /fields`: List fields of study.
 
 ## Security
 
 ### Authentication
-- **Method**: JWT (JSON Web Tokens)
-- **Token Contents**: 
-  - Academic email
-  - Phone number
-  - User `Role`
-- **Token Types**: Access token and refresh token
+- **Method**: JWT (Bearer Token).
+- **Token Payload**: Includes Subject (Email), Role, and Expiration.
+- **Interceptor**: Custom `LoggingInterceptor` logs request duration and parameters.
 
 ### Authorization
-- **Method**: Role-Based Access Control (RBAC)
-- **Implementation**: API route-based authorization
-- **Roles**: STUDENT, PROFESSOR, ADMIN, MANAGER
-
-### Constraints
-- Students can only be registered by `Admin` users
-- No student self-registration/signup page required
-- Each student must have an assigned instructor
+- **RBAC**: Annotations and Security Config ensure only specific roles access specific endpoints.
+- **Data Isolation**: Students can only view/edit their own forms.
 
 ## Installation
 
-```bash
-# Clone the repository
-git clone [repository-url]
+### Prerequisites
+- Java 17 or higher
+- Maven
+- PostgreSQL (or Docker container)
 
-# Navigate to project directory
-cd thesis-defense-scheduler
+### Steps
+1. **Clone the repository**
+   ```bash
+   git clone [repository-url]
+   cd thesis-defense-scheduler
+   ```
 
-# Build the project
-./mvnw clean install
+2. **Configure Database**
+   Update `src/main/resources/application.yaml` with your PostgreSQL credentials or use the default:
+    - User: `postgres`
+    - Password: `dev123`
+    - DB: `myapp`
 
-# Run the application
-./mvnw spring-boot:run
-```
+3. **Build the project**
+   ```bash
+   ./mvnw clean install
+   ```
+
+4. **Run the application**
+   ```bash
+   ./mvnw spring-boot:run
+   ```
+
 ## Configuration
 
-### Application Properties
-Configure the following in `application.properties` or `application.yml`:
+Configuration is managed in `src/main/resources/application.yaml`.
 
-- Database connection settings
-- JWT secret and expiration times
-- Maximum days ahead for time slot specification (n days)
-- Email settings for notifications
-- File upload settings
+### Key Properties
+
+| Property | Description | Default |
+| :--- | :--- | :--- |
+| `jwt.secret` | Secret key for signing tokens | *[Change in Prod]* |
+| `jwt.expiration` | Token validity in ms | `86400000` (24h) |
+| `spring.datasource.url` | Database URL | `jdbc:postgresql://...` |
+| `rate-limit.max-submitted-forms` | Max forms a student can have active | `3` |
+| `frontend.url` | CORS allowed origin | `http://localhost:3000` |
 
 ## Future Enhancements
 
-### Planned Features (Priority Order)
-
-1. **Sprint 2 Features**:
-   - Handle scenario when no common time slots are available
-   - Automated rescheduling suggestions
-   - Notification system for all stakeholders
-
-2. **Authentication Enhancement** (Low Priority):
-   - Single Sign-On (SSO) with OAuth 2.0 or SAML
-   - Integration with institutional authentication systems
-
-3. **Additional Features**:
-   - Email notifications at each workflow stage
-   - Calendar integration (iCal/Google Calendar)
-   - Meeting room reservation system
-   - Document management and version control
-   - Analytics dashboard for admins
-   - Export reports (PDF/Excel)
-
-## Similar Projects
-
-- [Thesis Management System](https://github.com/peii14/thesis-management-system)
+1. **Rescheduling Logic**: Handle scenarios where no common time slots exist (Scenario B).
+2. **Notifications**: Email/SMS integration for status updates.
+3. **Calendar Integration**: Export scheduled defenses to Google Calendar/iCal.
+4. **Document Generation**: Auto-generate official PDF minutes for the defense meeting.
 
 ## Contributing
 
-Just open a pull request. I would appreciate a comment for the PR if you have the time.
+Pull requests are welcome. Please ensure tests pass before submitting.
 
 ## License
 
-Do whatever the fuck you want with this code
+[MIT License](LICENSE) or as specified by the repository owner.
 
 ## Contact
 You can find my contacts at my [site](https://kghobad.ir)
-
