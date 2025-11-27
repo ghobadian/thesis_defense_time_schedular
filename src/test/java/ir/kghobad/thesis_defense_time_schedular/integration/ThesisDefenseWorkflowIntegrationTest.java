@@ -4,6 +4,10 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import ir.kghobad.thesis_defense_time_schedular.controller.BaseIntegrationTest;
 import ir.kghobad.thesis_defense_time_schedular.helper.TestDataBuilder;
 import ir.kghobad.thesis_defense_time_schedular.model.dto.*;
+import ir.kghobad.thesis_defense_time_schedular.model.dto.form.FormSuggestionInputDTO;
+import ir.kghobad.thesis_defense_time_schedular.model.dto.form.ThesisFormInputDTO;
+import ir.kghobad.thesis_defense_time_schedular.model.dto.meeting.*;
+import ir.kghobad.thesis_defense_time_schedular.model.dto.student.StudentRegistrationInputDTO;
 import ir.kghobad.thesis_defense_time_schedular.model.entity.Department;
 import ir.kghobad.thesis_defense_time_schedular.model.entity.Field;
 import ir.kghobad.thesis_defense_time_schedular.model.entity.ThesisDefenseMeeting;
@@ -260,10 +264,9 @@ public class ThesisDefenseWorkflowIntegrationTest extends BaseIntegrationTest {
         });
         assertEquals(1, meetings.size());
         ThesisDefenseMeetingOutputDTO meeting = meetings.getFirst();
-        assertEquals("Koosha Ghobadian", meeting.getStudentName());
-        assertEquals("Hamed Khanmirza", meeting.getInstructorName());
-        assertEquals(MeetingState.JURY_SELECTION.name(), meeting.getState());
-        assertEquals("Deep Learning Applications in Medical Image Analysis", meeting.getThesisTitle());
+        assertEquals("Koosha Ghobadian", meeting.getThesis().getStudentFirstName() + " " + meeting.getThesis().getStudentLastName());
+        assertEquals(MeetingState.JURIES_SELECTED.name(), meeting.getState());
+        assertEquals("Deep Learning Applications in Medical Image Analysis", meeting.getThesis().getTitle());
         assertNull(meeting.getSelectedTimeSlot());
     }
 
@@ -274,7 +277,7 @@ public class ThesisDefenseWorkflowIntegrationTest extends BaseIntegrationTest {
                 .andExpect(jsonPath("$[0].thesisTitle").value("Deep Learning Applications in Medical Image Analysis"))  // Changed from "title"
                 .andExpect(jsonPath("$[0].studentName").value("Koosha Ghobadian"))
                 .andExpect(jsonPath("$[0].instructorName").value("Hamed Khanmirza"))
-                .andExpect(jsonPath("$[0].state").value("JURY_SELECTION"))
+                .andExpect(jsonPath("$[0].state").value("JURIES_SELECTED"))
                 .andExpect(jsonPath("$[0].score").value(0.0))
                 .andExpect(jsonPath("$[0].selectedTimeSlot").isEmpty())
                 .andExpect(jsonPath("$", hasSize(1)))
@@ -297,7 +300,7 @@ public class ThesisDefenseWorkflowIntegrationTest extends BaseIntegrationTest {
                 .andExpect(jsonPath("$[0].thesisTitle").value("Deep Learning Applications in Medical Image Analysis"))
                 .andExpect(jsonPath("$[0].studentName").value("Koosha Ghobadian"))
                 .andExpect(jsonPath("$[0].instructorName").value("Hamed Khanmirza"))
-                .andExpect(jsonPath("$[0].state").value("TIME_SELECTION"))
+                .andExpect(jsonPath("$[0].state").value("JURIES_SPECIFIED_TIME"))
                 .andExpect(jsonPath("$[0].score").value(0.0))
                 .andExpect(jsonPath("$[0].selectedTimeSlot").isEmpty())
                 .andReturn().getResponse().getContentAsString();
@@ -319,7 +322,7 @@ public class ThesisDefenseWorkflowIntegrationTest extends BaseIntegrationTest {
 
         ThesisDefenseMeeting meeting = thesisDefenseMeetingRepository.findAll().getFirst();
         assertNull(meeting.getSelectedTimeSlot());
-        assertEquals(MeetingState.TIME_SELECTION, meeting.getState());
+        assertEquals(MeetingState.JURIES_SPECIFIED_TIME, meeting.getState());
         assertEquals(3, meeting.getAvailableSlots().size());
     }
 
@@ -340,7 +343,7 @@ public class ThesisDefenseWorkflowIntegrationTest extends BaseIntegrationTest {
         ThesisDefenseMeeting meeting = thesisDefenseMeetingRepository.findAll().getFirst();
         assertEquals(1, meeting.getAvailableSlots().size());
         assertNull(meeting.getSelectedTimeSlot());
-        assertEquals(MeetingState.JURY_SELECTION, meeting.getState());
+        assertEquals(MeetingState.JURIES_SELECTED, meeting.getState());
         TimeSlot timeSlot = meeting.getAvailableSlots().stream().findFirst().orElseThrow();
         assertEquals(ts1.getTimePeriod(), timeSlot.getTimePeriod());
         assertEquals(ts1.getDate(), timeSlot.getDate());
@@ -418,7 +421,7 @@ public class ThesisDefenseWorkflowIntegrationTest extends BaseIntegrationTest {
                 "Deep Learning Applications in Medical Image Analysis",
                 "This thesis investigates the use of convolutional neural networks and transformer architectures " +
                         "for automated disease detection in medical imaging, specifically focusing on early cancer detection.",
-                hamedKhanmirza.getId(),null
+                hamedKhanmirza.getId()
         );
 
         mockMvc.perform(post("/student/create-form")

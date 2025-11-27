@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import ir.kghobad.thesis_defense_time_schedular.dao.*;
 import ir.kghobad.thesis_defense_time_schedular.helper.DTODataBuilder;
 import ir.kghobad.thesis_defense_time_schedular.helper.TestDataBuilder;
-import ir.kghobad.thesis_defense_time_schedular.model.dto.LoginDTO;
+import ir.kghobad.thesis_defense_time_schedular.model.dto.auth.LoginDTO;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.springframework.beans.factory.annotation.Autowired;

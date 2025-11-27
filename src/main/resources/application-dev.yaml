@@ -12,6 +12,9 @@ spring:
     console:
       enabled: true
       path: /h2-console
+      settings:
+        web-allow-others: true  # Allow remote access
+        trace: false
   datasource:
     driver-class-name: org.h2.Driver
     password: ''
@@ -29,9 +32,11 @@ spring:
   sql:
     init:
       mode: embedded
-#      data-locations: classpath:data-prod.sql
+      data-locations: classpath:data-prod.sql
 server:
   servlet:
     context-path: /api/v1
 frontend:
   url: http://localhost:3000
+rate-limit:
+  max-submitted-forms: 3

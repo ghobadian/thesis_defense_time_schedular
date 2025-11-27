@@ -1,4 +1,5 @@
 Suggested Improvements to the Document
+add notification support via sms and email
 1. Entity Relationships & Attributes
 
    Add more details about entity attributes (e.g., Student: name, email, department, enrollmentYear)

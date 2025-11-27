@@ -2,7 +2,7 @@ package ir.kghobad.thesis_defense_time_schedular.model.entity.user;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import ir.kghobad.thesis_defense_time_schedular.model.entity.Department;
+import ir.kghobad.thesis_defense_time_schedular.model.entity.Field;
 import ir.kghobad.thesis_defense_time_schedular.model.entity.ThesisDefenseMeeting;
 import ir.kghobad.thesis_defense_time_schedular.model.entity.TimeSlot;
 import ir.kghobad.thesis_defense_time_schedular.model.entity.association.DefenseMeetingProfessorAssociation;
@@ -11,9 +11,7 @@ import ir.kghobad.thesis_defense_time_schedular.model.entity.thesisform.ThesisFo
 import ir.kghobad.thesis_defense_time_schedular.model.entity.user.student.Student;
 import ir.kghobad.thesis_defense_time_schedular.model.enums.Role;
 import jakarta.persistence.*;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -23,6 +21,8 @@ import java.util.Set;
 @DiscriminatorValue("PROFESSOR")
 @EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+@AllArgsConstructor
+@NoArgsConstructor
 public class Professor extends User {
 
     @Setter
@@ -42,27 +42,16 @@ public class Professor extends User {
     @OneToMany(mappedBy = "professor", cascade = CascadeType.ALL, orphanRemoval = true)
     private final Set<TimeSlotProfessorAssociation> timeSlotProfessorAssociations = new HashSet<>(1024);
 
+    @ManyToOne
+    @JoinColumn(name = "field_id")
+    @Getter
+    @Setter
+    private Field field;
 
-    public Professor(Long id,
-                     String firstName,
-                     String lastName,
-                     String email,
-                     String phoneNumber,
-                     String password,
-                     Department department,
-                     boolean enabled,
-                     boolean isManager) {
-        super(id, firstName, lastName, email, phoneNumber, password, department, enabled);
-        this.manager = isManager;
-    }
-
-    public Professor() {
-
-    }
 
     @Override
     public Role getRole() {
-        return Role.PROFESSOR;
+        return isManager() ? Role.MANAGER : Role.PROFESSOR;
     }
 
 
@@ -88,13 +77,23 @@ public class Professor extends User {
 
 
     public void addMeeting(ThesisDefenseMeeting meeting) {
-        DefenseMeetingProfessorAssociation association = new DefenseMeetingProfessorAssociation();
-        association.setDefenseMeeting(meeting);
-        association.setProfessor(this);
+        DefenseMeetingProfessorAssociation association = findOrCreateAssociation(meeting);
         if (!this.defenseMeetingProfessorAssociations.contains(association)) {
             this.defenseMeetingProfessorAssociations.add(association);
             meeting.addJury(this);
         }
+    }
+
+    private DefenseMeetingProfessorAssociation findOrCreateAssociation(ThesisDefenseMeeting meeting) {
+        return this.defenseMeetingProfessorAssociations.stream()
+                .filter(a -> a.getDefenseMeeting().equals(meeting))
+                .findFirst()
+                .orElseGet(() -> {
+                    DefenseMeetingProfessorAssociation newAssoc = new DefenseMeetingProfessorAssociation();
+                    newAssoc.setDefenseMeeting(meeting);
+                    newAssoc.setProfessor(this);
+                    return newAssoc;
+                });
     }
 
     public void removeMeeting(ThesisDefenseMeeting meeting) {
@@ -106,16 +105,6 @@ public class Professor extends User {
             meeting.removeJury(this);
         }
     }
-
-//    public void addAvailableSlot(TimeSlot slot) {
-//        TimeSlotProfessorAssociation association = new TimeSlotProfessorAssociation();
-//        association.setTimeSlot(slot);
-//        association.setProfessor(this);
-//        if (!this.timeSlotProfessorAssociations.contains(association)) {
-//            this.timeSlotProfessorAssociations.add(association);
-//            slot.addAvailableProfessor(this);
-//        }
-//    }
 
     public void removeAvailableSlot(TimeSlot slot) {
         TimeSlotProfessorAssociation association = new TimeSlotProfessorAssociation();
@@ -129,5 +118,13 @@ public class Professor extends User {
 
     public void addTimeSlotAssociation(TimeSlotProfessorAssociation association) {
         this.timeSlotProfessorAssociations.add(association);
+    }
+
+    public void addMeetingProfessorAssociation(DefenseMeetingProfessorAssociation association) {
+        this.defenseMeetingProfessorAssociations.add(association);
+    }
+
+    public boolean containsAssociation(DefenseMeetingProfessorAssociation association) {
+        return this.defenseMeetingProfessorAssociations.contains(association);
     }
 }
