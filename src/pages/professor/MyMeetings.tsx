@@ -7,6 +7,7 @@ import {MeetingView} from '../../components/common/MeetingView';
 import {TimeSlotsComparison} from '../../components/professor/TimeSlotsComparison';
 import {Meeting, MeetingState, UserRole} from '../../types';
 import {useAuthStore} from '../../store/authStore';
+import { ScheduleMeeting } from '../../components/professor/ScheduleMeeting';
 
 export const MyMeetings: React.FC = () => {
     const navigate = useNavigate();
@@ -30,6 +31,11 @@ export const MyMeetings: React.FC = () => {
         }
         // Regular professors can specify time for any meeting they see
         return true;
+    };
+
+    const canScheduleMeeting = (meeting: Meeting): boolean => {
+        return role === UserRole.MANAGER &&
+               meeting.state === MeetingState.STUDENT_SPECIFIED_TIME;
     };
 
     const canViewTimeSlots = (meeting: Meeting): boolean => {
@@ -77,7 +83,7 @@ export const MyMeetings: React.FC = () => {
                 </h1>
                 {role === UserRole.MANAGER && (
                     <p className="text-gray-600 mt-2">
-                        Viewing all meetings in your department. You can specify time slots for meetings where you are a jury member.
+                        Viewing all meetings in your department. You can specify time slots for meetings where you are a jury member and schedule meetings.
                     </p>
                 )}
             </div>
@@ -100,6 +106,21 @@ export const MyMeetings: React.FC = () => {
                     <TimeSlotsComparison meetingId={meeting.id} />
                 )}
                 renderAdditionalContent={(meeting) => {
+                    // Show scheduling interface for managers when student has selected time
+                    if (canScheduleMeeting(meeting)) {
+                        return (
+                            <>
+                                <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-4">
+                                    <p className="text-sm text-green-800">
+                                        <strong>Action Required:</strong> The student has selected a time slot.
+                                        Please confirm the location and schedule the meeting.
+                                    </p>
+                                </div>
+                                <ScheduleMeeting meetingId={meeting.id} />
+                            </>
+                        );
+                    }
+
                     // Show info banner for managers when they can't specify time
                     if (role === UserRole.MANAGER && !isJuryMember(meeting)) {
                         return (
