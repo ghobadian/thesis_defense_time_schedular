@@ -45,7 +45,6 @@ export interface User {
     lastName: string;
     phoneNumber: string;
     role: UserRole;
-    enabled: boolean;
 }
 
 export interface Student extends User {
@@ -131,6 +130,7 @@ export interface Meeting {
     location?: string;
     juryMembers: SimpleUser[];
     createdAt: string;
+    score: Number;
 }
 
 export interface AvailableTime {

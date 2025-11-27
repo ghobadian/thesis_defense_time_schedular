@@ -104,7 +104,9 @@ export const DefenseMeetings: React.FC = () => {
                         />
                     </div>
                     <div className="flex gap-2 overflow-x-auto">
-                        {['ALL', 'JURY_SELECTION', 'SCHEDULED', 'COMPLETED'].map((status) => (
+                        {['ALL', MeetingState.JURIES_SELECTED, MeetingState.JURIES_SPECIFIED_TIME,
+                            MeetingState.STUDENT_SPECIFIED_TIME, MeetingState.SCHEDULED,
+                            MeetingState.COMPLETED, MeetingState.CANCELED].map((status) => (
                             <button
                                 key={status}
                                 onClick={() => setStatusFilter(status)}
@@ -204,6 +206,18 @@ export const DefenseMeetings: React.FC = () => {
                                             <div>
                                                 <span className="text-gray-500 block">Field</span>
                                                 <span className="font-medium">{selectedMeeting.thesis.fieldName || 'N/A'}</span>
+                                            </div>
+                                            <div>
+                                                <span className="text-gray-500 block">Instructor</span>
+                                                <span className="font-medium">{selectedMeeting.thesis.instructorFirstName} {selectedMeeting.thesis.instructorLastName}</span>
+                                            </div>
+                                            <div>
+                                                <span className="text-gray-500 block">Score</span>
+                                                <span className="font-medium">
+                                                    {selectedMeeting.score !== undefined && selectedMeeting.score !== null
+                                                        ? Number(selectedMeeting.score).toFixed(2)
+                                                        : '-'}
+                                                </span>
                                             </div>
                                         </div>
                                         <div className="mt-4 pt-4 border-t border-gray-200">

@@ -101,15 +101,14 @@ export const StudentManagement: React.FC = () => {
         }
 
         // Simple CSV Export Logic
-        const header = ['ID', 'Student Number', 'First Name', 'Last Name', 'Email', 'Department', 'Status'];
-        const rows = students.map(s => [
+        const header = ['ID', 'Student Number', 'First Name', 'Last Name', 'Email', 'Department'];
+        const rows = students.map((s: Student) => [
             s.id,
             s.studentNumber,
             s.firstName,
             s.lastName,
             s.email,
             s.department?.name || 'N/A',
-            s.enabled ? 'Active' : 'Inactive'
         ]);
 
         const csvContent = [
