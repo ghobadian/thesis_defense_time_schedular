@@ -1,184 +1,187 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { adminAPI } from '../../api/admin.api';
-import { Button } from '../../components/common/Button';  // Uses your existing version
+import { UserPlus, Download, FileDown } from 'lucide-react';
+
+// Components
+import { Button } from '../../components/common/Button';
 import { Card } from '../../components/common/Card';
 import { StudentSearchBar } from '../../components/admin/StudentSearchBar';
 import { DepartmentFilter } from '../../components/admin/DepartmentFilter';
 import { StudentTable } from '../../components/admin/StudentTable';
-import { UserPlus, Download } from 'lucide-react';
-import {Student} from "../../types";
+
+// API
+import { adminAPI } from '../../api/admin.api';
+
+// Types
+import { Student, DepartmentSummary } from '../../types';
 
 export const StudentManagement: React.FC = () => {
     const navigate = useNavigate();
     const queryClient = useQueryClient();
 
-    const [search, setSearch] = useState('');
-    const [department, setDepartment] = useState('');
+    // --- State Management ---
+    const [search, setSearch] = useState<string>('');
+    // We keep departmentId as string in state to handle the empty "" (All) case easily with select inputs,
+    // but we convert it to number before sending to API.
+    const [selectedDeptId, setSelectedDeptId] = useState<string>('');
 
-    // -------------------------------
-    // ✅ Mock Data (for fallback)
-    // -------------------------------
-    const mockStudents = [
-        {
-            id: '1',
-            studentId: 'STU-001',
-            firstName: 'Ali',
-            lastName: 'Rezaei',
-            email: 'ali@example.com',
-            phone: '09123456789',
-            department: { name: 'Computer Science' },
-            field: { name: 'Software Engineering' },
-            status: 'ACTIVE',
-            createdAt: new Date().toISOString()
-        },
-        {
-            id: '2',
-            studentId: 'STU-002',
-            firstName: 'Sara',
-            lastName: 'Ahmadi',
-            email: 'sara@example.com',
-            department: { name: 'Computer Science' },
-            field: { name: 'AI' },
-            status: 'GRADUATED',
-            createdAt: new Date().toISOString()
-        }
-    ];
+    // --- Queries ---
 
-    // -------------------------------
-    // ✅ Queries: Students + Departments
-    // -------------------------------
-    const { data: studentsData, isLoading, error } = useQuery({
-        queryKey: ['students', search, department],
-        queryFn: () => adminAPI.getStudents({ search, department }),
-        retry: false,
-    });
-
-    const { data: departments } = useQuery({
+    // 1. Fetch Departments (for the Filter Dropdown)
+    const {
+        data: departmentsData,
+        isLoading: isLoadingDepts
+    } = useQuery({
         queryKey: ['departments'],
         queryFn: adminAPI.getDepartments,
-        retry: false,
     });
 
-    // -------------------------------
-    // ✅ Mutations
-    // -------------------------------
+    // 2. Fetch Students (with Search and Filter)
+    const {
+        data: studentsResponse,
+        isLoading: isLoadingStudents
+    } = useQuery({
+        // We include search and selectedDeptId in the key so it auto-refetches when they change
+        queryKey: ['students', search, selectedDeptId],
+        queryFn: () => adminAPI.getStudents({
+            search: search || undefined,
+            // Convert string state to number for API, or undefined if empty
+            departmentId: selectedDeptId ? Number(selectedDeptId) : undefined,
+        }),
+    });
+
+    // --- Data Extraction ---
+    // Handle cases where API might return array directly or inside a .data property
+    const students: Student[] = Array.isArray(studentsResponse)
+        ? studentsResponse
+        : (studentsResponse?.data || []);
+
+    const departments: DepartmentSummary[] = Array.isArray(departmentsData)
+        ? departmentsData
+        : (departmentsData?.data || []);
+
+    // --- Mutations ---
+
     const deleteMutation = useMutation({
-        mutationFn: (id: string) => adminAPI.deleteStudent(id),
+        mutationFn: (id: number) => adminAPI.deleteStudent(id),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['students'] });
-            alert('Student deleted successfully');
+            // Ideally use a toast notification here
+            console.log('Student deleted successfully');
         },
-        onError: () => {
-            alert('Error deleting student (using mock data fallback)');
+        onError: (error) => {
+            console.error('Failed to delete student', error);
+            alert('Failed to delete student. Please try again.');
         },
     });
 
-    // -------------------------------
-    // ✅ Data Mapping + Filtering
-    // -------------------------------
-    const students = error ? mockStudents : (studentsData?.data || []);
-    const filteredStudents = students.filter((s: Student) => {
-        const term: string = search.toLowerCase();
-        const matchesSearch: boolean =
-            !search ||
-            s.firstName.toLowerCase().includes(term) ||
-            s.lastName.toLowerCase().includes(term) ||
-            s.email.toLowerCase().includes(term) ||
-            String(s.id) === term;
+    // --- Handlers ---
 
-        const matchesDepartment = !department || s.department?.name === department;
-        return matchesSearch && matchesDepartment;
-    });
-
-    // -------------------------------
-    // ✅ CSV Export
-    // -------------------------------
-    const handleExport = () => {
-        const csvData = filteredStudents.map(
-            (s: Student) => `${s.id},${s.firstName},${s.lastName},${s.email},${s.enabled}`
-        ).join('\n');
-
-        const blob = new Blob(
-            [`ID,First Name,Last Name,Email,Status\n${csvData}`],
-            { type: 'text/csv' }
-        );
-        const url = window.URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = 'students.csv';
-        link.click();
+    const handleViewStudent = (student: Student) => {
+        // Example: navigate to a detail page
+        // navigate(`/admin/students/${student.id}`);
+        console.log('View student:', student.id);
     };
 
-    // -------------------------------
-    // ✅ Handlers
-    // -------------------------------
-    const handleViewStudent = (student: any) => {
-        alert(`Viewing details for ${student.firstName} ${student.lastName}`);
-        // open modal later (StudentDetailModal)
-    };
-
-    const handleEditStudent = (student: any) => {
+    const handleEditStudent = (student: Student) => {
         navigate(`/admin/edit-student/${student.id}`);
     };
 
-    const handleDeleteStudent = (student: any) => {
-        if (window.confirm(`Delete ${student.firstName} ${student.lastName}?`)) {
+    const handleDeleteStudent = (student: Student) => {
+        if (window.confirm(`Are you sure you want to delete ${student.firstName} ${student.lastName}?`)) {
             deleteMutation.mutate(student.id);
         }
     };
 
-    // -------------------------------
-    // ✅ UI Rendering
-    // -------------------------------
+    const handleExport = () => {
+        if (students.length === 0) {
+            alert('No students to export.');
+            return;
+        }
+
+        // Simple CSV Export Logic
+        const header = ['ID', 'Student Number', 'First Name', 'Last Name', 'Email', 'Department', 'Status'];
+        const rows = students.map(s => [
+            s.id,
+            s.studentNumber,
+            s.firstName,
+            s.lastName,
+            s.email,
+            s.department?.name || 'N/A',
+            s.enabled ? 'Active' : 'Inactive'
+        ]);
+
+        const csvContent = [
+            header.join(','),
+            ...rows.map(row => row.join(','))
+        ].join('\n');
+
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', `students_export_${new Date().toISOString().split('T')[0]}.csv`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
+
+    // --- Render ---
+
     return (
         <div className="space-y-6">
-            {/* --- Header --- */}
-            <div className="flex justify-between items-center">
+            {/* Page Header */}
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div>
                     <h1 className="text-2xl font-bold text-gray-900">Student Management</h1>
                     <p className="text-sm text-gray-600 mt-1">
-                        Manage registered students, edit details, or export data
+                        Manage registered students, track their progress, and oversee enrollment.
                     </p>
                 </div>
-                <div className="flex space-x-3">
+                <div className="flex gap-3">
                     <Button
                         variant="secondary"
-                        size="md"
                         onClick={handleExport}
+                        disabled={students.length === 0 || isLoadingStudents}
                     >
-                        <Download className="h-4 w-4 mr-2" /> Export
+                        <Download className="h-4 w-4 mr-2" />
+                        Export CSV
                     </Button>
                     <Button
                         variant="primary"
-                        size="md"
                         onClick={() => navigate('/admin/register-student')}
                     >
-                        <UserPlus className="h-4 w-4 mr-2" /> Add Student
+                        <UserPlus className="h-4 w-4 mr-2" />
+                        Register Student
                     </Button>
                 </div>
             </div>
 
-            {/* --- Filters --- */}
+            {/* Filter Bar */}
             <Card>
-                <div className="flex flex-col md:flex-row gap-4 items-center">
-                    <StudentSearchBar
-                        value={search}
-                        onChange={setSearch}
-                    />
-                    <DepartmentFilter
-                        value={department}
-                        onChange={setDepartment}
-                        departments={departments?.data || []}
-                    />
+                <div className="flex flex-col md:flex-row gap-4 items-center p-1">
+                    <div className="w-full md:w-1/2">
+                        <StudentSearchBar
+                            value={search}
+                            onChange={setSearch}
+                            placeholder="Search by name, email, or student ID..."
+                        />
+                    </div>
+                    <div className="w-full md:w-1/3">
+                        <DepartmentFilter
+                            value={selectedDeptId}
+                            onChange={(val) => setSelectedDeptId(val)}
+                            departments={departments}
+                        />
+                    </div>
                 </div>
             </Card>
 
-            {/* --- Table --- */}
+            {/* Data Table */}
             <StudentTable
-                students={filteredStudents}
-                loading={isLoading}
+                students={students}
+                loading={isLoadingStudents}
                 onViewStudent={handleViewStudent}
                 onEditStudent={handleEditStudent}
                 onDeleteStudent={handleDeleteStudent}

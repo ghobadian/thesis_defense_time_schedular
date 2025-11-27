@@ -21,7 +21,7 @@ export const Sidebar: React.FC = () => {
       case UserRole.ADMIN:
         return [
           { to: '/admin/dashboard', icon: Home, label: 'Dashboard' },
-          { to: '/admin/users', icon: Users, label: 'User Management' },
+          { to: '/admin/users', icon: Users, label: 'Student Management' },
           { to: '/admin/departments', icon: Building2, label: 'Departments' },
           { to: '/admin/fields', icon: ClipboardList, label: 'Fields' },
           { to: '/admin/thesis-forms', icon: FileText, label: 'Thesis Forms' },

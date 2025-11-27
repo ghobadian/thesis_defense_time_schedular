@@ -1,13 +1,14 @@
 // src/components/admin/students/StudentTable.tsx
 import React from 'react';
 import { StudentTableRow } from './StudentTableRow';
+import {Student} from "../../types";
 
 interface StudentTableProps {
-    students: any[];
+    students: Student[];
     loading?: boolean;
-    onViewStudent: (student: any) => void;
-    onEditStudent: (student: any) => void;
-    onDeleteStudent: (student: any) => void;
+    onViewStudent: (student: Student) => void;
+    onEditStudent: (student: Student) => void;
+    onDeleteStudent: (student: Student) => void;
 }
 
 export const StudentTable: React.FC<StudentTableProps> = ({

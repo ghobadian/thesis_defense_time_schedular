@@ -4,8 +4,9 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Card } from '../../components/common/Card';
 import { Button } from '../../components/common/Button';
+import { TimeSlotsComparison } from '../../components/professor/TimeSlotsComparison';
 import { professorAPI } from '../../api/professor.api';
-import { Calendar, Clock, ArrowLeft } from 'lucide-react';
+import { Calendar, Clock, ArrowLeft, Users } from 'lucide-react';
 import { TimePeriod, TimeSlot } from '../../types';
 import { useAuthStore } from '../../store/authStore';
 
@@ -13,10 +14,11 @@ export const SpecifyMeetingTimeSlots: React.FC = () => {
     const { meetingId } = useParams<{ meetingId: string }>();
     const navigate = useNavigate();
     const queryClient = useQueryClient();
-    const { userId } = useAuthStore(); // Get current professor ID
+    const { userId } = useAuthStore();
 
     const [selectedSlots, setSelectedSlots] = useState<TimeSlot[]>([]);
     const [currentDate, setCurrentDate] = useState('');
+    // const [currentSlots, setCurrentSlots] = useState<TimeSlot[]>([]);
     const [currentPeriods, setCurrentPeriods] = useState<TimePeriod[]>([]);
 
     // Fetch meeting details
@@ -35,9 +37,10 @@ export const SpecifyMeetingTimeSlots: React.FC = () => {
     // Populate selectedSlots when existing time slots are loaded
     useEffect(() => {
         if (myExistingTimeSlots && Array.isArray(myExistingTimeSlots)) {
-            const formattedSlots: TimeSlot[] = myExistingTimeSlots.map((slot: any) => ({
+            const formattedSlots: TimeSlot[] = myExistingTimeSlots.map((slot: TimeSlot) => ({
+                id: slot.id,
                 date: slot.date,
-                timePeriod: slot.period || slot.timePeriod,
+                timePeriod: slot.timePeriod,
             }));
             setSelectedSlots(formattedSlots);
         }
@@ -52,8 +55,9 @@ export const SpecifyMeetingTimeSlots: React.FC = () => {
             queryClient.invalidateQueries({ queryKey: ['meeting', meetingId] });
             queryClient.invalidateQueries({ queryKey: ['myMeetingTimeSlots', meetingId, userId] });
             queryClient.invalidateQueries({ queryKey: ['myTimeSlots'] });
+            queryClient.invalidateQueries({ queryKey: ['meetingTimeSlots', Number(meetingId)] });
             alert('Time slots updated successfully!');
-            navigate('/professor/meetings');
+            navigate(`/professor/meetings/${meetingId}/specify-time`);
         },
         onError: (error: any) => {
             alert(error.response?.data?.message || 'Failed to submit time slots');
@@ -68,6 +72,14 @@ export const SpecifyMeetingTimeSlots: React.FC = () => {
         [TimePeriod.PERIOD_15_30_17_00]: '15:30 - 17:00',
     };
 
+    // const togglePeriod = (slot: TimeSlot) => {
+    //     setCurrentSlots(prev =>
+    //         prev.includes(slot)
+    //             ? prev.filter(p => p !== slot)
+    //             : [...prev, slot]
+    //     );
+    // };
+
     const togglePeriod = (period: TimePeriod) => {
         setCurrentPeriods(prev =>
             prev.includes(period)
@@ -76,6 +88,29 @@ export const SpecifyMeetingTimeSlots: React.FC = () => {
         );
     };
 
+    // const addTimeSlot = () => {
+    //     if (!currentDate || currentSlots.length === 0) {
+    //         alert('Please select a date and at least one time period');
+    //         return;
+    //     }
+    //
+    //     const newTimeSlots: TimeSlot[] = currentSlots.map(slot => ({
+    //         id: slot.id,
+    //         date: currentDate,
+    //         timePeriod: slot.timePeriod,
+    //     }));
+    //
+    //     setSelectedSlots(prev => {
+    //         const existing = prev.filter(
+    //             slot => !(slot.date === currentDate && currentSlots.includes(slot))
+    //         );
+    //         return [...existing, ...newTimeSlots];
+    //     });
+    //
+    //     setCurrentDate('');
+    //     setCurrentSlots([]);
+    // };
+
     const addTimeSlot = () => {
         if (!currentDate || currentPeriods.length === 0) {
             alert('Please select a date and at least one time period');
@@ -83,6 +118,7 @@ export const SpecifyMeetingTimeSlots: React.FC = () => {
         }
 
         const newTimeSlots: TimeSlot[] = currentPeriods.map(period => ({
+            id: -1, // Temporary ID; real ID assigned by backend
             date: currentDate,
             timePeriod: period,
         }));
@@ -157,6 +193,34 @@ export const SpecifyMeetingTimeSlots: React.FC = () => {
                             For: {meeting.thesis.title} - {meeting.thesis.studentFirstName} {meeting.thesis.studentLastName}
                         </p>
                     )}
+                </div>
+            </div>
+
+            {/* TIME SLOTS COMPARISON - NEW SECTION */}
+            <Card className="bg-blue-50 border-blue-200">
+                <div className="flex items-start space-x-3 mb-4">
+                    <Users className="h-6 w-6 text-blue-600 mt-1" />
+                    <div>
+                        <h2 className="text-xl font-semibold text-gray-900">
+                            Other Jury Members' Availability
+                        </h2>
+                        <p className="text-sm text-gray-600 mt-1">
+                            See what time slots other jury members have already submitted to help coordinate your selection
+                        </p>
+                    </div>
+                </div>
+                <TimeSlotsComparison meetingId={Number(meetingId)} />
+            </Card>
+
+            {/* Divider */}
+            <div className="relative">
+                <div className="absolute inset-0 flex items-center">
+                    <div className="w-full border-t border-gray-300"></div>
+                </div>
+                <div className="relative flex justify-center text-sm">
+                    <span className="px-4 bg-gray-50 text-gray-500 font-medium">
+                        Specify Your Availability Below
+                    </span>
                 </div>
             </div>
 

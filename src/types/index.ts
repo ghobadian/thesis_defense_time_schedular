@@ -22,8 +22,9 @@ export enum FormState {
 }
 
 export enum MeetingState {
-    JURY_SELECTION = 'JURY_SELECTION',
-    TIME_SELECTION = 'TIME_SELECTION',
+    JURIES_SELECTED = 'JURIES_SELECTED',
+    JURIES_SPECIFIED_TIME = 'JURIES_SPECIFIED_TIME',
+    STUDENT_SPECIFIED_TIME = 'STUDENT_SPECIFIED_TIME',
     SCHEDULED = 'SCHEDULED',
     COMPLETED = 'COMPLETED',
     CANCELED = 'CANCELED'
@@ -53,6 +54,8 @@ export interface Student extends User {
     department: DepartmentSummary;
     field: Field;
     instructor: Professor;
+    creationDate: string;
+    isGraduated: boolean;
 }
 
 export interface StudentRegistration {
@@ -104,6 +107,7 @@ export interface ThesisForm {
     studentFirstName: string;
     studentLastName: string;
     studentEmail: string;
+    instructorId: number;
     instructorFirstName: string;
     instructorLastName: string;
     field: Field;
@@ -114,10 +118,10 @@ export interface ThesisForm {
 }
 
 export interface TimeSlot {
+    id: number;
     date: string;
     timePeriod: TimePeriod;
 }
-
 
 export interface Meeting {
     id: number;
@@ -125,11 +129,7 @@ export interface Meeting {
     state: MeetingState;
     selectedTimeSlot?: TimeSlot;
     location?: string;
-    juryMembers: Array<{
-        id: number;
-        firstName: string;
-        lastName: string;
-    }>;
+    juryMembers: SimpleUser[];
     createdAt: string;
 }
 
@@ -172,7 +172,7 @@ export interface ProfessorTimeSlots {
     timeslots: TimeSlot[];
 }
 
-interface SimpleUser {
+export interface SimpleUser {
     id: number;
     firstName: string;
     lastName: string;
@@ -180,11 +180,6 @@ interface SimpleUser {
 
 export interface MeetingTimeSlotsResponse {
     meetingId: number;
-    juryMemberTimeSlots: ProfessorTimeSlots[];
-    intersections: TimeSlot[];
-}
-
-export interface TimeSlotsComparisonProps {
     juryMemberTimeSlots: ProfessorTimeSlots[];
     intersections: TimeSlot[];
 }

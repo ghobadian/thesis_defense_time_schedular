@@ -23,27 +23,58 @@ export const professorAPI = {
     },
 
     approveThesisForm: async (formId: number) => {
-        const response = await getProfessorAPI().post(`/approve-form/${formId}`);
+        const response = await getProfessorAPI().post(`/forms/${formId}/approve`);
         return response.data;
     },
 
-    rejectThesisForm: async (formId: number, reason: string) => {
-        const response = await getProfessorAPI().post(`/reject-form/${formId}`, { reason });
+    rejectThesisForm: async (formId: number, rejectionReason: string) => {
+        const response = await getProfessorAPI().post(`/forms/reject`, { formId, reason: rejectionReason });
         return response.data;
     },
 
-    submitTimeSlots: async (data: { date: string; periods: string[] }) => {
-        const response = await getProfessorAPI().post('/give-time', data);
-        return response.data;
-    },
-
-    getMyTimeSlots: async () => {
-        const response = await getProfessorAPI().get('/timeslots');
-        return response.data;
-    },
-
-    getMeetings: async () => {
+    getMyMeetings: async () => {
         const response = await getProfessorAPI().get('/meetings');
+        return response.data;
+    },
+
+    getMeetingById: async (meetingId: number) => {
+        const response = await getProfessorAPI().get('/meetings/' + meetingId);
+        return response.data;
+    },
+
+
+    submitMeetingTimeSlots: async (requestBody: AvailableTime)=> {
+        const response = await getProfessorAPI().post('/meetings/give-time', requestBody);
+        return response.data;
+    },
+
+    getMyTimeslots: async() => {
+        const response = await getProfessorAPI().get(`/timeslots`);
+        return response.data;
+    },
+
+
+    createMeeting: async (formId: number, juryIds: number[], location: string) => {
+        const response = await getProfessorAPI().post('/meetings/create', {
+            formId,
+            juryIds,
+            location
+        });
+        return response.data;
+    },
+
+    cancelMeeting: async (meetingId: number) => {
+        const response = await getProfessorAPI().post(`/meetings/${meetingId}/cancel`);
+        return response.data;
+    },
+
+    completeMeeting: async (data: { meetingId: number; score: number }) => {
+        const response = await getProfessorAPI().post('/meetings/complete', data);
+        return response.data;
+    },
+
+    scheduleMeeting: async (data: { meetingId: number; location: string }) => {
+        const response = await getProfessorAPI().post('/meetings/schedule', data);
         return response.data;
     },
 
@@ -51,20 +82,23 @@ export const professorAPI = {
         const response = await getProfessorAPI().get('/students');
         return response.data;
     },
-    getMeetingById: async (meetingId: number) => {
-        const response = await getProfessorAPI().get('/meetings/' + meetingId);
-        return response.data;
-    },
-    submitMeetingTimeSlots: async (requestBody: AvailableTime)=> {
-        const response = await getProfessorAPI().post('/give-time', requestBody);
-        return response.data;
-    },
+
+
     getMeetingTimeSlots: async (meetingId: number): Promise<MeetingTimeSlotsResponse> => {
         const response = await getProfessorAPI().get(`/meetings/${meetingId}/timeslots`);
         return response.data;
     },
+
     getMyMeetingTimeSlots: async (meetingId: number) => {
         const response = await getProfessorAPI().get(`/meetings/${meetingId}/my-timeslots`);
         return response.data;
-    }
+    },
+
+    getAllProfessors: async () => {
+        const response = await getProfessorAPI().get('/list');
+        return response.data;
+    },
+
+
+
 };

@@ -4,7 +4,7 @@ import { adminAPI } from '../../api/admin.api';
 import { Button } from '../common/Button';
 import { Input } from '../common/Input';
 import { Card } from '../common/Card';
-import {ThesisFormInput} from '../../types';
+import {Professor, ThesisFormInput} from '../../types';
 import React, {useState} from "react";
 
 export const ThesisFormCreate: React.FC = () => {
@@ -83,7 +83,7 @@ export const ThesisFormCreate: React.FC = () => {
                         required
                     >
                         <option value="">Select an instructor</option>
-                        {professors?.map((professor: any) => (
+                        {professors?.map((professor: Professor) => (
                             <option key={professor.id} value={professor.id}>
                                 {professor.firstName} {professor.lastName}
                             </option>

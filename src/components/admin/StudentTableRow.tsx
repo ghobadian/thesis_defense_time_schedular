@@ -1,20 +1,10 @@
 // src/components/admin/students/StudentTableRow.tsx
 import React from 'react';
 import { GraduationCap, Mail, Phone, Eye, Edit, Trash2 } from 'lucide-react';
+import {Student} from "../../types";
 
 interface StudentTableRowProps {
-    student: {
-        id: string;
-        studentId: string;
-        firstName: string;
-        lastName: string;
-        email: string;
-        phone?: string;
-        department?: { name: string };
-        field?: { name: string };
-        status: string;
-        createdAt: string;
-    };
+    student: Student
     onView: () => void;
     onEdit: () => void;
     onDelete: () => void;
@@ -51,7 +41,7 @@ export const StudentTableRow: React.FC<StudentTableRowProps> = ({
                             {student.firstName} {student.lastName}
                         </div>
                         <div className="text-sm text-gray-500">
-                            ID: {student.studentId}
+                            Student Number: {student.studentNumber}
                         </div>
                     </div>
                 </div>
@@ -73,11 +63,11 @@ export const StudentTableRow: React.FC<StudentTableRowProps> = ({
                     >
                         <Mail className="h-4 w-4" />
                     </a>
-                    {student.phone && (
+                    {student.phoneNumber && (
                         <a
-                            href={`tel:${student.phone}`}
+                            href={`tel:${student.phoneNumber}`}
                             className="text-gray-500 hover:text-primary-600"
-                            title={student.phone}
+                            title={student.phoneNumber}
                         >
                             <Phone className="h-4 w-4" />
                         </a>
@@ -85,12 +75,12 @@ export const StudentTableRow: React.FC<StudentTableRowProps> = ({
                 </div>
             </td>
             <td className="px-6 py-4 whitespace-nowrap">
-                <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusColor(student.status)}`}>
-                    {student.status}
+                <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusColor(student.isGraduated ? 'GRADUATED' : 'ACTIVE')}`}>
+                    {student.isGraduated ? 'Graduated' : 'Active'}
                 </span>
             </td>
             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                {new Date(student.createdAt).toLocaleDateString()}
+                {new Date(student.creationDate).toLocaleDateString()}
             </td>
             <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                 <div className="flex items-center justify-end space-x-2">

@@ -1,8 +1,10 @@
 // components/professor/TimeSlotsComparison.tsx
 import React from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { Calendar, Clock, Users, CheckCircle } from 'lucide-react';
 import { Card } from '../common/Card';
-import {TimeSlot, TimePeriod, TimeSlotsComparisonProps, ProfessorTimeSlots} from '../../types';
+import { TimeSlot, TimePeriod, ProfessorTimeSlots } from '../../types';
+import { professorAPI } from '../../api/professor.api';
 
 const periodLabels: Record<TimePeriod, string> = {
     [TimePeriod.PERIOD_7_30_9_00]: '7:30 - 9:00',
@@ -12,20 +14,11 @@ const periodLabels: Record<TimePeriod, string> = {
     [TimePeriod.PERIOD_15_30_17_00]: '15:30 - 17:00',
 };
 
-export const TimeSlotsComparison: React.FC<TimeSlotsComparisonProps> = ({
-                                                                            juryMemberTimeSlots,
-                                                                            intersections
-                                                                        }) => {
-    // Add null/undefined check
-    if (!juryMemberTimeSlots || !Array.isArray(juryMemberTimeSlots)) {
-        return (
-            <Card className="bg-gray-50">
-                <p className="text-gray-600 text-center py-8">
-                    No jury member data available.
-                </p>
-            </Card>
-        );
-    }
+export const TimeSlotsComparison = ({ meetingId }: { meetingId: number }) => {
+    const { data, isLoading, error } = useQuery({
+        queryKey: ['meetingTimeSlots', meetingId],
+        queryFn: () => professorAPI.getMeetingTimeSlots(meetingId),
+    });
 
     // Group time slots by date for each professor
     const groupSlotsByDate = (slots: TimeSlot[]) => {
@@ -42,12 +35,50 @@ export const TimeSlotsComparison: React.FC<TimeSlotsComparisonProps> = ({
 
     // Check if a specific slot is in the intersection
     const isIntersection = (date: string, period: TimePeriod) => {
-        if (!intersections || !Array.isArray(intersections)) return false;
+        if (!data?.intersections || !Array.isArray(data.intersections)) return false;
 
-        return intersections.some(
+        return data.intersections.some(
             slot => slot.date === date && slot.timePeriod === period
         );
     };
+
+    // Loading state
+    if (isLoading) {
+        return (
+            <div className="flex items-center justify-center py-8">
+                <div className="text-gray-600">Loading time slots...</div>
+            </div>
+        );
+    }
+
+    // Error state
+    if (error) {
+        return (
+            <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                <p className="text-red-600 text-sm">
+                    Failed to load time slots. Please try again.
+                </p>
+            </div>
+        );
+    }
+
+    // No data state
+    if (!data) {
+        return null;
+    }
+
+    const { juryMemberTimeSlots, intersections } = data;
+
+    // Add null/undefined check
+    if (!juryMemberTimeSlots || !Array.isArray(juryMemberTimeSlots)) {
+        return (
+            <Card className="bg-gray-50">
+                <p className="text-gray-600 text-center py-8">
+                    No jury member data available.
+                </p>
+            </Card>
+        );
+    }
 
     // Get all unique dates from all professors
     const allDates = new Set<string>();

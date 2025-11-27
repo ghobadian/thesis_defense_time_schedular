@@ -1,10 +1,10 @@
-// src/components/admin/students/DepartmentFilter.tsx
 import React from 'react';
+import {DepartmentSummary} from "../../types";
 
 interface DepartmentFilterProps {
     value: string;
     onChange: (value: string) => void;
-    departments: Array<{ id: string; name: string }>;
+    departments: Array<DepartmentSummary>;
 }
 
 export const DepartmentFilter: React.FC<DepartmentFilterProps> = ({

@@ -4,7 +4,7 @@ import { Card } from '../../components/common/Card';
 import { Button } from '../../components/common/Button';
 import { Input } from '../../components/common/Input';
 import { adminAPI } from '../../api/admin.api';
-import { StudentType } from '../../types';
+import {Field, Professor, StudentType} from '../../types';
 
 export const StudentRegistration: React.FC = () => {
     const queryClient = useQueryClient();
@@ -166,7 +166,7 @@ export const StudentRegistration: React.FC = () => {
                         required
                     >
                         <option value="">Select Field</option>
-                        {fields?.map((field: any) => (
+                        {fields?.map((field: Field) => (
                             <option key={field.id} value={field.id}>
                                 {field.name}
                             </option>
@@ -185,7 +185,7 @@ export const StudentRegistration: React.FC = () => {
                         required
                     >
                         <option value="">Select Instructor</option>
-                        {professors?.map((prof: any) => (
+                        {professors?.map((prof: Professor) => (
                             <option key={prof.id} value={prof.id}>
                                 {prof.firstName} {prof.lastName}
                             </option>

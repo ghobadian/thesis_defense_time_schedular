@@ -1,8 +1,9 @@
 import React from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { Card } from '../../components/common/Card';
-import { FileText, Calendar, Clock, CheckCircle } from 'lucide-react';
-import { studentAPI } from '../../api/student.api';
+import {useQuery} from '@tanstack/react-query';
+import {Card} from '../../components/common/Card';
+import {Calendar, CheckCircle, Clock, FileText} from 'lucide-react';
+import {studentAPI} from '../../api/student.api';
+import {FormState, Meeting, MeetingState, ThesisForm} from "../../types";
 
 export const StudentHome: React.FC = () => {
     const { data: thesisForms } = useQuery({
@@ -17,9 +18,9 @@ export const StudentHome: React.FC = () => {
 
     const stats = {
         totalForms: thesisForms?.length || 0,
-        pendingForms: thesisForms?.filter((f: any) => f.state === 'SUBMITTED').length || 0,
-        approvedForms: thesisForms?.filter((f: any) => f.state.includes('APPROVED')).length || 0,
-        scheduledMeetings: meetings?.filter((m: any) => m.state === 'SCHEDULED').length || 0,
+        pendingForms: thesisForms?.filter((f: ThesisForm) => f.state === FormState.SUBMITTED).length || 0,
+        approvedForms: thesisForms?.filter((f: ThesisForm) => f.state.includes('APPROVED')).length || 0,
+        scheduledMeetings: meetings?.filter((m: Meeting) => m.state === MeetingState.SCHEDULED).length || 0,
     };
 
     return (
@@ -71,7 +72,7 @@ export const StudentHome: React.FC = () => {
             {/* Recent Activity */}
             <Card title="Recent Activity">
                 <div className="space-y-4">
-                    {thesisForms?.slice(0, 3).map((form: any) => (
+                    {thesisForms?.slice(0, 3).map((form: ThesisForm) => (
                         <div key={form.id} className="flex items-center justify-between py-3 border-b">
                             <div>
                                 <p className="font-medium text-gray-900">{form.title}</p>

@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { API_BASE_URL } from './config';
-import {Student, StudentRegistration} from "../types";
+import {Meeting, StudentRegistration} from "../types";
 
 const getAdminAPI = () => {
     const token = localStorage.getItem('auth-storage');
@@ -14,14 +14,17 @@ const getAdminAPI = () => {
     });
 };
 
+
+interface StudentSearch {
+    search?: string;
+    departmentId?: number;
+    page?: number;
+    limit?: number;
+}
+
 export const adminAPI = {
     registerStudent: async (data: StudentRegistration) => {
-        const response = await getAdminAPI().post('/register-student', data);
-        return response.data;
-    },
-
-    registerStudents: async (data: StudentRegistration[]) => {
-        const response = await getAdminAPI().post('/register-students', data);
+        const response = await getAdminAPI().post('/students/register', data);
         return response.data;
     },
 
@@ -70,14 +73,10 @@ export const adminAPI = {
         return response.data;
     },
 
-    // New methods for Student Management
-    getStudents: async (params?: {
-        search?: string;
-        department?: string;
-        page?: number;
-        limit?: number;
-    }) => {
-        const response = await getAdminAPI().get('/students', { params });
+
+
+    getStudents: async (params: StudentSearch) => {
+        const response = await getAdminAPI().get('/students', {params});
         return response.data;
     },
 
@@ -91,8 +90,48 @@ export const adminAPI = {
         return response.data;
     },
 
-    deleteStudent: async (studentId: string) => {
+    deleteStudent: async (studentId: number) => {
         const response = await getAdminAPI().delete(`/students/${studentId}`);
         return response.data;
     },
+
+    getAllMeetings: async (): Promise<Meeting[]> => {
+        const response = await getAdminAPI().get('/meetings');
+        return response.data;
+    },
+
+    getMeetingDetails: async (id: string): Promise<Meeting> => {
+        const response = await getAdminAPI().get(`/meetings/${id}`);
+        return response.data;
+    },
+
+    createDepartment: async (data: { name: string }) => {
+        const response = await getAdminAPI().post('/departments', data);
+        return response.data;
+    },
+
+    updateDepartment: async (id: number, data: { name: string }) => {
+        const response = await getAdminAPI().put(`/departments/${id}`, data);
+        return response.data;
+    },
+
+    deleteDepartment: async (id: number) => {
+        const response = await getAdminAPI().delete(`/departments/${id}`);
+        return response.data;
+    },
+
+    updateField: async(fieldId: number, field: { name: string; departmentId: number })=> {
+        const response = await getAdminAPI().put(`/fields/${fieldId}`, field);
+        return response.data;
+    },
+
+    createField: async(field: { name: string; departmentId: number })=> {
+        const response = await getAdminAPI().post(`/fields`, field);
+        return response.data;
+    },
+
+    deleteField: async(fieldId: number)=> {
+        const response = await getAdminAPI().delete(`/fields/${fieldId}`);
+        return response.data;
+    }
 };
