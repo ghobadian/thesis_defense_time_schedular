@@ -1,4 +1,5 @@
 {
+  "platform": "docker",
   "app": "thesis-front",
   "port": 80,
   "build": {
