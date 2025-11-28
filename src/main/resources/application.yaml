@@ -24,7 +24,7 @@ spring:
   liquibase.enabled: false
   sql:
     init:
-      mode: always
+      mode: never
       data-locations: classpath:data-prod.sql
 server:
   servlet:

@@ -562,15 +562,15 @@ WHERE tf.title = 'Pharma Quality Management';
 
 -- Add time slots
 INSERT INTO time_slot (date, time_period, defense_meeting_id)
-SELECT '2025-11-25', 'PERIOD_7_30_9_00', dm.id FROM thesis_defense_meeting dm
+SELECT '2025-11-25'::date, 'PERIOD_7_30_9_00', dm.id FROM thesis_defense_meeting dm
                                                         JOIN THESIS_FORM tf ON dm.thesis_form_id = tf.id
 WHERE tf.title = 'Pharma Quality Management'
 UNION ALL
-SELECT '2025-11-25', 'PERIOD_15_30_17_00', dm.id FROM thesis_defense_meeting dm
+SELECT '2025-11-25'::date, 'PERIOD_15_30_17_00', dm.id FROM thesis_defense_meeting dm
                                                           JOIN THESIS_FORM tf ON dm.thesis_form_id = tf.id
 WHERE tf.title = 'Pharma Quality Management'
 UNION ALL
-SELECT '2025-11-26', 'PERIOD_9_00_10_30', dm.id FROM thesis_defense_meeting dm
+SELECT '2025-11-26'::date, 'PERIOD_9_00_10_30', dm.id FROM thesis_defense_meeting dm
                                                          JOIN THESIS_FORM tf ON dm.thesis_form_id = tf.id
 WHERE tf.title = 'Pharma Quality Management';
 
@@ -579,47 +579,47 @@ INSERT INTO timeslot_professor_association (timeslot_id, professor_id)
 SELECT ts.id, 23 FROM time_slot ts
                           JOIN thesis_defense_meeting dm ON ts.defense_meeting_id = dm.id
                           JOIN THESIS_FORM tf ON dm.thesis_form_id = tf.id
-WHERE tf.title = 'Pharma Quality Management' AND ts.date = '2025-11-25' AND ts.time_period = 'PERIOD_7_30_9_00'
+WHERE tf.title = 'Pharma Quality Management' AND ts.date = '2025-11-25'::date AND ts.time_period = 'PERIOD_7_30_9_00'
 UNION ALL
 SELECT ts.id, 22 FROM time_slot ts
                           JOIN thesis_defense_meeting dm ON ts.defense_meeting_id = dm.id
                           JOIN THESIS_FORM tf ON dm.thesis_form_id = tf.id
-WHERE tf.title = 'Pharma Quality Management' AND ts.date = '2025-11-25' AND ts.time_period = 'PERIOD_7_30_9_00'
+WHERE tf.title = 'Pharma Quality Management' AND ts.date = '2025-11-25'::date AND ts.time_period = 'PERIOD_7_30_9_00'
 UNION ALL
 SELECT ts.id, 29 FROM time_slot ts
                           JOIN thesis_defense_meeting dm ON ts.defense_meeting_id = dm.id
                           JOIN THESIS_FORM tf ON dm.thesis_form_id = tf.id
-WHERE tf.title = 'Pharma Quality Management' AND ts.date = '2025-11-25' AND ts.time_period = 'PERIOD_7_30_9_00'
+WHERE tf.title = 'Pharma Quality Management' AND ts.date = '2025-11-25'::date AND ts.time_period = 'PERIOD_7_30_9_00'
 UNION ALL
 SELECT ts.id, 23 FROM time_slot ts
                           JOIN thesis_defense_meeting dm ON ts.defense_meeting_id = dm.id
                           JOIN THESIS_FORM tf ON dm.thesis_form_id = tf.id
-WHERE tf.title = 'Pharma Quality Management' AND ts.date = '2025-11-25' AND ts.time_period = 'PERIOD_15_30_17_00'
+WHERE tf.title = 'Pharma Quality Management' AND ts.date = '2025-11-25'::date AND ts.time_period = 'PERIOD_15_30_17_00'
 UNION ALL
 SELECT ts.id, 22 FROM time_slot ts
                           JOIN thesis_defense_meeting dm ON ts.defense_meeting_id = dm.id
                           JOIN THESIS_FORM tf ON dm.thesis_form_id = tf.id
-WHERE tf.title = 'Pharma Quality Management' AND ts.date = '2025-11-25' AND ts.time_period = 'PERIOD_15_30_17_00'
+WHERE tf.title = 'Pharma Quality Management' AND ts.date = '2025-11-25'::date AND ts.time_period = 'PERIOD_15_30_17_00'
 UNION ALL
 SELECT ts.id, 23 FROM time_slot ts
                           JOIN thesis_defense_meeting dm ON ts.defense_meeting_id = dm.id
                           JOIN THESIS_FORM tf ON dm.thesis_form_id = tf.id
-WHERE tf.title = 'Pharma Quality Management' AND ts.date = '2025-11-26' AND ts.time_period = 'PERIOD_9_00_10_30'
+WHERE tf.title = 'Pharma Quality Management' AND ts.date = '2025-11-26'::date AND ts.time_period = 'PERIOD_9_00_10_30'
 UNION ALL
 SELECT ts.id, 22 FROM time_slot ts
                           JOIN thesis_defense_meeting dm ON ts.defense_meeting_id = dm.id
                           JOIN THESIS_FORM tf ON dm.thesis_form_id = tf.id
-WHERE tf.title = 'Pharma Quality Management' AND ts.date = '2025-11-26' AND ts.time_period = 'PERIOD_9_00_10_30'
+WHERE tf.title = 'Pharma Quality Management' AND ts.date = '2025-11-26'::date AND ts.time_period = 'PERIOD_9_00_10_30'
 UNION ALL
 SELECT ts.id, 29 FROM time_slot ts
                           JOIN thesis_defense_meeting dm ON ts.defense_meeting_id = dm.id
                           JOIN THESIS_FORM tf ON dm.thesis_form_id = tf.id
-WHERE tf.title = 'Pharma Quality Management' AND ts.date = '2025-11-26' AND ts.time_period = 'PERIOD_9_00_10_30';
+WHERE tf.title = 'Pharma Quality Management' AND ts.date = '2025-11-26'::date AND ts.time_period = 'PERIOD_9_00_10_30';
 
 -- PhD thesis - IoT Security Protocols
 INSERT INTO thesis_defense_meeting (thesis_form_id, state, submission_date, update_date)
 VALUES
-    ((SELECT id FROM THESIS_FORM WHERE title = 'IoT Security Protocols'), 'JURIES_SELECTED', '2025-10-27 09:00:00.000', '2025-10-30 11:00:00.000');
+    ((SELECT id FROM THESIS_FORM WHERE title = 'IoT Security Protocols'), 'JURIES_SELECTED', '2025-10-27 09:00:00.000'::date, '2025-10-30 11:00:00.000'::date);
 
 -- Associate professors (5 for PhD)
 INSERT INTO defensemeeting_professor_association (defense_meeting_id, professor_id)
@@ -645,11 +645,11 @@ WHERE tf.title = 'IoT Security Protocols';
 
 -- Add time slots for IoT Security
 INSERT INTO time_slot (date, time_period, defense_meeting_id)
-SELECT '2025-11-28', 'PERIOD_10_30_12_00', dm.id FROM thesis_defense_meeting dm
+SELECT '2025-11-28'::date, 'PERIOD_10_30_12_00', dm.id FROM thesis_defense_meeting dm
                                                           JOIN THESIS_FORM tf ON dm.thesis_form_id = tf.id
 WHERE tf.title = 'IoT Security Protocols'
 UNION ALL
-SELECT '2025-11-28', 'PERIOD_13_30_15_00', dm.id FROM thesis_defense_meeting dm
+SELECT '2025-11-28'::date, 'PERIOD_13_30_15_00', dm.id FROM thesis_defense_meeting dm
                                                           JOIN THESIS_FORM tf ON dm.thesis_form_id = tf.id
 WHERE tf.title = 'IoT Security Protocols'
 UNION ALL
@@ -662,42 +662,42 @@ INSERT INTO timeslot_professor_association (timeslot_id, professor_id)
 SELECT ts.id, 12 FROM time_slot ts
                           JOIN thesis_defense_meeting dm ON ts.defense_meeting_id = dm.id
                           JOIN THESIS_FORM tf ON dm.thesis_form_id = tf.id
-WHERE tf.title = 'IoT Security Protocols' AND ts.date = '2025-11-28' AND ts.time_period = 'PERIOD_10_30_12_00'
+WHERE tf.title = 'IoT Security Protocols' AND ts.date = '2025-11-28'::date AND ts.time_period = 'PERIOD_10_30_12_00'
 UNION ALL
 SELECT ts.id, 13 FROM time_slot ts
                           JOIN thesis_defense_meeting dm ON ts.defense_meeting_id = dm.id
                           JOIN THESIS_FORM tf ON dm.thesis_form_id = tf.id
-WHERE tf.title = 'IoT Security Protocols' AND ts.date = '2025-11-28' AND ts.time_period = 'PERIOD_10_30_12_00'
+WHERE tf.title = 'IoT Security Protocols' AND ts.date = '2025-11-28'::date AND ts.time_period = 'PERIOD_10_30_12_00'
 UNION ALL
 SELECT ts.id, 14 FROM time_slot ts
                           JOIN thesis_defense_meeting dm ON ts.defense_meeting_id = dm.id
                           JOIN THESIS_FORM tf ON dm.thesis_form_id = tf.id
-WHERE tf.title = 'IoT Security Protocols' AND ts.date = '2025-11-28' AND ts.time_period = 'PERIOD_10_30_12_00'
+WHERE tf.title = 'IoT Security Protocols' AND ts.date = '2025-11-28'::date AND ts.time_period = 'PERIOD_10_30_12_00'
 UNION ALL
 SELECT ts.id, 24 FROM time_slot ts
                           JOIN thesis_defense_meeting dm ON ts.defense_meeting_id = dm.id
                           JOIN THESIS_FORM tf ON dm.thesis_form_id = tf.id
-WHERE tf.title = 'IoT Security Protocols' AND ts.date = '2025-11-28' AND ts.time_period = 'PERIOD_10_30_12_00'
+WHERE tf.title = 'IoT Security Protocols' AND ts.date = '2025-11-28'::date AND ts.time_period = 'PERIOD_10_30_12_00'
 UNION ALL
 SELECT ts.id, 12 FROM time_slot ts
                           JOIN thesis_defense_meeting dm ON ts.defense_meeting_id = dm.id
                           JOIN THESIS_FORM tf ON dm.thesis_form_id = tf.id
-WHERE tf.title = 'IoT Security Protocols' AND ts.date = '2025-11-28' AND ts.time_period = 'PERIOD_13_30_15_00'
+WHERE tf.title = 'IoT Security Protocols' AND ts.date = '2025-11-28'::date AND ts.time_period = 'PERIOD_13_30_15_00'
 UNION ALL
 SELECT ts.id, 13 FROM time_slot ts
                           JOIN thesis_defense_meeting dm ON ts.defense_meeting_id = dm.id
                           JOIN THESIS_FORM tf ON dm.thesis_form_id = tf.id
-WHERE tf.title = 'IoT Security Protocols' AND ts.date = '2025-11-28' AND ts.time_period = 'PERIOD_13_30_15_00'
+WHERE tf.title = 'IoT Security Protocols' AND ts.date = '2025-11-28'::date AND ts.time_period = 'PERIOD_13_30_15_00'
 UNION ALL
 SELECT ts.id, 24 FROM time_slot ts
                           JOIN thesis_defense_meeting dm ON ts.defense_meeting_id = dm.id
                           JOIN THESIS_FORM tf ON dm.thesis_form_id = tf.id
-WHERE tf.title = 'IoT Security Protocols' AND ts.date = '2025-11-28' AND ts.time_period = 'PERIOD_13_30_15_00'
+WHERE tf.title = 'IoT Security Protocols' AND ts.date = '2025-11-28'::date AND ts.time_period = 'PERIOD_13_30_15_00'
 UNION ALL
 SELECT ts.id, 25 FROM time_slot ts
                           JOIN thesis_defense_meeting dm ON ts.defense_meeting_id = dm.id
                           JOIN THESIS_FORM tf ON dm.thesis_form_id = tf.id
-WHERE tf.title = 'IoT Security Protocols' AND ts.date = '2025-11-28' AND ts.time_period = 'PERIOD_13_30_15_00';
+WHERE tf.title = 'IoT Security Protocols' AND ts.date = '2025-11-28'::date AND ts.time_period = 'PERIOD_13_30_15_00';
 
 -- ============================================
 -- Meeting State: SCHEDULED (2 meetings)
@@ -706,7 +706,7 @@ WHERE tf.title = 'IoT Security Protocols' AND ts.date = '2025-11-28' AND ts.time
 -- PhD thesis - Seismic Structural Engineering
 INSERT INTO thesis_defense_meeting (thesis_form_id, state, submission_date, update_date, location)
 VALUES
-    ((SELECT id FROM THESIS_FORM WHERE title = 'Seismic Structural Engineering'), 'SCHEDULED', '2025-10-26 09:00:00.000', '2025-11-05 15:00:00.000', 'Room 207');
+    ((SELECT id FROM THESIS_FORM WHERE title = 'Seismic Structural Engineering'), 'SCHEDULED', '2025-10-26 09:00:00.000'::date, '2025-11-05 15:00:00.000'::date, 'Room 207');
 
 -- Associate professors (5 for PhD)
 INSERT INTO defensemeeting_professor_association (defense_meeting_id, professor_id)
@@ -724,7 +724,7 @@ WHERE tf.title = 'Seismic Structural Engineering';
 
 -- Insert selected time slot
 INSERT INTO time_slot (date, time_period, defense_meeting_id)
-SELECT '2025-11-20', 'PERIOD_13_30_15_00', dm.id FROM thesis_defense_meeting dm
+SELECT '2025-11-20'::date, 'PERIOD_13_30_15_00', dm.id FROM thesis_defense_meeting dm
                                                           JOIN THESIS_FORM tf ON dm.thesis_form_id = tf.id
 WHERE tf.title = 'Seismic Structural Engineering';
 
@@ -759,7 +759,7 @@ WHERE tf.title = 'Automated Quality Control System';
 
 -- Insert selected time slot
 INSERT INTO time_slot (date, time_period, defense_meeting_id)
-SELECT '2025-11-22', 'PERIOD_9_00_10_30', dm.id FROM thesis_defense_meeting dm
+SELECT '2025-11-22'::date, 'PERIOD_9_00_10_30', dm.id FROM thesis_defense_meeting dm
                                                          JOIN THESIS_FORM tf ON dm.thesis_form_id = tf.id
 WHERE tf.title = 'Automated Quality Control System';
 
@@ -780,7 +780,7 @@ WHERE thesis_form_id = (SELECT id FROM THESIS_FORM WHERE title = 'Automated Qual
 -- Master thesis - Renewable Energy Integration
 INSERT INTO thesis_defense_meeting (thesis_form_id, state, score, submission_date, update_date, location)
 VALUES
-    ((SELECT id FROM THESIS_FORM WHERE title = 'Renewable Energy Integration'), 'COMPLETED', 17.5, '2025-10-29 10:00:00.000', '2025-11-08 16:00:00.000', 'Room 123');
+    ((SELECT id FROM THESIS_FORM WHERE title = 'Renewable Energy Integration'), 'COMPLETED', 17.5, '2025-10-29 10:00:00.000'::date, '2025-11-08 16:00:00.000'::date, 'Room 123');
 
 -- Associate professors
 INSERT INTO defensemeeting_professor_association (defense_meeting_id, professor_id)
@@ -802,7 +802,7 @@ WHERE tf.title = 'Renewable Energy Integration';
 
 -- Insert completed time slot
 INSERT INTO time_slot (date, time_period, defense_meeting_id)
-SELECT '2025-11-08', 'PERIOD_15_30_17_00', dm.id FROM thesis_defense_meeting dm
+SELECT '2025-11-08'::date, 'PERIOD_15_30_17_00', dm.id FROM thesis_defense_meeting dm
                                                           JOIN THESIS_FORM tf ON dm.thesis_form_id = tf.id
 WHERE tf.title = 'Renewable Energy Integration';
 
@@ -819,7 +819,7 @@ WHERE thesis_form_id = (SELECT id FROM THESIS_FORM WHERE title = 'Renewable Ener
 -- Master thesis - Deep RL for Robotics
 INSERT INTO thesis_defense_meeting (thesis_form_id, state, score, submission_date, update_date, location)
 VALUES
-    ((SELECT id FROM THESIS_FORM WHERE title = 'Deep RL for Robotics'), 'COMPLETED', 18.0, '2025-10-28 09:00:00.000', '2025-11-07 15:30:00.000', 'Room 123');
+    ((SELECT id FROM THESIS_FORM WHERE title = 'Deep RL for Robotics'), 'COMPLETED', 18.0, '2025-10-28 09:00:00.000'::date, '2025-11-07 15:30:00.000'::date, 'Room 123');
 
 -- Associate professors
 INSERT INTO defensemeeting_professor_association (defense_meeting_id, professor_id)
@@ -837,7 +837,7 @@ WHERE tf.title = 'Deep RL for Robotics';
 
 -- Insert completed time slot
 INSERT INTO time_slot (date, time_period, defense_meeting_id)
-SELECT '2025-11-07', 'PERIOD_13_30_15_00', dm.id FROM thesis_defense_meeting dm
+SELECT '2025-11-07'::date, 'PERIOD_13_30_15_00', dm.id FROM thesis_defense_meeting dm
                                                           JOIN THESIS_FORM tf ON dm.thesis_form_id = tf.id
 WHERE tf.title = 'Deep RL for Robotics';
 
@@ -854,7 +854,7 @@ WHERE thesis_form_id = (SELECT id FROM THESIS_FORM WHERE title = 'Deep RL for Ro
 -- PhD thesis - Supply Chain Optimization Algorithms
 INSERT INTO thesis_defense_meeting (thesis_form_id, state, score, submission_date, update_date, location)
 VALUES
-    ((SELECT id FROM THESIS_FORM WHERE title = 'Supply Chain Optimization Algorithms'), 'COMPLETED', 19.0, '2025-10-28 08:00:00.000', '2025-11-10 17:00:00.000', 'Room 123');
+    ((SELECT id FROM THESIS_FORM WHERE title = 'Supply Chain Optimization Algorithms'), 'COMPLETED', 19.0, '2025-10-28 08:00:00.000'::date, '2025-11-10 17:00:00.000'::date, 'Room 123');
 
 -- Associate professors (5 for PhD)
 INSERT INTO defensemeeting_professor_association (defense_meeting_id, professor_id)
@@ -880,7 +880,7 @@ WHERE tf.title = 'Supply Chain Optimization Algorithms';
 
 -- Insert completed time slot
 INSERT INTO time_slot (date, time_period, defense_meeting_id)
-SELECT '2025-11-10', 'PERIOD_15_30_17_00', dm.id FROM thesis_defense_meeting dm
+SELECT '2025-11-10'::date, 'PERIOD_15_30_17_00', dm.id FROM thesis_defense_meeting dm
                                                           JOIN THESIS_FORM tf ON dm.thesis_form_id = tf.id
 WHERE tf.title = 'Supply Chain Optimization Algorithms';
 
@@ -901,7 +901,7 @@ WHERE thesis_form_id = (SELECT id FROM THESIS_FORM WHERE title = 'Supply Chain O
 -- Edge case: Student with multiple thesis submissions (testing rejection/resubmission)
 INSERT INTO THESIS_FORM (FIELD_ID, INSTRUCTOR_ID, STUDENT_ID, SUBMISSION_DATE, UPDATE_DATE, ABSTRACT_TEXT, TITLE, STATE, STUDENT_TYPE)
 VALUES
-    (1, 10, 100, '2025-10-15 10:00:00.000', '2025-10-15 10:00:00.000',
+    (1, 10, 100, '2025-10-15 10:00:00.000'::date, '2025-10-15 10:00:00.000'::date,
      'Initial submission - rejected and resubmitted.',
      'Web Security Testing Framework v1', 'SUBMITTED', 'BACHELOR');
 
@@ -972,14 +972,14 @@ GROUP BY date, time_period
 ORDER BY Date, Period;
 
 -- Students per Instructor
-SELECT 'Students per Instructor:' as Summary, '' as Instructor, NULL as Count
-UNION ALL
-SELECT '', CONCAT(u.first_name, ' ', u.last_name), COUNT(*)
-FROM student s
-         JOIN professor p ON s.instructor_id = p.id
-         JOIN users u ON p.id = u.id
-GROUP BY p.id, u.first_name, u.last_name
-ORDER BY Instructor;
+-- SELECT 'Students per Instructor:' as Summary, '' as Instructor, NULL as Count
+-- UNION ALL
+-- SELECT '', CONCAT(u.first_name, ' ', u.last_name), COUNT(*)
+-- FROM student s
+--          JOIN professor p ON s.instructor_id = p.id
+--          JOIN users u ON p.id = u.id
+-- GROUP BY p.id, u.first_name, u.last_name
+-- ORDER BY Instructor;
 
 -- ============================================
 -- 12. ADDITIONAL SAMPLE TIME SLOTS FOR TESTING
@@ -989,11 +989,11 @@ ORDER BY Instructor;
 -- These are not yet associated with defense meetings
 INSERT INTO time_slot (date, time_period, defense_meeting_id)
 VALUES
-    ('2025-11-30', 'PERIOD_7_30_9_00', NULL),
-    ('2025-11-30', 'PERIOD_9_00_10_30', NULL),
-    ('2025-11-30', 'PERIOD_10_30_12_00', NULL),
-    ('2025-12-01', 'PERIOD_13_30_15_00', NULL),
-    ('2025-12-01', 'PERIOD_15_30_17_00', NULL);
+    ('2025-11-30'::date, 'PERIOD_7_30_9_00', NULL),
+    ('2025-11-30'::date, 'PERIOD_9_00_10_30', NULL),
+    ('2025-11-30'::date, 'PERIOD_10_30_12_00', NULL),
+    ('2025-12-01'::date, 'PERIOD_13_30_15_00', NULL),
+    ('2025-12-01'::date, 'PERIOD_15_30_17_00', NULL);
 
 -- ============================================
 -- END OF PRODUCTION DATA INITIALIZATION
