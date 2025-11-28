@@ -1,6 +1,6 @@
 {
   "platform": "docker",
-  "app": "thesis-backend",
+  "app": "thesis-back",
   "port": 8080,
   "disks": [],
   "build": {
