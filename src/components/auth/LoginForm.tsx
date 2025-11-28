@@ -74,7 +74,7 @@ export const LoginForm: React.FC = () => {
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-500 to-primary-700">
-            <div className="bg-white p-8 rounded-lg shadow-2xl w-full max-w-md">
+            <div className="bg-white p-8 rounded-lg shadow-2xl w-full max-w-4xl">
                 <h2 className="text-3xl font-bold text-center text-gray-800 mb-8">
                     Thesis Defense Scheduler
                 </h2>
@@ -113,11 +113,115 @@ export const LoginForm: React.FC = () => {
                     </Button>
                 </form>
 
-                <div className="mt-6 text-center text-sm text-gray-600">
-                    <p>Demo Credentials:</p>
-                    <p className="mt-2">Admin: admin@test.com / Test123!</p>
-                    <p>Professor: prof@test.com / Test123!</p>
-                    <p>Student: student@test.com / Test123!</p>
+                <div className="mt-8 text-sm text-gray-600">
+                    <h3 className="text-lg font-semibold text-gray-800 mb-4 text-center">Demo Credentials</h3>
+
+                    {/* Admins Section */}
+                    <div className="mb-4">
+                        <h4 className="font-semibold text-red-600 mb-2">👨‍💼 Admins (Password: admin123)</h4>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-1 text-xs bg-red-50 p-3 rounded">
+                            <div>• Mohammad Rezaei - admin@university.ac.ir</div>
+                            <div>• Fatima Ahmadi - admin2@university.ac.ir</div>
+                            <div>• Ali Karimi - admin3@university.ac.ir</div>
+                            <div>• Sara Hosseini - admin4@university.ac.ir</div>
+                        </div>
+                    </div>
+
+                    {/* Professors Section */}
+                    <div className="mb-4">
+                        <h4 className="font-semibold text-blue-600 mb-2">👨‍🏫 Professors (Password: prof123)</h4>
+                        <div className="text-xs bg-blue-50 p-3 rounded">
+                            <p className="font-medium text-blue-800 mb-1">Department Managers:</p>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-1 mb-2">
+                                <div>• Reza Mohammadi - r.mohammadi@university.ac.ir</div>
+                                <div>• Ahmad Mousavi - a.mousavi@university.ac.ir</div>
+                                <div>• Parisa Rahmani - p.rahmani@university.ac.ir</div>
+                                <div>• Neda Hashemi - n.hashemi@university.ac.ir</div>
+                                <div>• Kamran Azizi - k.azizi@university.ac.ir</div>
+                            </div>
+                            <p className="font-medium text-blue-800 mb-1">Regular Professors:</p>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-1">
+                                <div>• Maryam Alavi - m.alavi@university.ac.ir</div>
+                                <div>• Hassan Rahimi - h.rahimi@university.ac.ir</div>
+                                <div>• Zahra Jamali - z.jamali@university.ac.ir</div>
+                                <div>• Mehdi Naseri - m.naseri@university.ac.ir</div>
+                                <div>• Leila Salehi - l.salehi@university.ac.ir</div>
+                                <div>• Hossein Abbasi - h.abbasi@university.ac.ir</div>
+                                <div>• Javad Kazemi - j.kazemi@university.ac.ir</div>
+                                <div>• Saeed Moradi - s.moradi@university.ac.ir</div>
+                                <div>• Amir Sadeghi - a.sadeghi@university.ac.ir</div>
+                                <div>• Narges Tavakoli - n.tavakoli@university.ac.ir</div>
+                                <div>• Davood Yousefi - d.yousefi@university.ac.ir</div>
+                                <div>• Fatemeh Akbari - f.akbari@university.ac.ir</div>
+                                <div>• Behzad Farahani - b.farahani@university.ac.ir</div>
+                                <div>• Mina Ghorbani - m.ghorbani@university.ac.ir</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Students Section */}
+                    <div className="mb-4">
+                        <h4 className="font-semibold text-green-600 mb-2">👨‍🎓 Students (Password: student123)</h4>
+                        <div className="text-xs bg-green-50 p-3 rounded">
+                            <p className="font-medium text-green-800 mb-1">Bachelor Students:</p>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-1 mb-2">
+                                <div>• Ali Nejati - a.nejati@student.university.ac.ir</div>
+                                <div>• Mahsa Amini - m.amini@student.university.ac.ir</div>
+                                <div>• Hamed Rostami - h.rostami@student.university.ac.ir</div>
+                                <div>• Negar Shams - n.shams@student.university.ac.ir</div>
+                                <div>• Amin Zarei - a.zarei@student.university.ac.ir</div>
+                                <div>• Elham Sharifi - e.sharifi@student.university.ac.ir</div>
+                                <div>• Pouya Forouzan - p.forouzan@student.university.ac.ir</div>
+                                <div>• Niloofar Ebrahimi - n.ebrahimi@student.university.ac.ir</div>
+                                <div>• Omid Ghafari - o.ghafari@student.university.ac.ir</div>
+                                <div>• Sanaz Mirzaei - s.mirzaei@student.university.ac.ir</div>
+                                <div>• Arash Soltani - a.soltani@student.university.ac.ir</div>
+                                <div>• Golnaz Maleki - g.maleki@student.university.ac.ir</div>
+                                <div>• Sina Asadi - s.asadi@student.university.ac.ir</div>
+                                <div>• Yasmin Sadri - y.sadri@student.university.ac.ir</div>
+                                <div>• Ramin Jafari - r.jafari@student.university.ac.ir</div>
+                            </div>
+                            <p className="font-medium text-green-800 mb-1">Master Students:</p>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-1 mb-2">
+                                <div>• Navid Kiani - n.kiani@student.university.ac.ir</div>
+                                <div>• Shiva Ramezani - s.ramezani@student.university.ac.ir</div>
+                                <div>• Erfan Hosseinpour - e.hosseinpour@student.university.ac.ir</div>
+                                <div>• Kimia Nouri - k.nouri@student.university.ac.ir</div>
+                            </div>
+                            <p className="font-medium text-green-800 mb-1">PhD Students:</p>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-1">
+                                <div>• Mojtaba Esmaili - m.esmaili@student.university.ac.ir</div>
+                                <div>• Vida Daneshvar - v.daneshvar@student.university.ac.ir</div>
+                                <div>• Kourosh Khalili - k.khalili@student.university.ac.ir</div>
+                                <div>• Azadeh Ghasemi - a.ghasemi@student.university.ac.ir</div>
+                                <div>• Vahid Bahrami - v.bahrami@student.university.ac.ir</div>
+                                <div>• Mahdieh Taheri - m.taheri@student.university.ac.ir</div>
+                                <div>• Saeid Moslemi - s.moslemi@student.university.ac.ir</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Quick Test Section */}
+                    <div className="mt-4 p-3 bg-gray-100 rounded">
+                        <p className="font-semibold text-gray-700 mb-2">🚀 Quick Test:</p>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-2 text-xs">
+                            <div className="bg-white p-2 rounded shadow-sm">
+                                <span className="font-medium">Admin:</span><br/>
+                                admin@university.ac.ir<br/>
+                                admin123
+                            </div>
+                            <div className="bg-white p-2 rounded shadow-sm">
+                                <span className="font-medium">Professor:</span><br/>
+                                r.mohammadi@university.ac.ir<br/>
+                                prof123
+                            </div>
+                            <div className="bg-white p-2 rounded shadow-sm">
+                                <span className="font-medium">Student:</span><br/>
+                                a.nejati@student.university.ac.ir<br/>
+                                student123
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
