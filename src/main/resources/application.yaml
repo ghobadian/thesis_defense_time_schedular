@@ -24,9 +24,10 @@ spring:
   liquibase.enabled: false
   sql:
     init:
-      mode: never
+      mode: always
       data-locations: classpath:data-prod.sql
 server:
   servlet:
     context-path: /api/v1
 frontend.url: ${FRONTEND_URL}
+rate-limit.max-submitted-forms: ${RATE_LIMIT_MAX_SUBMITTED_FORMS}
