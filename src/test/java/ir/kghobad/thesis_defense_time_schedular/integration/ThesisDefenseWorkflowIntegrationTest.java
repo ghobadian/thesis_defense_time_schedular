@@ -177,22 +177,21 @@ public class ThesisDefenseWorkflowIntegrationTest extends BaseIntegrationTest {
     private void studentChoosesTimeSlotCorrectly() throws Exception {
         LocalDate defenseDate = LocalDate.now().plusDays(14);
         ThesisDefenseMeeting meeting = thesisDefenseMeetingRepository.findAll().getFirst();
-        TimeSlotSelectionInputDTO timeSlotSelectionInputDTO = new TimeSlotSelectionInputDTO(defenseDate, TimePeriod.PERIOD_7_30_9_00, meeting.getId());
+        TimeSlotSelectionInputDTO timeSlotSelectionInputDTO = new TimeSlotSelectionInputDTO(1L, meeting.getId());
         mockMvc.perform(post("/student/time-slots")
                         .header(HttpHeaders.AUTHORIZATION, "Bearer " + studentToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(timeSlotSelectionInputDTO)))
                 .andExpect(status().isOk());
         TimeSlot selectedTimeSlot = meeting.getSelectedTimeSlot();
-        assertEquals(selectedTimeSlot.getTimePeriod(), timeSlotSelectionInputDTO.getTimePeriod());
+        assertEquals(selectedTimeSlot.getId(), timeSlotSelectionInputDTO.getTimeSlotId());
         assertEquals(selectedTimeSlot.getDefenseMeeting().getId(), timeSlotSelectionInputDTO.getMeetingId());
-        assertEquals(selectedTimeSlot.getDate(), timeSlotSelectionInputDTO.getDate());
     }
 
     private void studentChoosesTimeSlotWithWrongDate() throws Exception {
         LocalDate defenseDate = LocalDate.now().plusDays(28);
         ThesisDefenseMeeting meeting = thesisDefenseMeetingRepository.findAll().getFirst();
-        TimeSlotSelectionInputDTO timeSlotSelectionInputDTO = new TimeSlotSelectionInputDTO(defenseDate, TimePeriod.PERIOD_7_30_9_00, meeting.getId());
+        TimeSlotSelectionInputDTO timeSlotSelectionInputDTO = new TimeSlotSelectionInputDTO(3L, meeting.getId());
         mockMvc.perform(post("/student/time-slots")
                         .header(HttpHeaders.AUTHORIZATION, "Bearer " + studentToken)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -203,7 +202,7 @@ public class ThesisDefenseWorkflowIntegrationTest extends BaseIntegrationTest {
     private void studentChoosesTimeSlotWithWrongMeetingId() throws Exception {
         LocalDate defenseDate = LocalDate.now().plusDays(14);
         ThesisDefenseMeeting meeting = thesisDefenseMeetingRepository.findAll().getFirst();
-        TimeSlotSelectionInputDTO timeSlotSelectionInputDTO = new TimeSlotSelectionInputDTO(defenseDate, TimePeriod.PERIOD_7_30_9_00, meeting.getId() + 1);
+        TimeSlotSelectionInputDTO timeSlotSelectionInputDTO = new TimeSlotSelectionInputDTO(3L, meeting.getId() + 1);
         mockMvc.perform(post("/student/time-slots")
                         .header(HttpHeaders.AUTHORIZATION, "Bearer " + studentToken)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -214,7 +213,7 @@ public class ThesisDefenseWorkflowIntegrationTest extends BaseIntegrationTest {
     private void studentChoosesTimeSlotWithWrongTimePeriod() throws Exception {
         LocalDate defenseDate = LocalDate.now().plusDays(14);
         ThesisDefenseMeeting meeting = thesisDefenseMeetingRepository.findAll().getFirst();
-        TimeSlotSelectionInputDTO timeSlotSelectionInputDTO = new TimeSlotSelectionInputDTO(defenseDate, TimePeriod.PERIOD_10_30_12_00, meeting.getId());
+        TimeSlotSelectionInputDTO timeSlotSelectionInputDTO = new TimeSlotSelectionInputDTO(4L, meeting.getId());
         mockMvc.perform(post("/student/time-slots")
                         .header(HttpHeaders.AUTHORIZATION, "Bearer " + studentToken)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -236,7 +235,7 @@ public class ThesisDefenseWorkflowIntegrationTest extends BaseIntegrationTest {
         TimeSlotDTO actualTimeslot = meeting.getAvailableTimeSlots().getFirst();
 
         LocalDate defenseDate = LocalDate.now().plusDays(14);
-        TimeSlotDTO expectedTimeslot = new TimeSlotDTO(defenseDate, TimePeriod.PERIOD_7_30_9_00);
+        TimeSlotDTO expectedTimeslot = new TimeSlotDTO(3L, defenseDate, TimePeriod.PERIOD_7_30_9_00);//TODO fix tests
         assertEquals(expectedTimeslot, actualTimeslot);
 
 
@@ -308,9 +307,9 @@ public class ThesisDefenseWorkflowIntegrationTest extends BaseIntegrationTest {
 
     private void jury2GivesTime() throws Exception {
         LocalDate defenseDate = LocalDate.now().plusDays(14);
-        TimeSlotDTO t1 = new TimeSlotDTO(defenseDate, TimePeriod.PERIOD_7_30_9_00);
-        TimeSlotDTO t2 = new TimeSlotDTO(defenseDate, TimePeriod.PERIOD_9_00_10_30);
-        TimeSlotDTO t3 = new TimeSlotDTO(defenseDate.minusDays(1), TimePeriod.PERIOD_15_30_17_00);
+        TimeSlotDTO t1 = new TimeSlotDTO(5L, defenseDate, TimePeriod.PERIOD_7_30_9_00);
+        TimeSlotDTO t2 = new TimeSlotDTO(5L, defenseDate, TimePeriod.PERIOD_9_00_10_30);
+        TimeSlotDTO t3 = new TimeSlotDTO(5L, defenseDate.minusDays(1), TimePeriod.PERIOD_15_30_17_00);
         Long meetingId = thesisDefenseMeetingRepository.findAll().getFirst().getId();
         AvailableTimeInputDTO jury2Slot = new AvailableTimeInputDTO(Set.of(t1, t2, t3), meetingId);
 
@@ -329,7 +328,7 @@ public class ThesisDefenseWorkflowIntegrationTest extends BaseIntegrationTest {
     private void jury1GivesTime() throws Exception {
         LocalDate defenseDate = LocalDate.now().plusDays(14);
         Long meetingId = thesisDefenseMeetingRepository.findAll().getFirst().getId();
-        TimeSlotDTO ts1 = new TimeSlotDTO(defenseDate, TimePeriod.PERIOD_7_30_9_00);
+        TimeSlotDTO ts1 = new TimeSlotDTO(5L, defenseDate, TimePeriod.PERIOD_7_30_9_00);
         AvailableTimeInputDTO jury1Slot = new AvailableTimeInputDTO(
                 Set.of(ts1), meetingId
         );
@@ -466,7 +465,7 @@ public class ThesisDefenseWorkflowIntegrationTest extends BaseIntegrationTest {
         LocalDate defenseDate = LocalDate.now().plusDays(14);
 
         Long meetingId = thesisDefenseMeetingRepository.findAll().getFirst().getId();
-        TimeSlotDTO timeslotDto = new TimeSlotDTO(defenseDate, TimePeriod.PERIOD_7_30_9_00);
+        TimeSlotDTO timeslotDto = new TimeSlotDTO(5L, defenseDate, TimePeriod.PERIOD_7_30_9_00);
         AvailableTimeInputDTO instructorSlot = new AvailableTimeInputDTO(
                 Set.of(timeslotDto), meetingId
         );

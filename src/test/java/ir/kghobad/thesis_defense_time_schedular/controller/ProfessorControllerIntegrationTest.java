@@ -171,7 +171,7 @@ public class ProfessorControllerIntegrationTest extends BaseIntegrationTest {
         String token = getAuthToken("prof@test.com", DEFAULT_PASSWORD);
         
         AvailableTimeInputDTO availableTimeInputDTo = new AvailableTimeInputDTO();
-        availableTimeInputDTo.setTimeSlots(Set.of(new TimeSlotDTO(LocalDate.now().plusDays(7), TimePeriod.PERIOD_7_30_9_00)));
+        availableTimeInputDTo.setTimeSlots(Set.of(new TimeSlotDTO(1L, LocalDate.now().plusDays(7), TimePeriod.PERIOD_7_30_9_00)));
         availableTimeInputDTo.setMeetingId(professor.getId());
         availableTimeInputDTo.setMeetingId(meeting.getId());
         
