@@ -2,5 +2,8 @@
   "platform": "docker",
   "app": "thesis-backend",
   "port": 8080,
-  "disks": []
+  "disks": [],
+  "build": {
+    "location": "germany"
+  }
 }
