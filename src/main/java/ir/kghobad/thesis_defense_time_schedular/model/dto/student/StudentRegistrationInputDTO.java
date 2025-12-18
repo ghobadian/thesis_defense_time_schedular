@@ -5,11 +5,13 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
+@AllArgsConstructor
 public class StudentRegistrationInputDTO {
     @NotBlank(message = "First name is required")
     private String firstName;
@@ -42,17 +44,4 @@ public class StudentRegistrationInputDTO {
     
     @NotBlank(message = "Password is required")
     private String password;
-
-    public StudentRegistrationInputDTO(String firstName, String lastName, String email, String phoneNumber, Long studentNumber, StudentType studentType, Long departmentId, Long fieldId, Long instructorId, String password) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.phoneNumber = phoneNumber;
-        this.studentNumber = studentNumber;
-        this.studentType = studentType;
-        this.departmentId = departmentId;
-        this.fieldId = fieldId;
-        this.instructorId = instructorId;
-        this.password = password;
-    }
 }
