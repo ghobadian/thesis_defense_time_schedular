@@ -14,6 +14,8 @@ public interface StudentRepository extends JpaRepository<Student, Long>, JpaSpec
 
     Optional<Student> findByPhoneNumber(String phoneNumber);
 
+    boolean existsByPhoneNumber(String phoneNumber);
+
     List<Student> findByInstructorId(Long instructorId);
 
     Integer countByDepartmentId(Long departmentId);

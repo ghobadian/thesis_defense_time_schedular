@@ -1,11 +1,16 @@
 package ir.kghobad.thesis_defense_time_schedular.controller;
 
+import ir.kghobad.thesis_defense_time_schedular.model.dto.PhoneUpdateDTO;
 import ir.kghobad.thesis_defense_time_schedular.model.dto.SimpleUserOutputDto;
 import ir.kghobad.thesis_defense_time_schedular.model.dto.form.ThesisFormInputDTO;
 import ir.kghobad.thesis_defense_time_schedular.model.dto.form.ThesisFormOutputDTO;
 import ir.kghobad.thesis_defense_time_schedular.model.dto.meeting.ThesisDefenseMeetingDetailsOutputDTO;
 import ir.kghobad.thesis_defense_time_schedular.model.dto.meeting.TimeSlotSelectionInputDTO;
+import ir.kghobad.thesis_defense_time_schedular.model.dto.student.PasswordChangeInputDTO;
+import ir.kghobad.thesis_defense_time_schedular.model.dto.student.StudentOutputDTO;
 import ir.kghobad.thesis_defense_time_schedular.service.StudentService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,13 +18,15 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/student")
+@RequiredArgsConstructor
 public class StudentController {
     private final StudentService studentService;
 
-    public StudentController(StudentService studentService) {
-        this.studentService = studentService;
+    @GetMapping("/")
+    public ResponseEntity<StudentOutputDTO> getProfile() {
+        return ResponseEntity.ok(studentService.getProfile());
     }
-    
+
     @PostMapping("/create-form")
     public ResponseEntity<?> createForm(@RequestBody ThesisFormInputDTO formDTO) {
         studentService.createThesisForm(formDTO);
@@ -50,5 +57,17 @@ public class StudentController {
     public ResponseEntity<?> chooseTimeSlot(@RequestBody TimeSlotSelectionInputDTO input) {
         studentService.chooseTimeSlot(input);
         return ResponseEntity.ok("Time slot chosen successfully");
+    }
+
+    @PutMapping("/change-password")
+    public ResponseEntity<?> changePassword(@RequestBody PasswordChangeInputDTO input) {
+        studentService.changePassword(input);
+        return ResponseEntity.ok("Password changed successfully");
+    }
+
+    @PutMapping("/update-phone")
+    public ResponseEntity<?> updatePhone(@Valid @RequestBody PhoneUpdateDTO phone) {
+        studentService.updatePhone(phone);
+        return ResponseEntity.ok("Password changed successfully");
     }
 }

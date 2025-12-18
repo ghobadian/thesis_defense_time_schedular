@@ -8,6 +8,8 @@ import ir.kghobad.thesis_defense_time_schedular.model.dto.form.ThesisFormOutputD
 import ir.kghobad.thesis_defense_time_schedular.model.dto.meeting.ThesisDefenseMeetingDetailsOutputDTO;
 import ir.kghobad.thesis_defense_time_schedular.model.dto.meeting.ThesisDefenseMeetingOutputDTO;
 import ir.kghobad.thesis_defense_time_schedular.model.dto.meeting.TimeSlotSelectionInputDTO;
+import ir.kghobad.thesis_defense_time_schedular.model.dto.student.PasswordChangeInputDTO;
+import ir.kghobad.thesis_defense_time_schedular.model.dto.student.StudentOutputDTO;
 import ir.kghobad.thesis_defense_time_schedular.model.entity.ThesisDefenseMeeting;
 import ir.kghobad.thesis_defense_time_schedular.model.entity.TimeSlot;
 import ir.kghobad.thesis_defense_time_schedular.model.entity.thesisform.ThesisForm;
@@ -20,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authorization.AuthorizationDeniedException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,6 +43,7 @@ public class StudentService {
     private final ThesisDefenseMeetingRepository thesisDefenseMeetingRepository;
     private final JwtUtil jwtUtil;
     private final TimeSlotRepository timeSlotRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Value("${rate-limit.max-submitted-forms}")
     private int maxSubmittedForms;
@@ -128,5 +132,29 @@ public class StudentService {
         Student student = studentRepository.findById(currentUserId).orElseThrow();
         return professorRepository.findAllByDepartmentId(student.getDepartment().getId())
                 .stream().map(SimpleUserOutputDto::from).toList();
+    }
+
+    public void changePassword(PasswordChangeInputDTO input) {
+        Student student = studentRepository.findById(jwtUtil.getCurrentUserId()).orElseThrow();
+        boolean matches = passwordEncoder.matches(input.getCurrentPassword(), student.getPassword());
+        if (!matches) {
+            throw new RuntimeException("Wrong password");
+        }
+        student.setPassword(passwordEncoder.encode(input.getNewPassword()));
+    }
+
+    public StudentOutputDTO getProfile() {
+        Student student = studentRepository.findById(jwtUtil.getCurrentUserId()).orElseThrow();
+        return StudentOutputDTO.from(student);
+    }
+
+    public void updatePhone(PhoneUpdateDTO phone) {
+        if (studentRepository.existsByPhoneNumber(phone.getPhoneNumber())) {
+            throw new RuntimeException("Phone Number is already used by another user");
+        }
+
+        Student student = studentRepository.findById(jwtUtil.getCurrentUserId()).orElseThrow();
+        student.setPhoneNumber(phone.getPhoneNumber());
+        studentRepository.save(student);
     }
 }
