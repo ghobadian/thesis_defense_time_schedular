@@ -37,7 +37,7 @@ public interface ThesisFormRepository extends JpaRepository<ThesisForm, Long> {
     List<ThesisForm> findAllByFieldIn(Collection<Field> fields);
 
     @Query("SELECT tf FROM ThesisForm tf " +
-            "INNER JOIN Professor p ON tf.field = p.field " +
+            "INNER JOIN Professor p ON tf.field.department.id = p.department.id " +
             "WHERE p.id = :managerId " +
             "AND p.manager = TRUE")
     List<ThesisForm> findAllByManagerId(@Param("managerId") Long managerId);

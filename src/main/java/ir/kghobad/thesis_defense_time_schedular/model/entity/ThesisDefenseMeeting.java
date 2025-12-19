@@ -88,13 +88,18 @@ public class ThesisDefenseMeeting {
     }
 
     public void addJury(Professor professor) {
+        boolean alreadyExists = this.defenseMeetingProfessorAssociations.stream()
+                .anyMatch(a -> a.getProfessor().getId().equals(professor.getId()));
+
+        if (alreadyExists) {
+            return;
+        }
+
         DefenseMeetingProfessorAssociation association = new DefenseMeetingProfessorAssociation();
         association.setDefenseMeeting(this);
         association.setProfessor(professor);
 
-        if (!this.defenseMeetingProfessorAssociations.contains(association)) {
-            this.defenseMeetingProfessorAssociations.add(association);
-        }
+        this.defenseMeetingProfessorAssociations.add(association);
 
         if (!professor.containsAssociation(association)) {
             professor.addMeetingProfessorAssociation(association);

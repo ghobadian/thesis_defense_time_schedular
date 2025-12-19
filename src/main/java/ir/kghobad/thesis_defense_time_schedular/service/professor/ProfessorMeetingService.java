@@ -52,6 +52,7 @@ public class ProfessorMeetingService {
                 meetingRepository.findByJuryId(currentUserId);
     }
 
+    @Transactional
     public void acceptAndSchedule(MeetingCreationInputDTO input) {
         ThesisForm form = thesisFormRepository.findById(input.getFormId())
                 .orElseThrow(() -> new RuntimeException("Form not found. Can't Accept Form"));
@@ -61,15 +62,18 @@ public class ProfessorMeetingService {
         }
 
         ThesisDefenseMeeting meeting = approveFormAsManager(form);
+        input.getJuryIds().add(form.getInstructor().getId());
         suggestJuries(meeting, input.getJuryIds());
     }
 
-    private void suggestJuries(ThesisDefenseMeeting meeting, List<Long> juryIds) {
+    private void suggestJuries(ThesisDefenseMeeting meeting, Set<Long> juryIds) {
         List<Professor> juries = professorRepository.findAllById(juryIds);
         meeting.addJury(juries);
         meeting.setUpdateDate(new Date());
 
+        log.info("Juries suggested for meeting. Meeting: {}, Juries: {}, by manager id: {}", meeting, juries, jwtUtil.getCurrentUserId());
         meetingRepository.save(meeting);
+        log.info("Meeting saved after suggesting juries. Meeting: {}, by manager id: {}", meeting, jwtUtil.getCurrentUserId());
     }
 
     public void specifyAvailableTime(AvailableTimeInputDTO dto) {
@@ -143,15 +147,16 @@ public class ProfessorMeetingService {
 
     private ThesisDefenseMeeting approveFormAsManager(ThesisForm form) {
         if (form.getState() != FormState.ADMIN_APPROVED) {
-            throw new IllegalStateException("Form is not in a state that can be approved by manager. Valid state: %s. Current state: %s".formatted(FormState.ADMIN_APPROVED));
+            throw new IllegalStateException("Form is not in a state that can be approved by manager. Valid state: %s. Current state: %s".formatted(FormState.ADMIN_APPROVED, form.getState()));
         }
         ThesisDefenseMeeting meeting = new ThesisDefenseMeeting();
         meeting.setThesisForm(form);
-        meeting.addJury(form.getInstructor());
 
         form.setState(FormState.MANAGER_APPROVED);
         form.setDefenseMeeting(meeting);
-        form.setUpdateDate(new Date());
+        Date now = new Date();
+        form.setUpdateDate(now);
+        form.setManagerReviewedAt(now);
 
         meetingRepository.save(meeting);
         thesisFormRepository.save(form);

@@ -36,7 +36,7 @@ public class Professor extends User {
     @OneToMany(mappedBy = "instructor")
     private final Set<ThesisForm> supervisedForms = new HashSet<>(512);
 
-    @OneToMany(mappedBy = "professor", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "professor")
     private final Set<DefenseMeetingProfessorAssociation> defenseMeetingProfessorAssociations = new HashSet<>(512);
 
     @OneToMany(mappedBy = "professor", cascade = CascadeType.ALL, orphanRemoval = true)
