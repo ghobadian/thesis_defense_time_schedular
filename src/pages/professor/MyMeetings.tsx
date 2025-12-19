@@ -1,15 +1,15 @@
 // src/pages/professor/MyMeetings.tsx
-import React, { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { useNavigate } from 'react-router-dom';
-import { professorAPI } from '../../api/professor.api';
-import { MeetingView } from '../../components/common/MeetingView';
-import { TimeSlotsComparison } from '../../components/professor/TimeSlotsComparison';
-import { JuryScoresPanel } from '../../components/professor/JuryScoresPanel';
-import { ScheduleMeetingModal } from '../../components/professor/ScheduleMeetingModal';
-import { Meeting, MeetingState, UserRole } from '../../types';
-import { useAuthStore } from '../../store/authStore';
-import { Button } from '../../components/common/Button';
+import React, {useState} from 'react';
+import {useQuery} from '@tanstack/react-query';
+import {useNavigate} from 'react-router-dom';
+import {professorAPI} from '../../api/professor.api';
+import {MeetingView} from '../../components/common/MeetingView';
+import {TimeSlotsComparison} from '../../components/professor/TimeSlotsComparison';
+import {JuryScoresPanel} from '../../components/professor/JuryScoresPanel';
+import {ScheduleMeetingModal} from '../../components/professor/ScheduleMeetingModal';
+import {Meeting, MeetingState, UserRole} from '../../types';
+import {useAuthStore} from '../../store/authStore';
+import {Button} from '../../components/common/Button';
 
 export const MyMeetings: React.FC = () => {
     const navigate = useNavigate();
@@ -22,13 +22,17 @@ export const MyMeetings: React.FC = () => {
         queryFn: professorAPI.getMyMeetings,
     });
 
+    const canSelectTime = (meeting: Meeting): boolean => {
+        return meeting.state === MeetingState.JURIES_SELECTED;
+    };
+
     const isJuryMember = (meeting: Meeting): boolean => {
         if (!userId) return false;
         return meeting.juryMembers?.some(jury => jury.id === userId) ?? false;
     };
 
     const canSpecifyTime = (meeting: Meeting): boolean => {
-        if (role === UserRole.MANAGER) {
+        if (role === UserRole.MANAGER || role === UserRole.PROFESSOR) {
             return isJuryMember(meeting);
         }
         return true;
@@ -49,7 +53,7 @@ export const MyMeetings: React.FC = () => {
 
     const handleMeetingAction = (meeting: Meeting) => {
         if (!canSpecifyTime(meeting)) {
-            alert('As a manager, you can only specify time for meetings where you are a jury member.');
+            alert('You can only specify time for meetings where you are a jury member.');
             return;
         }
         navigate(`/professor/meetings/${meeting.id}/specify-time`);
@@ -83,12 +87,12 @@ export const MyMeetings: React.FC = () => {
                 isLoading={isLoading}
                 onMeetingAction={handleMeetingAction}
                 actionButtonLabel={getActionButtonLabel}
+                showActionButton={canSelectTime}
                 userRole="professor"
                 canViewTimeSlots={canViewTimeSlots}
                 renderTimeSlotsComparison={(meeting) => (
                     <TimeSlotsComparison meetingId={meeting.id} />
                 )}
-                // This is the renderAdditionalContent prop ⬇️
                 renderAdditionalContent={(meeting, isExpanded) => (
                     <>
                         {/* Schedule Meeting Button for Manager */}
