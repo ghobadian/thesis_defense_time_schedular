@@ -35,4 +35,6 @@ public interface ProfessorRepository extends JpaRepository<Professor, Long> {
 
     @Query("SELECT COUNT(p) > 0 FROM Professor p WHERE p.id = :professorId AND p.manager = true")
     boolean existsManagerById(Long professorId);
+
+    boolean existsByPhoneNumber(String phoneNumber);
 }

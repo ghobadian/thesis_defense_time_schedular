@@ -1,13 +1,19 @@
 package ir.kghobad.thesis_defense_time_schedular.service.admin;
 
 import ir.kghobad.thesis_defense_time_schedular.dao.*;
+import ir.kghobad.thesis_defense_time_schedular.model.dto.AdminOutputDTO;
+import ir.kghobad.thesis_defense_time_schedular.model.dto.PhoneUpdateDTO;
 import ir.kghobad.thesis_defense_time_schedular.model.dto.SimpleUserOutputDto;
 import ir.kghobad.thesis_defense_time_schedular.model.dto.SystemStatsDTO;
 import ir.kghobad.thesis_defense_time_schedular.model.dto.meeting.ThesisDefenseMeetingDetailsOutputDTO;
 import ir.kghobad.thesis_defense_time_schedular.model.dto.meeting.ThesisDefenseMeetingOutputDTO;
+import ir.kghobad.thesis_defense_time_schedular.model.dto.student.PasswordChangeInputDTO;
+import ir.kghobad.thesis_defense_time_schedular.model.entity.user.Admin;
 import ir.kghobad.thesis_defense_time_schedular.model.enums.FormState;
 import ir.kghobad.thesis_defense_time_schedular.model.enums.MeetingState;
+import ir.kghobad.thesis_defense_time_schedular.security.JwtUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -23,6 +29,9 @@ public class AdminService {// TODO check security of deletion and update apis
     private final FieldRepository fieldRepository;
     private final StudentRepository studentRepository;
     private final ProfessorRepository professorRepository;
+    private final JwtUtil jwtUtil;
+    private final AdminRepository adminRepository;
+    private final PasswordEncoder passwordEncoder;
 
 
     public SystemStatsDTO getSystemStats() {
@@ -59,5 +68,28 @@ public class AdminService {// TODO check security of deletion and update apis
 
     public ThesisDefenseMeetingDetailsOutputDTO getMeeting(Long meetingId) {
         return meetingRepository.findById(meetingId).map(ThesisDefenseMeetingDetailsOutputDTO::from).orElseThrow();
+    }
+
+    public AdminOutputDTO getProfile() {
+        return AdminOutputDTO.from(adminRepository.findById(jwtUtil.getCurrentUserId()).orElseThrow());
+    }
+
+    public void updatePhone(PhoneUpdateDTO phone) {
+        if (adminRepository.existsByPhoneNumber(phone.getPhoneNumber())) {
+            throw new RuntimeException("Phone Number is already used by another user");
+        }
+
+        Admin admin = adminRepository.findById(jwtUtil.getCurrentUserId()).orElseThrow();
+        admin.setPhoneNumber(phone.getPhoneNumber());
+        adminRepository.save(admin);
+    }
+
+    public void changePassword(PasswordChangeInputDTO input) {
+        Admin admin = adminRepository.findById(jwtUtil.getCurrentUserId()).orElseThrow();
+        boolean matches = passwordEncoder.matches(input.getCurrentPassword(), admin.getPassword());
+        if (!matches) {
+            throw new RuntimeException("Wrong password");
+        }
+        admin.setPassword(passwordEncoder.encode(input.getNewPassword()));
     }
 }

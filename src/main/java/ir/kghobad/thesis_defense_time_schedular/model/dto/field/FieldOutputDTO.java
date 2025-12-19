@@ -14,6 +14,10 @@ public class FieldOutputDTO {
 
 
     public static FieldOutputDTO from(Field field) {
+        if (field == null) {
+            return null;
+        }
+
         FieldOutputDTO dto = new FieldOutputDTO();
         dto.setId(field.getId());
         dto.setName(field.getName());
