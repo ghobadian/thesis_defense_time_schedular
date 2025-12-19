@@ -29,6 +29,11 @@ public class DefenseMeetingProfessorAssociation {
     @JoinColumn(name = "professor_id", nullable = false)
     private Professor professor;
 
+    @Getter
+    @Setter
+    @Column(name = "score")
+    private Double score;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
