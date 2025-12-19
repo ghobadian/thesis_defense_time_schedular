@@ -4,7 +4,9 @@ import ir.kghobad.thesis_defense_time_schedular.dao.ProfessorRepository;
 import ir.kghobad.thesis_defense_time_schedular.dao.ThesisDefenseMeetingRepository;
 import ir.kghobad.thesis_defense_time_schedular.dao.ThesisFormRepository;
 import ir.kghobad.thesis_defense_time_schedular.dao.TimeSlotRepository;
-import ir.kghobad.thesis_defense_time_schedular.model.dto.*;
+import ir.kghobad.thesis_defense_time_schedular.model.dto.JuryMemberAvailability;
+import ir.kghobad.thesis_defense_time_schedular.model.dto.SimpleUserOutputDto;
+import ir.kghobad.thesis_defense_time_schedular.model.dto.TimeSlotDTO;
 import ir.kghobad.thesis_defense_time_schedular.model.dto.meeting.*;
 import ir.kghobad.thesis_defense_time_schedular.model.entity.ThesisDefenseMeeting;
 import ir.kghobad.thesis_defense_time_schedular.model.entity.TimeSlot;
@@ -211,19 +213,21 @@ public class ProfessorMeetingService {
             throw new IllegalStateException("Only scheduled meetings can be completed");
         }
 
+
         LocalDate meetingDate = meeting.getSelectedTimeSlot().getDate();
         LocalDate now = LocalDate.now(clock);
-        if (!meetingDate.equals(now)) {
-            if (meetingDate.isBefore(now)) {
-                log.warn("Meeting date has passed. meeting date: {}, now: {}, meeting: {}", meetingDate, now, meeting);
-            } else {
-                log.warn("Meeting date haven't come yet. meeting date: {}, now: {}, meeting: {}", meetingDate, now, meeting);
-            }
+        if (meetingDate.isBefore(now)) {
+            log.warn("Meeting date has passed. meeting date: {}, now: {}, meeting: {}", meetingDate, now, meeting);
         }
 
-        meeting.setState(MeetingState.COMPLETED);
+        meeting.updateProfessorScore(professor, input.getScore());
+        if (meeting.allProfessorsScored()) {
+            meeting.setScore(meeting.calculateAverageScore());
+            meeting.setState(MeetingState.COMPLETED);
+            log.info("All professors have scored the meeting. Meeting: {}, average score: {}", meeting, meeting.getScore());
+        }
+
         meeting.setUpdateDate(new Date());
-        meeting.setScore(input.getScore());
         meetingRepository.save(meeting);
     }
 

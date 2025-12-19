@@ -49,6 +49,7 @@ public class ThesisDefenseMeeting {
 
     @Getter
     @Setter
+    @Column(name = "score")
     private Double score;
 
     @Getter
@@ -146,6 +147,14 @@ public class ThesisDefenseMeeting {
                 .map(SimpleUserOutputDto::from).toList();
     }
 
+    public Map<Long, Double> getJuriesWithScores() {
+        Map<Long, Double> juryScores = new HashMap<>();
+        for (DefenseMeetingProfessorAssociation association : defenseMeetingProfessorAssociations) {
+            juryScores.put(association.getProfessor().getId(), association.getScore());
+        }
+        return juryScores;
+    }
+
     public Set<TimeSlot> getAvailableSlots() {
         return Collections.unmodifiableSet(availableSlots);
     }
@@ -159,6 +168,37 @@ public class ThesisDefenseMeeting {
             throw new RuntimeException("location can't be null for scheduled or completed meetings");
         }
         return location;
+    }
+
+    public boolean allProfessorsScored() {
+        for (DefenseMeetingProfessorAssociation association : defenseMeetingProfessorAssociations) {
+            if (association.getScore() == null) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public double calculateAverageScore() {
+        double totalScore = 0.0;
+        int count = 0;
+        for (DefenseMeetingProfessorAssociation association : defenseMeetingProfessorAssociations) {
+            if (association.getScore() != null) {
+                totalScore += association.getScore();
+                count++;
+            }
+        }
+        return count == 0 ? 0.0 : totalScore / count;
+    }
+
+    public void updateProfessorScore(Professor professor, Double score) {
+        for (DefenseMeetingProfessorAssociation association : defenseMeetingProfessorAssociations) {
+            if (association.getProfessor().equals(professor)) {
+                association.setScore(score);
+                return;
+            }
+        }
+        throw new NoSuchElementException("Professor not found in this meeting's juries");
     }
 }
 
