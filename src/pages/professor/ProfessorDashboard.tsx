@@ -6,6 +6,7 @@ import { MyStudents } from "./MyStudents";
 import { MyMeetings } from "./MyMeetings";
 import { MyThesisForms } from "./MyThesisForms";
 import { SpecifyMeetingTimeSlots } from './SpecifyMeetingTimeSlots';
+import {ProfilePage} from "../student/ProfilePage";
 
 export const ProfessorDashboard: React.FC = () => {
     return (
@@ -16,6 +17,7 @@ export const ProfessorDashboard: React.FC = () => {
                 <Route path="students" element={<MyStudents />} />
                 <Route path="meetings" element={<MyMeetings />} />
                 <Route path="meetings/:meetingId/specify-time" element={<SpecifyMeetingTimeSlots />} />
+                <Route path="profile" element={<ProfilePage />} />
                 <Route path="*" element={<ProfessorHome />} />
             </Routes>
         </Layout>

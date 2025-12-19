@@ -26,7 +26,7 @@ export const Sidebar: React.FC = () => {
           { to: '/admin/fields', icon: ClipboardList, label: 'Fields' },
           { to: '/admin/thesis-forms', icon: FileText, label: 'Thesis Forms' },
           { to: '/admin/meetings', icon: Calendar, label: 'Defense Meetings' },
-          { to: '/admin/reports', icon: BarChart3, label: 'Reports' },
+          { to: '/admin/profile', icon: Settings, label: 'Profile' },
         ];
 
       case UserRole.PROFESSOR:

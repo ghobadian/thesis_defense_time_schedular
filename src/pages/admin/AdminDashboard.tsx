@@ -9,6 +9,7 @@ import {DefenseMeetings} from "./DefenseMeetings";
 import {Departments} from "./Departments";
 import AdminFieldsPage from "./AdminFieldsPage";
 import StudentEdit from './StudentEdit';
+import {ProfilePage} from "../student/ProfilePage";
 
 export const AdminDashboard: React.FC = () => {
     return (
@@ -22,8 +23,8 @@ export const AdminDashboard: React.FC = () => {
                 <Route path="fields" element={<AdminFieldsPage />} />
                 <Route path="thesis-forms" element={<AdminThesisFormsPage />} />
                 <Route path="meetings" element={<DefenseMeetings />} />
+                <Route path="profile" element={<ProfilePage />} />
                 <Route path="edit-student/:id" element={<StudentEdit />} />
-                {/*<Route path="reports" element={<AdminReports />} />*/}
             </Routes>
         </Layout>
     );

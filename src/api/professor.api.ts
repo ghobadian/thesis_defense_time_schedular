@@ -99,6 +99,21 @@ export const professorAPI = {
         return response.data;
     },
 
+    updatePhoneNumber: async (phone: string) => {
+        const response = await getProfessorAPI().put('/update-phone', {phoneNumber: phone});
+        return response.data;
+    },
+
+    getProfile: async () => {
+        const response = await getProfessorAPI().get("/");
+        return response.data;
+    },
+
+    changePassword: async (data: { currentPassword: string; newPassword: string }) => {
+        const response = await getProfessorAPI().put('/change-password', data);
+        return response.data;
+    },
+
 
 
 };

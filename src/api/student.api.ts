@@ -41,10 +41,7 @@ export const studentAPI = {
         return response.data;
     },
 
-    changePassword: async (data: { currentPassword: string; newPassword: string }) => {
-        const response = await getStudentAPI().put('/change-password', data);
-        return response.data;
-    },
+
 
     getAllProfessors: async () => {
         const response = await getStudentAPI().get('/professors');
@@ -58,6 +55,11 @@ export const studentAPI = {
 
     getProfile: async () => {
         const response = await getStudentAPI().get("/");
+        return response.data;
+    },
+
+    changePassword: async (data: { currentPassword: string; newPassword: string }) => {
+        const response = await getStudentAPI().put('/change-password', data);
         return response.data;
     },
 };

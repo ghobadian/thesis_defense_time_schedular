@@ -134,5 +134,20 @@ export const adminAPI = {
     deleteField: async(fieldId: number)=> {
         const response = await getAdminAPI().delete(`/fields/${fieldId}`);
         return response.data;
-    }
+    },
+
+    updatePhoneNumber: async (phone: string) => {
+        const response = await getAdminAPI().put('/update-phone', {phoneNumber: phone});
+        return response.data;
+    },
+
+    getProfile: async () => {
+        const response = await getAdminAPI().get("/");
+        return response.data;
+    },
+
+    changePassword: async (data: { currentPassword: string; newPassword: string }) => {
+        const response = await getAdminAPI().put('/change-password', data);
+        return response.data;
+    },
 };
