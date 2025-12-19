@@ -1,5 +1,6 @@
 package ir.kghobad.thesis_defense_time_schedular.controller.admin;
 
+import ir.kghobad.thesis_defense_time_schedular.model.dto.form.FormRejectionInputDTO;
 import ir.kghobad.thesis_defense_time_schedular.service.admin.AdminFormService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -22,9 +23,9 @@ public class AdminFormController {
         return ResponseEntity.ok("Form approved successfully");
     }
 
-    @PostMapping("/{formId}/reject")
-    public ResponseEntity<?> rejectForm(@PathVariable Long formId) {
-        service.rejectForm(formId);
+    @PostMapping("/reject")
+    public ResponseEntity<?> rejectForm(@RequestBody FormRejectionInputDTO input) {
+        service.rejectForm(input);
         return ResponseEntity.ok("Admin action performed successfully");
     }
 

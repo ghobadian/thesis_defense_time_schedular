@@ -20,7 +20,7 @@ public class ProfessorFormController {
         return ResponseEntity.ok(service.getThesisForms());
     }
 
-    @PostMapping("/{formId}/reject")
+    @PostMapping("/reject")
     public ResponseEntity<?> rejectForm(@RequestBody FormRejectionInputDTO input) {
         service.rejectForm(input);
         return ResponseEntity.ok("Form rejected");

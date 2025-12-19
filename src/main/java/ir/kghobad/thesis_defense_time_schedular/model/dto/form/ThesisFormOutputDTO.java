@@ -22,7 +22,10 @@ public class ThesisFormOutputDTO {
     private String state;
     private String createdAt;
     private String updatedAt;
-    private String comment;
+    private String instructorReviewedAt;
+    private String adminReviewedAt;
+    private String managerReviewedAt;
+    private String rejectionReason;
 
 
     public static ThesisFormOutputDTO from(ThesisForm form) {
@@ -42,7 +45,10 @@ public class ThesisFormOutputDTO {
         output.setInstructorLastName(form.getInstructor().getLastName());
         output.setCreatedAt(form.getSubmissionDate().toString());
         output.setUpdatedAt(form.getUpdateDate().toString());
-        output.setComment(form.getComment());
+        output.setInstructorReviewedAt(form.getInstructorReviewedAt() != null ? form.getInstructorReviewedAt().toString() : null);
+        output.setAdminReviewedAt(form.getAdminReviewedAt() != null ? form.getAdminReviewedAt().toString() : null);
+        output.setManagerReviewedAt(form.getManagerReviewedAt() != null ? form.getManagerReviewedAt().toString() : null);
+        output.setRejectionReason(form.getRejectionReason());
         return output;
     }
 }

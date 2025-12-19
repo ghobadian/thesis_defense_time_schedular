@@ -39,9 +39,19 @@ public class ProfessorFormService {
             throw new IllegalStateException("Form is not in a state that can be approved by instructor. Valid state: %s. Current state: %s".formatted(FormState.SUBMITTED, form.getState()));
         }
 
-        form.setState(FormState.INSTRUCTOR_APPROVED);
-        form.setUpdateDate(new Date());
+        updateAcceptedForm(form);
         thesisFormRepository.save(form);
+    }
+
+    private static void updateAcceptedForm(ThesisForm form) {
+        form.setState(FormState.INSTRUCTOR_APPROVED);
+        updateFormTimeState(form);
+    }
+
+    private static void updateFormTimeState(ThesisForm form) {
+        Date now = new Date();
+        form.setUpdateDate(now);
+        form.setInstructorReviewedAt(now);
     }
 
     public void rejectForm(FormRejectionInputDTO input) {
@@ -51,6 +61,22 @@ public class ProfessorFormService {
         ThesisForm form = thesisFormRepository.findById(input.getFormId())
                 .orElseThrow(() -> new RuntimeException("Form not found. Can't reject Form"));
 
+        updateRejectedForm(input, form, professor);
+        thesisFormRepository.save(form);
+    }
+
+    private static void updateRejectedForm(FormRejectionInputDTO input, ThesisForm form, Professor professor) {
+        updateRejectedFormState(form, professor);
+        updateFormTimeState(form);
+        form.setRejectionReason("""
+                Your thesis form is rejected by professor %s %s.
+                His reason for rejecting your form is:
+                %s
+                If you think this was an error, please contact %s.
+                """.formatted(professor.getFirstName(), professor.getLastName(), input.getRejectionReason(), professor.getEmail()));
+    }
+
+    private static void updateRejectedFormState(ThesisForm form, Professor professor) {
         if (professor.equals(form.getInstructor())) {
             form.setState(FormState.INSTRUCTOR_REJECTED);
         } else if (professor.isManager()) {
@@ -58,15 +84,6 @@ public class ProfessorFormService {
         } else {
             throw new AuthorizationDeniedException("You are not allowed to reject this form");
         }
-        form.setUpdateDate(new Date());
-        form.setComment("""
-                Your thesis form is rejected by professor %s %s.
-                His reason for rejecting your form is:
-                %s
-                If you think this was an error, please contact %s.
-                """.formatted(professor.getFirstName(), professor.getLastName(), input.getRejectionReason(), professor.getEmail()));
-
-        thesisFormRepository.save(form);
     }
 
     public List<ThesisFormOutputDTO> getThesisForms() {

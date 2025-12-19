@@ -59,6 +59,29 @@ public class ThesisForm {
     private Date submissionDate;
 
     @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "instructor_reviewed_at")
+    @Setter
+    @Getter
+    private Date instructorReviewedAt;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "admin_reviewed_at")
+    @Setter
+    @Getter
+    private Date adminReviewedAt;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "manager_reviewed_at")
+    @Setter
+    @Getter
+    private Date managerReviewedAt;
+
+    @Column(name = "rejection_reason")
+    @Setter
+    @Getter
+    private String rejectionReason;
+
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "update_date")
     @Setter
     @Getter
@@ -80,11 +103,6 @@ public class ThesisForm {
     @Setter
     @Getter
     private StudentType studentType;
-
-    @Column(name = "comment")
-    @Setter
-    @Getter
-    private String comment;
 
     public ThesisForm() {
 
