@@ -89,6 +89,7 @@ export const ThesisFormReview: React.FC = () => {
                     meetingId={selectedMeetingId || 0}
                     formId={selectedFormId}
                     onJuriesSelected={handleJuriesSelected}
+                    minJuryCount={1}
                 />
             )}
         </div>

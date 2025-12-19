@@ -136,8 +136,9 @@ export interface Meeting {
     selectedTimeSlot?: TimeSlot;
     location?: string;
     juryMembers: SimpleUser[];
+    juriesScores: Record<string, number>;
     createdAt: string;
-    score: Number;
+    score: number;
 }
 
 export interface AvailableTime {

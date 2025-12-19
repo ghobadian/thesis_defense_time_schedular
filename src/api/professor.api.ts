@@ -68,8 +68,8 @@ export const professorAPI = {
         return response.data;
     },
 
-    completeMeeting: async (data: { meetingId: number; score: number }) => {
-        const response = await getProfessorAPI().post('/meetings/complete', data);
+    scoreMeeting: async (data: { meetingId: number; score: number }) => {
+        const response = await getProfessorAPI().post('/meetings/score', data);
         return response.data;
     },
 

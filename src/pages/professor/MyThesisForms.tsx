@@ -7,9 +7,9 @@ import { ThesisForm, FormState } from '../../types';
 import { JurySelectionModal } from '../../components/common/JurySelectionModal';
 import { useAuthStore } from '../../store/authStore';
 import '../admin/AdminThesisFormsPage.css';
-import {ActionButton} from "../../components/thesis/ThesisFormDetails";
-import {RejectionModal} from "../../components/thesis/RejectionModal";
-import {ThesisFormsLayout} from "../../components/thesis/ThesisFormLayout";
+import { ActionButton } from "../../components/thesis/ThesisFormDetails";
+import { RejectionModal } from "../../components/thesis/RejectionModal";
+import { ThesisFormsLayout } from "../../components/thesis/ThesisFormLayout";
 
 export const MyThesisForms: React.FC = () => {
     const { role } = useAuthStore(); // PROFESSOR | MANAGER
@@ -146,6 +146,8 @@ export const MyThesisForms: React.FC = () => {
                     meetingId={0}
                     formId={selectedForm.id}
                     onJuriesSelected={handleJuriesSelected}
+                    minJuryCount={1}
+                    instructorId={selectedForm.instructorId} // NEW: Pass instructor ID
                 />
             )}
         </>

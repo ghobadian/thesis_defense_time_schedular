@@ -4,17 +4,20 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { professorAPI } from '../../api/professor.api';
 import { Button } from '../common/Button';
 import { Card } from '../common/Card';
-import { Calendar, Clock, MapPin } from 'lucide-react';
+import { Calendar, Clock, MapPin, CheckCircle, AlertCircle } from 'lucide-react';
 import { TimePeriod } from '../../types';
 import { format, parseISO } from 'date-fns';
 
 interface ScheduleMeetingProps {
     meetingId: number;
+    onScheduled?: () => void;
 }
 
-export const ScheduleMeeting: React.FC<ScheduleMeetingProps> = ({ meetingId }) => {
+export const ScheduleMeeting: React.FC<ScheduleMeetingProps> = ({ meetingId, onScheduled }) => {
     const queryClient = useQueryClient();
     const [location, setLocation] = useState('');
+    const [error, setError] = useState<string | null>(null);
+    const [success, setSuccess] = useState(false);
 
     const { data: meeting, isLoading: loadingMeeting } = useQuery({
         queryKey: ['meeting', meetingId],
@@ -22,29 +25,39 @@ export const ScheduleMeeting: React.FC<ScheduleMeetingProps> = ({ meetingId }) =
     });
 
     const scheduleMutation = useMutation({
-        mutationFn: (data: { meetingId: number; timeSlotId: number; location: string }) =>
+        mutationFn: (data: { meetingId: number; location: string }) =>
             professorAPI.scheduleMeeting(data),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['myMeetings'] });
             queryClient.invalidateQueries({ queryKey: ['meeting', meetingId] });
-            alert('Meeting scheduled successfully!');
+            setSuccess(true);
+            setError(null);
             setLocation('');
+
+            // Call the onScheduled callback if provided
+            if (onScheduled) {
+                setTimeout(() => {
+                    onScheduled();
+                }, 1500);
+            }
         },
         onError: (error: any) => {
-            alert(error.response?.data?.message || 'Failed to schedule meeting');
+            setError(error.response?.data?.message || 'Failed to schedule meeting');
+            setSuccess(false);
         },
     });
 
     const handleSchedule = () => {
         if (!location.trim()) {
-            alert('Please enter a location');
+            setError('Please enter a location');
             return;
         }
 
-        if (window.confirm('Are you sure you want to schedule this meeting?')) {
+        setError(null);
+
+        if (window.confirm('Are you sure you want to schedule this meeting with the selected time slot?')) {
             scheduleMutation.mutate({
                 meetingId,
-                timeSlotId: studentSelectedSlot.id,
                 location: location.trim(),
             });
         }
@@ -85,6 +98,27 @@ export const ScheduleMeeting: React.FC<ScheduleMeetingProps> = ({ meetingId }) =
         <div className="space-y-6">
             <h4 className="text-lg font-semibold text-gray-900">Schedule Meeting</h4>
 
+            {/* Success Message */}
+            {success && (
+                <div className="flex items-start space-x-3 bg-green-50 border border-green-200 rounded-lg p-4">
+                    <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
+                    <div>
+                        <p className="text-sm font-medium text-green-800">Meeting scheduled successfully!</p>
+                        <p className="text-sm text-green-700 mt-1">
+                            All participants will be notified about the scheduled meeting.
+                        </p>
+                    </div>
+                </div>
+            )}
+
+            {/* Error Message */}
+            {error && (
+                <div className="flex items-start space-x-3 bg-red-50 border border-red-200 rounded-lg p-4">
+                    <AlertCircle className="h-5 w-5 text-red-600 flex-shrink-0 mt-0.5" />
+                    <p className="text-sm text-red-800">{error}</p>
+                </div>
+            )}
+
             {/* Student's Selected Time Slot */}
             <Card className="bg-blue-50 border-blue-200">
                 <h5 className="font-semibold text-gray-900 mb-3">Student's Selected Time Slot</h5>
@@ -110,9 +144,13 @@ export const ScheduleMeeting: React.FC<ScheduleMeetingProps> = ({ meetingId }) =
                     <input
                         type="text"
                         value={location}
-                        onChange={(e) => setLocation(e.target.value)}
+                        onChange={(e) => {
+                            setLocation(e.target.value);
+                            if (error) setError(null);
+                        }}
                         placeholder="e.g., Room 305, Building A"
                         className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                        disabled={scheduleMutation.isPending || success}
                     />
                     <p className="text-xs text-gray-500 mt-1">
                         Specify where the defense meeting will take place
@@ -125,10 +163,10 @@ export const ScheduleMeeting: React.FC<ScheduleMeetingProps> = ({ meetingId }) =
                 <Button
                     onClick={handleSchedule}
                     isLoading={scheduleMutation.isPending}
-                    disabled={!location.trim() || scheduleMutation.isPending}
+                    disabled={!location.trim() || scheduleMutation.isPending || success}
                     className="px-6"
                 >
-                    Confirm Schedule
+                    {success ? 'Scheduled!' : 'Confirm & Schedule Meeting'}
                 </Button>
             </div>
         </div>

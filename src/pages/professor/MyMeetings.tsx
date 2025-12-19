@@ -1,41 +1,42 @@
 // src/pages/professor/MyMeetings.tsx
-import React from 'react';
-import {useQuery} from '@tanstack/react-query';
-import {useNavigate} from 'react-router-dom';
-import {professorAPI} from '../../api/professor.api';
-import {MeetingView} from '../../components/common/MeetingView';
-import {TimeSlotsComparison} from '../../components/professor/TimeSlotsComparison';
-import {Meeting, MeetingState, UserRole} from '../../types';
-import {useAuthStore} from '../../store/authStore';
-import { ScheduleMeeting } from '../../components/professor/ScheduleMeeting';
+import React, { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { useNavigate } from 'react-router-dom';
+import { professorAPI } from '../../api/professor.api';
+import { MeetingView } from '../../components/common/MeetingView';
+import { TimeSlotsComparison } from '../../components/professor/TimeSlotsComparison';
+import { JuryScoresPanel } from '../../components/professor/JuryScoresPanel';
+import { ScheduleMeetingModal } from '../../components/professor/ScheduleMeetingModal';
+import { Meeting, MeetingState, UserRole } from '../../types';
+import { useAuthStore } from '../../store/authStore';
+import { Button } from '../../components/common/Button';
 
 export const MyMeetings: React.FC = () => {
     const navigate = useNavigate();
     const { userId, role } = useAuthStore();
+    const [scheduleMeetingModal, setScheduleMeetingModal] = useState<Meeting | null>(null);
 
-    const { data: meetings, isLoading, error } = useQuery({
+    // Add refetch here ⬇️
+    const { data: meetings, isLoading, error, refetch } = useQuery({
         queryKey: ['myMeetings'],
         queryFn: professorAPI.getMyMeetings,
     });
 
-    // Check if user is a jury member for a specific meeting
     const isJuryMember = (meeting: Meeting): boolean => {
         if (!userId) return false;
         return meeting.juryMembers?.some(jury => jury.id === userId) ?? false;
     };
 
-    // Managers can only specify time if they are jury members
     const canSpecifyTime = (meeting: Meeting): boolean => {
         if (role === UserRole.MANAGER) {
             return isJuryMember(meeting);
         }
-        // Regular professors can specify time for any meeting they see
         return true;
     };
 
     const canScheduleMeeting = (meeting: Meeting): boolean => {
         return role === UserRole.MANAGER &&
-               meeting.state === MeetingState.STUDENT_SPECIFIED_TIME;
+            meeting.state === MeetingState.STUDENT_SPECIFIED_TIME;
     };
 
     const canViewTimeSlots = (meeting: Meeting): boolean => {
@@ -76,65 +77,59 @@ export const MyMeetings: React.FC = () => {
     }
 
     return (
-        <div className="space-y-6">
-            <div>
-                <h1 className="text-3xl font-bold text-gray-900">
-                    {role === UserRole.MANAGER ? 'Department Meetings' : 'My Meetings'}
-                </h1>
-                {role === UserRole.MANAGER && (
-                    <p className="text-gray-600 mt-2">
-                        Viewing all meetings in your department. You can specify time slots for meetings where you are a jury member and schedule meetings.
-                    </p>
-                )}
-            </div>
-
+        <>
             <MeetingView
                 meetings={meetings || []}
                 isLoading={isLoading}
-                userRole="professor"
                 onMeetingAction={handleMeetingAction}
-                showActionButton={(meeting) => {
-                    const canSpecify = canSpecifyTime(meeting);
-                    return canSpecify && (
-                        meeting.state === MeetingState.JURIES_SELECTED ||
-                        meeting.state === MeetingState.JURIES_SPECIFIED_TIME
-                    );
-                }}
                 actionButtonLabel={getActionButtonLabel}
+                userRole="professor"
                 canViewTimeSlots={canViewTimeSlots}
                 renderTimeSlotsComparison={(meeting) => (
                     <TimeSlotsComparison meetingId={meeting.id} />
                 )}
-                renderAdditionalContent={(meeting) => {
-                    // Show scheduling interface for managers when student has selected time
-                    if (canScheduleMeeting(meeting)) {
-                        return (
-                            <>
-                                <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-4">
-                                    <p className="text-sm text-green-800">
-                                        <strong>Action Required:</strong> The student has selected a time slot.
-                                        Please confirm the location and schedule the meeting.
-                                    </p>
-                                </div>
-                                <ScheduleMeeting meetingId={meeting.id} />
-                            </>
-                        );
-                    }
-
-                    // Show info banner for managers when they can't specify time
-                    if (role === UserRole.MANAGER && !isJuryMember(meeting)) {
-                        return (
-                            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mt-4">
-                                <p className="text-sm text-blue-800">
-                                    <strong>Note:</strong> You are viewing this meeting as a department manager.
-                                    You can only specify time slots for meetings where you are assigned as a jury member.
-                                </p>
+                // This is the renderAdditionalContent prop ⬇️
+                renderAdditionalContent={(meeting, isExpanded) => (
+                    <>
+                        {/* Schedule Meeting Button for Manager */}
+                        {canScheduleMeeting(meeting) && (
+                            <div className="mt-4">
+                                <Button
+                                    variant="primary"
+                                    onClick={() => setScheduleMeetingModal(meeting)}
+                                >
+                                    Schedule Meeting
+                                </Button>
                             </div>
-                        );
-                    }
-                    return null;
-                }}
+                        )}
+
+                        {/* Jury Scores Panel - shows for SCHEDULED and COMPLETED */}
+                        {(meeting.state === MeetingState.SCHEDULED ||
+                            meeting.state === MeetingState.COMPLETED) && (
+                            <JuryScoresPanel
+                                meetingId={meeting.id}
+                                meetingState={meeting.state}
+                                juryMembers={meeting.juryMembers || []}
+                                juriesScores={meeting.juriesScores || {}}
+                                finalScore={meeting.score}
+                                instructorId={meeting.thesis?.instructorId}
+                                onScoreSubmitted={() => refetch()}
+                            />
+                        )}
+                    </>
+                )}
             />
-        </div>
+
+            {/* Schedule Meeting Modal */}
+            {scheduleMeetingModal && (
+                <ScheduleMeetingModal
+                    isOpen={!!scheduleMeetingModal}
+                    onClose={() => setScheduleMeetingModal(null)}
+                    meeting={scheduleMeetingModal}
+                />
+            )}
+        </>
     );
 };
+
+export default MyMeetings;

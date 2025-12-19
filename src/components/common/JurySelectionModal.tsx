@@ -1,10 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { X, AlertCircle, CheckCircle } from 'lucide-react';
+import { X, AlertCircle, CheckCircle, Lock } from 'lucide-react';
 import { professorAPI } from '../../api/professor.api';
 import { Modal } from './Modal';
 import { Button } from './Button';
-import {Professor} from "../../types";
+import { Professor } from "../../types";
+
+// Configuration constants - can be moved to a separate config file
+export const JURY_SELECTION_CONFIG = {
+    MIN_JURY_MEMBERS: 3,
+    MAX_JURY_MEMBERS: 10, // Optional: you can also add a max limit
+};
 
 interface JurySelectionModalProps {
     isOpen: boolean;
@@ -12,9 +18,10 @@ interface JurySelectionModalProps {
     meetingId: number;
     formId: number;
     onJuriesSelected: (juryIds: number[]) => Promise<void>;
+    minJuryCount?: number;
+    maxJuryCount?: number;
+    instructorId?: number; // NEW: instructor ID to be pre-selected and locked
 }
-
-
 
 export const JurySelectionModal: React.FC<JurySelectionModalProps> = ({
                                                                           isOpen,
@@ -22,11 +29,32 @@ export const JurySelectionModal: React.FC<JurySelectionModalProps> = ({
                                                                           meetingId,
                                                                           formId,
                                                                           onJuriesSelected,
+                                                                          minJuryCount = JURY_SELECTION_CONFIG.MIN_JURY_MEMBERS,
+                                                                          maxJuryCount,
+                                                                          instructorId, // NEW prop
                                                                       }) => {
     const [selectedJuries, setSelectedJuries] = useState<number[]>([]);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState(false);
+
+    // Reset state when modal opens/closes
+    useEffect(() => {
+        if (isOpen) {
+            // When modal opens, pre-select the instructor if provided
+            if (instructorId) {
+                setSelectedJuries([instructorId]);
+            } else {
+                setSelectedJuries([]);
+            }
+            setError(null);
+            setSuccess(false);
+        } else {
+            setSelectedJuries([]);
+            setError(null);
+            setSuccess(false);
+        }
+    }, [isOpen, instructorId]);
 
     // Fetch all professors
     const { data: professors = [], isLoading: isProfessorsLoading } = useQuery({
@@ -36,17 +64,37 @@ export const JurySelectionModal: React.FC<JurySelectionModalProps> = ({
     });
 
     const handleProfessorToggle = (professorId: number) => {
-        setSelectedJuries((prev) =>
-            prev.includes(professorId)
+        // Prevent unselecting the instructor
+        if (professorId === instructorId) {
+            setError('The instructor must remain as a jury member');
+            return;
+        }
+
+        setSelectedJuries((prev) => {
+            const isCurrentlySelected = prev.includes(professorId);
+
+            // If trying to add and max limit is reached, show error
+            if (!isCurrentlySelected && maxJuryCount && prev.length >= maxJuryCount) {
+                setError(`You can select a maximum of ${maxJuryCount} jury members`);
+                return prev;
+            }
+
+            setError(null);
+
+            return isCurrentlySelected
                 ? prev.filter((id) => id !== professorId)
-                : [...prev, professorId]
-        );
-        setError(null);
+                : [...prev, professorId];
+        });
     };
 
     const handleSubmit = async () => {
-        if (selectedJuries.length < 3) {
-            setError('Please select at least 3 jury members');
+        if (selectedJuries.length < minJuryCount) {
+            setError(`Please select at least ${minJuryCount} jury member${minJuryCount !== 1 ? 's' : ''}`);
+            return;
+        }
+
+        if (maxJuryCount && selectedJuries.length > maxJuryCount) {
+            setError(`Please select no more than ${maxJuryCount} jury member${maxJuryCount !== 1 ? 's' : ''}`);
             return;
         }
 
@@ -69,6 +117,36 @@ export const JurySelectionModal: React.FC<JurySelectionModalProps> = ({
         }
     };
 
+    // Helper to generate the selection requirement text
+    const getRequirementText = (): string => {
+        if (maxJuryCount) {
+            if (minJuryCount === maxJuryCount) {
+                return `exactly ${minJuryCount} jury member${minJuryCount !== 1 ? 's' : ''}`;
+            }
+            return `between ${minJuryCount} and ${maxJuryCount} jury members`;
+        }
+        return `at least ${minJuryCount} jury member${minJuryCount !== 1 ? 's' : ''}`;
+    };
+
+    // Helper to generate the selected count text
+    const getSelectedCountText = (): string => {
+        const count = selectedJuries.length;
+        if (maxJuryCount) {
+            return `${count} / ${minJuryCount}-${maxJuryCount}`;
+        }
+        return `${count} / ${minJuryCount} minimum`;
+    };
+
+    // Check if submit should be disabled
+    const isSubmitDisabled =
+        selectedJuries.length < minJuryCount ||
+        (maxJuryCount !== undefined && selectedJuries.length > maxJuryCount);
+
+    // Helper to check if a professor is the instructor
+    const isInstructor = (professorId: number): boolean => {
+        return professorId === instructorId;
+    };
+
     if (!isOpen) return null;
 
     return (
@@ -77,8 +155,14 @@ export const JurySelectionModal: React.FC<JurySelectionModalProps> = ({
                 {/* Instructions */}
                 <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                     <p className="text-sm text-blue-800">
-                        Please select at least <strong>3 jury members</strong> for this thesis form.
+                        Please select <strong>{getRequirementText()}</strong> for this thesis form.
                     </p>
+                    {instructorId && (
+                        <p className="text-sm text-blue-600 mt-2">
+                            <Lock className="inline h-4 w-4 mr-1" />
+                            The thesis instructor is automatically included as a jury member.
+                        </p>
+                    )}
                 </div>
 
                 {/* Error Message */}
@@ -108,35 +192,69 @@ export const JurySelectionModal: React.FC<JurySelectionModalProps> = ({
                             No professors available
                         </div>
                     ) : (
-                        professors.map((professor: Professor) => (
-                            <label
-                                key={professor.id}
-                                className="flex items-center p-3 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors"
-                            >
-                                <input
-                                    type="checkbox"
-                                    checked={selectedJuries.includes(professor.id)}
-                                    onChange={() => handleProfessorToggle(professor.id)}
-                                    className="w-4 h-4 text-primary-600 border-gray-300 rounded focus:ring-primary-500"
-                                    disabled={isSubmitting}
-                                />
-                                <div className="ml-3 flex-1">
-                                    <p className="font-medium text-gray-900">
-                                        {professor.firstName} {professor.lastName}
-                                    </p>
-                                    <p className="text-sm text-gray-500">{professor.email}</p>
-                                </div>
-                                {selectedJuries.includes(professor.id) && (
-                                    <CheckCircle className="h-5 w-5 text-green-600" />
-                                )}
-                            </label>
-                        ))
+                        professors.map((professor: Professor) => {
+                            const isSelected = selectedJuries.includes(professor.id);
+                            const isProfessorInstructor = isInstructor(professor.id);
+                            const isMaxReached = maxJuryCount !== undefined &&
+                                selectedJuries.length >= maxJuryCount &&
+                                !isSelected;
+                            const isDisabled = isSubmitting || isMaxReached || isProfessorInstructor;
+
+                            return (
+                                <label
+                                    key={professor.id}
+                                    className={`flex items-center p-3 rounded-lg transition-colors ${
+                                        isProfessorInstructor
+                                            ? 'bg-primary-50 border border-primary-200 cursor-not-allowed'
+                                            : isMaxReached
+                                                ? 'opacity-50 cursor-not-allowed bg-gray-50'
+                                                : 'hover:bg-gray-50 cursor-pointer'
+                                    }`}
+                                >
+                                    <input
+                                        type="checkbox"
+                                        checked={isSelected}
+                                        onChange={() => handleProfessorToggle(professor.id)}
+                                        className={`w-4 h-4 border-gray-300 rounded focus:ring-primary-500 ${
+                                            isProfessorInstructor
+                                                ? 'text-primary-600 cursor-not-allowed'
+                                                : 'text-primary-600'
+                                        }`}
+                                        disabled={isDisabled}
+                                    />
+                                    <div className="ml-3 flex-1">
+                                        <p className="font-medium text-gray-900">
+                                            {professor.firstName} {professor.lastName}
+                                            {isProfessorInstructor && (
+                                                <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-primary-100 text-primary-800">
+                                                    <Lock className="h-3 w-3 mr-1" />
+                                                    Instructor
+                                                </span>
+                                            )}
+                                        </p>
+                                        <p className="text-sm text-gray-500">{professor.email}</p>
+                                    </div>
+                                    {isSelected && (
+                                        <CheckCircle className={`h-5 w-5 ${
+                                            isProfessorInstructor ? 'text-primary-600' : 'text-green-600'
+                                        }`} />
+                                    )}
+                                </label>
+                            );
+                        })
                     )}
                 </div>
 
                 {/* Selected Count */}
                 <div className="text-sm text-gray-600">
-                    Selected: <span className="font-semibold">{selectedJuries.length}</span> / 3 minimum
+                    Selected: <span className={`font-semibold ${
+                    selectedJuries.length >= minJuryCount ? 'text-green-600' : 'text-gray-900'
+                }`}>
+                        {getSelectedCountText()}
+                    </span>
+                    {instructorId && (
+                        <span className="text-gray-500 ml-2">(including instructor)</span>
+                    )}
                 </div>
 
                 {/* Action Buttons */}
@@ -153,7 +271,7 @@ export const JurySelectionModal: React.FC<JurySelectionModalProps> = ({
                         variant="success"
                         onClick={handleSubmit}
                         isLoading={isSubmitting}
-                        disabled={selectedJuries.length < 3}
+                        disabled={isSubmitDisabled}
                         className="flex-1"
                     >
                         {isSubmitting ? 'Assigning...' : 'Assign Juries'}
