@@ -21,6 +21,10 @@ public interface ThesisFormRepository extends JpaRepository<ThesisForm, Long> {
     @Query("SELECT tf FROM ThesisForm tf WHERE tf.state = 'INSTRUCTOR_APPROVED'")
     List<ThesisForm> findAllInstructorApprovedThesisForms();
 
+    @Query(value = "SELECT * FROM thesis_form tf WHERE tf.state = 'INSTRUCTOR_APPROVED' OR tf.state LIKE '%_REJECTED'",
+            nativeQuery = true)
+    List<ThesisForm> findAllInstructorApprovedAndRejectedThesisForms();
+
     @Query("SELECT tf FROM ThesisForm tf WHERE tf.state = 'ADMIN_APPROVED'")
     List<ThesisForm> findAllAdminApprovedThesisForms();
 

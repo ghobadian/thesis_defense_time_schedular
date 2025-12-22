@@ -17,7 +17,7 @@ public class AdminFormService {
     private final ThesisFormRepository thesisFormRepository;
 
     public List<ThesisFormOutputDTO> listForms() {
-        return thesisFormRepository.findAllInstructorApprovedThesisForms().stream().map(ThesisFormOutputDTO::from).toList();
+        return thesisFormRepository.findAllInstructorApprovedAndRejectedThesisForms().stream().map(ThesisFormOutputDTO::from).toList();
     }
 
     public void approveForm(Long formId) {
