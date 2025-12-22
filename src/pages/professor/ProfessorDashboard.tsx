@@ -4,16 +4,16 @@ import { Layout } from '../../components/layout/Layout';
 import { ProfessorHome } from './ProfessorHome';
 import { MyStudents } from "./MyStudents";
 import { MyMeetings } from "./MyMeetings";
-import { MyThesisForms } from "./MyThesisForms";
 import { SpecifyMeetingTimeSlots } from './SpecifyMeetingTimeSlots';
 import {ProfilePage} from "../student/ProfilePage";
+import ProfessorThesisFormsPage from "./MyThesisForms";
 
 export const ProfessorDashboard: React.FC = () => {
     return (
         <Layout>
             <Routes>
                 <Route path="dashboard" element={<ProfessorHome />} />
-                <Route path="thesis-forms" element={<MyThesisForms />} />
+                <Route path="thesis-forms" element={<ProfessorThesisFormsPage />} />
                 <Route path="students" element={<MyStudents />} />
                 <Route path="meetings" element={<MyMeetings />} />
                 <Route path="meetings/:meetingId/specify-time" element={<SpecifyMeetingTimeSlots />} />

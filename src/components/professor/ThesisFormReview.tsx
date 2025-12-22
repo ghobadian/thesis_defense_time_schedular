@@ -23,14 +23,11 @@ export const ThesisFormReview: React.FC = () => {
         enabled: role === 'MANAGER',
     });
 
-    // Schedule Meeting / Assign Juries mutation
-    // Fixed: Changed from suggestJuries (non-existent) to scheduleMeeting
     const scheduleMeetingMutation = useMutation({
         mutationFn: ({ formId, juryIds, location }: { formId: number; juryIds: number[]; location: string }) =>
             professorAPI.createMeeting(formId, juryIds, location),
     });
 
-    // Handle jury selection
     const handleJuriesSelected = async (juryIds: number[]) => {
         if (!selectedFormId) {
             throw new Error('Form ID not found');

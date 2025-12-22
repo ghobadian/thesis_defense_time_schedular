@@ -44,8 +44,11 @@ export const adminAPI = {
         return response.data;
     },
 
-    rejectForm: async (formId: number) => {
-        const response = await getAdminAPI().post(`/forms/${formId}/reject`);
+    rejectForm: async (formId: number, rejectionReason: string) => {
+        const response = await getAdminAPI().post(`/forms/reject`, {
+            formId: formId,
+            rejectionReason: rejectionReason
+        });
         return response.data;
     },
 
@@ -73,8 +76,6 @@ export const adminAPI = {
         const response = await getAdminAPI().get('/departments');
         return response.data;
     },
-
-
 
     getStudents: async (params: StudentSearch) => {
         const response = await getAdminAPI().get('/students', {params});

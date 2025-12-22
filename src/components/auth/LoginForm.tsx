@@ -187,6 +187,7 @@ export const LoginForm: React.FC = () => {
                                 <div>• Shiva Ramezani - s.ramezani@student.university.ac.ir</div>
                                 <div>• Erfan Hosseinpour - e.hosseinpour@student.university.ac.ir</div>
                                 <div>• Kimia Nouri - k.nouri@student.university.ac.ir</div>
+                                <div>• Nadia Zahedi - n.zahedi@student.university.ac.ir</div>
                             </div>
                             <p className="font-medium text-green-800 mb-1">PhD Students:</p>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-1">
