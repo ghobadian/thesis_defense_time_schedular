@@ -301,8 +301,15 @@ export const MeetingView: React.FC<MeetingViewProps> = ({
                                             </div>
                                             <div className="pt-2">
                                                 <p className="text-sm text-gray-500">Abstract</p>
-                                                <p className="text-gray-700 mt-1">
+                                                <p className="text-gray-900 mt-1">
                                                     {meeting.thesis?.abstractText || 'No abstract available'}
+                                                </p>
+                                            </div>
+
+                                            <div className="pt-2">
+                                                <p className="text-sm text-gray-500">Score</p>
+                                                <p className="text-gray-900 mt-1">
+                                                    {meeting.score || 'Not Given Yet'}
                                                 </p>
                                             </div>
                                         </div>
