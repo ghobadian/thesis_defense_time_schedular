@@ -95,6 +95,20 @@ export const ThesisFormDetails: React.FC<Props> = ({
                 <h3>Submission Date</h3>
                 <p>{formatDate(form.createdAt)}</p>
             </div>
+
+            {form.rejectionReason && (
+                <div className="detail-section">
+                    <h3>Rejection Reason</h3>
+                    <p className="rejection-reason">{form.rejectionReason}</p>
+                </div>
+            )}
+
+            {form.revisionMessage && (
+                <div className="detail-section">
+                    <h3>Revision Message</h3>
+                    <p className="rejection-reason">{form.revisionMessage}</p>
+                </div>
+            )}
         </div>
 
         {actions.length > 0 && (

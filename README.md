@@ -98,7 +98,6 @@ src/
 │   │   └── SideBar.tsx           # Sidebar navigation
 │   ├── professor/
 │   │   ├── ScheduleMeeting.tsx   # Meeting scheduling component
-│   │   └── ThesisFormReview.tsx  # Thesis review component
 │   └── student/
 │       └── ThesisFormCreate.tsx  # Thesis form creation
 │
@@ -118,7 +117,7 @@ src/
 │   │   ├── StudentDashboard.tsx  # Student main dashboard
 │   │   ├── StudentHome.tsx       # Student home page
 │   │   ├── ThesisFormPage.tsx    # Thesis form page
-│   │   ├── MyThesisForms.tsx     # View submitted forms
+│   │   ├── ProfessorThesisForms.tsx     # View submitted forms
 │   │   ├── MeetingsPage.tsx      # View meetings
 │   │   └── ProfilePage.tsx       # Profile settings
 │   └── LoginPage.tsx             # Authentication page

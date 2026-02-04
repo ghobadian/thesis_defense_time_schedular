@@ -1,0 +1,267 @@
+/* src/components/thesis/SubmitRevisionModal.css */
+
+.submit-revision-modal {
+    max-width: 540px;
+    width: 95%;
+}
+
+.thesis-title-display {
+    background-color: var(--bg-secondary, #f5f5f5);
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.thesis-title-display .label {
+    font-size: 12px;
+    color: var(--text-secondary, #666);
+    display: block;
+    margin-bottom: 4px;
+}
+
+.thesis-title-display .title {
+    font-weight: 600;
+    color: var(--text-primary, #333);
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+/* Revision Info Card */
+.revision-info-card {
+    background-color: var(--bg-primary, #fff);
+    border: 1px solid var(--border-color, #e0e0e0);
+    border-radius: 10px;
+    padding: 16px;
+    margin-bottom: 20px;
+}
+
+.revision-info-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    color: var(--text-primary, #333);
+    margin-bottom: 14px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border-color, #e0e0e0);
+}
+
+.revision-info-header svg {
+    color: var(--primary-color, #3b82f6);
+}
+
+.revision-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 14px;
+}
+
+.meta-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+}
+
+.meta-item svg {
+    color: var(--text-secondary, #666);
+}
+
+.meta-label {
+    color: var(--text-secondary, #666);
+}
+
+.meta-value {
+    color: var(--text-primary, #333);
+    font-weight: 500;
+}
+
+.revision-message-box {
+    background-color: var(--bg-secondary, #f8f9fa);
+    border-radius: 8px;
+    padding: 12px 14px;
+}
+
+.message-label {
+    display: block;
+    font-size: 12px;
+    color: var(--text-secondary, #666);
+    margin-bottom: 6px;
+    font-weight: 500;
+}
+
+.message-content {
+    margin: 0;
+    font-size: 14px;
+    color: var(--text-primary, #333);
+    line-height: 1.5;
+    white-space: pre-wrap;word-break: break-word;
+}
+
+/* Confirmation Notice */
+.confirmation-notice {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    background-color: var(--success-bg, #ecfdf5);
+    border: 1px solid var(--success-border, #a7f3d0);
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-bottom: 20px;
+}
+
+.confirmation-notice svg {
+    color: var(--success-color, #10b981);
+    flex-shrink: 0;margin-top: 2px;
+}
+
+.notice-content {
+    flex: 1;
+}
+
+.notice-content strong {
+    display: block;
+    color: var(--success-dark, #065f46);
+    font-size: 14px;
+    margin-bottom: 4px;
+}
+
+.notice-content p {
+    margin: 0;
+    font-size: 13px;
+    color: var(--success-text, #047857);
+    line-height: 1.4;
+}
+
+/* Modal Actions */
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    padding-top: 16px;border-top: 1px solid var(--border-color, #e0e0e0);
+}
+
+.btn-cancel {
+    padding: 10px 20px;
+    border: 2px solid var(--border-color, #e0e0e0);
+    background-color: transparent;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: var(--text-primary, #333);
+}
+
+.btn-cancel:hover:not(:disabled) {
+    background-color: var(--bg-hover, #f5f5f5);
+}
+
+.btn-cancel:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.btn-submit {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-submit.btn-approve {
+    background-color: var(--success-color, #10b981);
+    color: white;
+}
+
+.btn-submit.btn-approve:hover:not(:disabled) {
+    background-color: var(--success-hover, #059669);
+}
+
+.btn-submit:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Spinner */
+.spinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Modal Base Styles */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;padding: 20px;
+}
+
+.modal-content {
+    background-color: var(--bg-primary, #fff);
+    border-radius: 12px;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    overflow: hidden;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border-color, #e0e0e0);
+}
+
+.modal-header h2 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-primary, #333);
+}
+
+.modal-close-btn {
+    background: none;
+    border: none;
+    padding: 4px;
+    cursor: pointer;
+    color: var(--text-secondary, #666);
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+
+.modal-close-btn:hover:not(:disabled) {
+    background-color: var(--bg-hover, #f5f5f5);
+    color: var(--text-primary, #333);
+}
+
+.modal-close-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.modal-body {
+    padding: 20px;
+}

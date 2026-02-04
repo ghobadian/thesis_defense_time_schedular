@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -17,3 +19,28 @@ body {
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
+
+
+/* Import Persian-friendly fonts */
+
+/* Base styles */
+body {
+    font-family: 'Inter', 'Vazirmatn', system-ui, sans-serif;
+}
+
+/* RTL specific styles */
+html[dir="rtl"] body {
+    font-family: 'Vazirmatn', 'Inter', system-ui, sans-serif;
+}
+
+/* Ensure proper text alignment in RTL */
+html[dir="rtl"] input,
+html[dir="rtl"] textarea {
+    text-align: right;
+}
+
+html[dir="ltr"] input,
+html[dir="ltr"] textarea {
+    text-align: left;
+}
+

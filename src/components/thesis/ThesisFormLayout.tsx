@@ -37,14 +37,19 @@ interface Props {
     availableStatuses?: FormState[];
 }
 
-// Default statuses if not provided
 const DEFAULT_STATUSES: FormState[] = [
     FormState.SUBMITTED,
     FormState.INSTRUCTOR_APPROVED,
-    FormState.ADMIN_APPROVED,
+    FormState.INSTRUCTOR_REVISION_REQUESTED,
     FormState.INSTRUCTOR_REJECTED,
+    FormState.ADMIN_APPROVED,
+    FormState.ADMIN_REVISION_REQUESTED_FOR_STUDENT,
+    FormState.ADMIN_REVISION_REQUESTED_FOR_INSTRUCTOR,
     FormState.ADMIN_REJECTED,
     FormState.MANAGER_APPROVED,
+    FormState.MANAGER_REVISION_REQUESTED_FOR_STUDENT,
+    FormState.MANAGER_REVISION_REQUESTED_FOR_INSTRUCTOR,
+    FormState.MANAGER_REVISION_REQUESTED_FOR_ADMIN,
     FormState.MANAGER_REJECTED
 ];
 

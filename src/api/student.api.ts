@@ -1,9 +1,9 @@
-import { ThesisFormInput, TimeSlotSelectionInput } from '../types';
+import {RevisionTarget, ThesisFormInput, TimeSlotSelectionInput} from '../types';
 import axios from 'axios';
 import { API_BASE_URL } from './config';
 
 
-const getStudentAPI = () => {
+const getApi = () => {
     const token = localStorage.getItem('auth-storage');
     const authData = token ? JSON.parse(token) : null;
 
@@ -17,49 +17,57 @@ const getStudentAPI = () => {
 
 export const studentAPI = {
     createThesisForm: async (data: ThesisFormInput) => {
-        const response = await getStudentAPI().post('/create-form', data);
+        const response = await getApi().post('/forms', data);
         return response.data;
     },
 
     getMyThesisForms: async () => {
-        const response = await getStudentAPI().get('/forms');
+        const response = await getApi().get('/forms');
         return response.data;
     },
 
     getMeetings: async () => {
-        const response = await getStudentAPI().get('/meetings');
+        const response = await getApi().get('/meetings');
         return response.data;
     },
 
     getMeetingDetails: async (id: number) => {
-        const response = await getStudentAPI().get(`/meetings/${id}`);
+        const response = await getApi().get(`/meetings/${id}`);
         return response.data;
     },
 
     chooseTimeSlot: async (data: TimeSlotSelectionInput) => {
-        const response = await getStudentAPI().post('/time-slots', data);
+        const response = await getApi().post('/meetings/time-slots', data);
         return response.data;
     },
 
-
-
     getAllProfessors: async () => {
-        const response = await getStudentAPI().get('/professors');
+        const response = await getApi().get('/professors');
         return response.data;
     },
 
     updatePhoneNumber: async (phone: string) => {
-        const response = await getStudentAPI().put('/update-phone', {phoneNumber: phone});
+        const response = await getApi().put('/profile/update-phone', {phoneNumber: phone});
         return response.data;
     },
 
     getProfile: async () => {
-        const response = await getStudentAPI().get("/");
+        const response = await getApi().get("/profile");
         return response.data;
     },
 
     changePassword: async (data: { currentPassword: string; newPassword: string }) => {
-        const response = await getStudentAPI().put('/change-password', data);
+        const response = await getApi().put('/profile/change-password', data);
         return response.data;
     },
+
+    submitRevision: async (formId: number)=> {
+        const response = await getApi().post(`/forms/${formId}/submit-revision`);
+        return response.data;
+    },
+
+    editForm: async (formId: number, data: ThesisFormInput) => {
+        const response = await getApi().put(`/forms/${formId}/update`, data);
+        return response.data;
+    }
 };

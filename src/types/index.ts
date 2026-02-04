@@ -15,10 +15,16 @@ export enum FormState {
     SUBMITTED = 'SUBMITTED',
     INSTRUCTOR_APPROVED = 'INSTRUCTOR_APPROVED',
     INSTRUCTOR_REJECTED = 'INSTRUCTOR_REJECTED',
+    INSTRUCTOR_REVISION_REQUESTED = 'INSTRUCTOR_REVISION_REQUESTED',
     ADMIN_APPROVED = 'ADMIN_APPROVED',
     ADMIN_REJECTED = 'ADMIN_REJECTED',
+    ADMIN_REVISION_REQUESTED_FOR_STUDENT = 'ADMIN_REVISION_REQUESTED_FOR_STUDENT',
+    ADMIN_REVISION_REQUESTED_FOR_INSTRUCTOR = 'ADMIN_REVISION_REQUESTED_FOR_INSTRUCTOR',
     MANAGER_APPROVED = 'MANAGER_APPROVED',
     MANAGER_REJECTED = 'MANAGER_REJECTED',
+    MANAGER_REVISION_REQUESTED_FOR_STUDENT = 'MANAGER_REVISION_REQUESTED_FOR_STUDENT',
+    MANAGER_REVISION_REQUESTED_FOR_INSTRUCTOR = 'MANAGER_REVISION_REQUESTED_FOR_INSTRUCTOR',
+    MANAGER_REVISION_REQUESTED_FOR_ADMIN = 'MANAGER_REVISION_REQUESTED_FOR_ADMIN',
 }
 
 export enum MeetingState {
@@ -116,6 +122,8 @@ export interface ThesisForm {
     createdAt: string;
     updatedAt: string;
     rejectionReason?: string;
+    revisionMessage?: string;
+    revisionRequestedAt?: string;
     submittedAt?: string;
     instructorReviewedAt?: string;
     adminReviewedAt?: string;
@@ -190,4 +198,10 @@ export interface MeetingTimeSlotsResponse {
     meetingId: number;
     juryMemberTimeSlots: ProfessorTimeSlots[];
     intersections: TimeSlot[];
+}
+
+export enum RevisionTarget {
+    STUDENT = 'STUDENT',
+    INSTRUCTOR = 'INSTRUCTOR',
+    ADMIN = 'ADMIN'
 }

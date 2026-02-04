@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import { useAuthStore } from '../../store/authStore';
 import { UserRole } from '../../types';
+import {t} from "i18next";
 
 export const Sidebar: React.FC = () => {
   const { role } = useAuthStore();
@@ -20,31 +21,31 @@ export const Sidebar: React.FC = () => {
     switch (role) {
       case UserRole.ADMIN:
         return [
-          { to: '/admin/dashboard', icon: Home, label: 'Dashboard' },
-          { to: '/admin/students', icon: Users, label: 'Student Management' },
-          { to: '/admin/departments', icon: Building2, label: 'Departments' },
-          { to: '/admin/fields', icon: ClipboardList, label: 'Fields' },
-          { to: '/admin/thesis-forms', icon: FileText, label: 'Thesis Forms' },
-          { to: '/admin/meetings', icon: Calendar, label: 'Defense Meetings' },
-          { to: '/admin/profile', icon: Settings, label: 'Profile' },
+          { to: '/admin/dashboard', icon: Home, label: t('dashboard') },
+          { to: '/admin/students', icon: Users, label: t('users.admin.students-management') },
+          { to: '/admin/departments', icon: Building2, label: t('users.admin.departments-management') },
+          { to: '/admin/fields', icon: ClipboardList, label: t('users.admin.fields-management') },
+          { to: '/admin/thesis-forms', icon: FileText, label: t('form.thesis-forms') },
+          { to: '/admin/meetings', icon: Calendar, label: t('meeting.meetings') },
+          { to: '/admin/profile', icon: Settings, label: t('profile') },
         ];
 
       case UserRole.PROFESSOR:
       case UserRole.MANAGER:
         return [
-          { to: '/professor/dashboard', icon: Home, label: 'Dashboard' },
-          { to: '/professor/thesis-forms', icon: FileText, label: 'Thesis Forms' },
-          { to: '/professor/meetings', icon: Calendar, label: 'My Meetings' },
-          { to: '/professor/students', icon: Users, label: 'My Students' },
-          { to: '/professor/profile', icon: Settings, label: 'Profile' },
+          { to: '/professor/dashboard', icon: Home, label: t('dashboard') },
+          { to: '/professor/thesis-forms', icon: FileText, label: t('form.thesis-forms') },
+          { to: '/professor/meetings', icon: Calendar, label: t('meeting.meetings') },
+          { to: '/professor/students', icon: Users, label: t('users.instructor.my-students') },
+          { to: '/professor/profile', icon: Settings, label: t('profile') },
         ];
 
       case UserRole.STUDENT:
         return [
-          { to: '/student/dashboard', icon: Home, label: 'Dashboard' },
-          { to: '/student/thesis-form', icon: FileText, label: 'My Thesis Form' },
-          { to: '/student/meetings', icon: Calendar, label: 'Defense Meetings' },
-          { to: '/student/profile', icon: Settings, label: 'Profile' },
+          { to: '/student/dashboard', icon: Home, label: t('dashboard') },
+          { to: '/student/thesis-form', icon: FileText, label: t('form.thesis-forms') },
+          { to: '/student/meetings', icon: Calendar, label: t('meeting.meetings') },
+          { to: '/student/profile', icon: Settings, label: t('profile') },
         ];
 
       default:
