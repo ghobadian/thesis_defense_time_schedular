@@ -1,6 +1,6 @@
-package ir.kghobad.thesis_defense_time_schedular.model.dto.student;
+package ir.kghobad.thesis_defense_time_schedular.model.dto.user.student;
 
-import ir.kghobad.thesis_defense_time_schedular.model.dto.SimpleUserOutputDto;
+import ir.kghobad.thesis_defense_time_schedular.model.dto.user.SimpleUserOutputDto;
 import ir.kghobad.thesis_defense_time_schedular.model.dto.department.DepartmentSummaryOutputDTO;
 import ir.kghobad.thesis_defense_time_schedular.model.dto.field.FieldOutputDTO;
 import ir.kghobad.thesis_defense_time_schedular.model.dto.form.ThesisFormOutputDTO;
@@ -9,9 +9,8 @@ import ir.kghobad.thesis_defense_time_schedular.model.enums.StudentType;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Getter
 @Setter
@@ -26,7 +25,7 @@ public class StudentOutputDTO {
     private DepartmentSummaryOutputDTO department;
     private List<ThesisFormOutputDTO> thesisForms;
     private SimpleUserOutputDto instructor;
-    private Date creationDate;
+    private LocalDateTime creationDate;
     private Boolean isGraduated;
     private StudentType studentType;
 
@@ -43,7 +42,7 @@ public class StudentOutputDTO {
         dto.setDepartment(DepartmentSummaryOutputDTO.from(student.getDepartment()));
         dto.setThesisForms(student.getThesisForms());
         dto.setCreationDate(student.getCreationDate());
-        dto.setIsGraduated(Optional.ofNullable(student.getGraduationDate()).map(g -> g.after(new Date())).orElse(false));
+        dto.setIsGraduated(student.isGraduated());
         dto.setStudentType(student.getStudentType());
         dto.setInstructor(SimpleUserOutputDto.from(student.getInstructor()));
         return dto;

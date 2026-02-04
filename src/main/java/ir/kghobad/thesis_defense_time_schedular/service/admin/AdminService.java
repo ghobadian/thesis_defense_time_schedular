@@ -1,13 +1,12 @@
 package ir.kghobad.thesis_defense_time_schedular.service.admin;
 
 import ir.kghobad.thesis_defense_time_schedular.dao.*;
-import ir.kghobad.thesis_defense_time_schedular.model.dto.AdminOutputDTO;
 import ir.kghobad.thesis_defense_time_schedular.model.dto.PhoneUpdateDTO;
-import ir.kghobad.thesis_defense_time_schedular.model.dto.SimpleUserOutputDto;
 import ir.kghobad.thesis_defense_time_schedular.model.dto.SystemStatsDTO;
 import ir.kghobad.thesis_defense_time_schedular.model.dto.meeting.ThesisDefenseMeetingDetailsOutputDTO;
 import ir.kghobad.thesis_defense_time_schedular.model.dto.meeting.ThesisDefenseMeetingOutputDTO;
-import ir.kghobad.thesis_defense_time_schedular.model.dto.student.PasswordChangeInputDTO;
+import ir.kghobad.thesis_defense_time_schedular.model.dto.user.AdminOutputDTO;
+import ir.kghobad.thesis_defense_time_schedular.model.dto.user.student.PasswordChangeInputDTO;
 import ir.kghobad.thesis_defense_time_schedular.model.entity.user.Admin;
 import ir.kghobad.thesis_defense_time_schedular.model.enums.FormState;
 import ir.kghobad.thesis_defense_time_schedular.model.enums.MeetingState;
@@ -58,9 +57,7 @@ public class AdminService {// TODO check security of deletion and update apis
                 .build();
     }
 
-    public List<SimpleUserOutputDto> getProfessors() {
-        return professorRepository.findAll().stream().map(SimpleUserOutputDto::from).toList();
-    }
+
 
     public List<ThesisDefenseMeetingOutputDTO> getMeetings() {
         return meetingRepository.findAll().stream().map(ThesisDefenseMeetingOutputDTO::from).toList();

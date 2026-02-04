@@ -1,4 +1,4 @@
-package ir.kghobad.thesis_defense_time_schedular.model.dto;
+package ir.kghobad.thesis_defense_time_schedular.model.dto.user;
 
 import ir.kghobad.thesis_defense_time_schedular.model.dto.department.DepartmentSummaryOutputDTO;
 import ir.kghobad.thesis_defense_time_schedular.model.dto.field.FieldOutputDTO;
@@ -6,7 +6,7 @@ import ir.kghobad.thesis_defense_time_schedular.model.entity.user.Admin;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -18,7 +18,7 @@ public class AdminOutputDTO {
     private String phoneNumber;
     private FieldOutputDTO field;
     private DepartmentSummaryOutputDTO department;
-    private Date creationDate;
+    private LocalDateTime creationDate;
 
     public static AdminOutputDTO from(Admin admin) {
         AdminOutputDTO dto = new AdminOutputDTO();

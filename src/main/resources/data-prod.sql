@@ -48,10 +48,10 @@ INSERT INTO field (id, name, department_id, active) VALUES
 -- ============================================
 -- Password: admin123 (hashed with BCrypt)
 INSERT INTO users (id, first_name, last_name, email, phone_number, password, department_id, enabled, creation_date) VALUES
-                                                                                                                        (1, 'Mohammad', 'Rezaei', 'admin@university.ac.ir', '09121234567', '$2a$10$LZLBvCmFxTicp0mKCc2rVutt.LS.dGUBDYGzxL3bdcXLz9cYkWhOK', 1, true, '2025-09-23 08:00:00'),
-                                                                                                                        (2, 'Fatima', 'Ahmadi', 'admin2@university.ac.ir', '09121234568', '$2a$10$LZLBvCmFxTicp0mKCc2rVutt.LS.dGUBDYGzxL3bdcXLz9cYkWhOK', 2, true, '2025-09-23 08:00:00'),
-                                                                                                                        (3, 'Ali', 'Karimi', 'admin3@university.ac.ir', '09121234569', '$2a$10$LZLBvCmFxTicp0mKCc2rVutt.LS.dGUBDYGzxL3bdcXLz9cYkWhOK', 3, true, '2025-09-23 08:00:00'),
-                                                                                                                        (4, 'Sara', 'Hosseini', 'admin4@university.ac.ir', '09121234570', '$2a$10$LZLBvCmFxTicp0mKCc2rVutt.LS.dGUBDYGzxL3bdcXLz9cYkWhOK', 4, true, '2025-09-23 08:00:00');
+(1, 'Mohammad', 'Rezaei', 'admin@university.ac.ir', '09121234567', '$2a$10$LZLBvCmFxTicp0mKCc2rVutt.LS.dGUBDYGzxL3bdcXLz9cYkWhOK', 1, true, '2025-09-23 08:00:00'),
+(2, 'Fatima', 'Ahmadi', 'admin2@university.ac.ir', '09121234568', '$2a$10$LZLBvCmFxTicp0mKCc2rVutt.LS.dGUBDYGzxL3bdcXLz9cYkWhOK', 2, true, '2025-09-23 08:00:00'),
+(3, 'Ali', 'Karimi', 'admin3@university.ac.ir', '09121234569', '$2a$10$LZLBvCmFxTicp0mKCc2rVutt.LS.dGUBDYGzxL3bdcXLz9cYkWhOK', 3, true, '2025-09-23 08:00:00'),
+(4, 'Sara', 'Hosseini', 'admin4@university.ac.ir', '09121234570', '$2a$10$LZLBvCmFxTicp0mKCc2rVutt.LS.dGUBDYGzxL3bdcXLz9cYkWhOK', 4, true, '2025-09-23 08:00:00');
 
 INSERT INTO admin (id) VALUES (1), (2), (3), (4);
 
@@ -116,50 +116,50 @@ INSERT INTO professor (id, is_manager) VALUES
 -- 5. BACHELOR STUDENTS
 -- ============================================
 -- Password: student123 (hashed with BCrypt)
-INSERT INTO users (id, first_name, last_name, email, phone_number, password, department_id, enabled, creation_date) VALUES
+INSERT INTO users (id, first_name, last_name, email, phone_number, password, department_id, enabled, creation_date, field_id) VALUES
 -- Computer Engineering Students (100-105)
-(100, 'Ali', 'Nejati', 'a.nejati@student.university.ac.ir', '09141234567', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 1, true, '2025-09-25 10:00:00'),
-(101, 'Mahsa', 'Amini', 'm.amini@student.university.ac.ir', '09141234568', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 1, true, '2025-09-25 10:00:00'),
-(102, 'Hamed', 'Rostami', 'h.rostami@student.university.ac.ir', '09141234569', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 1, true, '2025-09-25 10:00:00'),
+(100, 'Ali', 'Nejati', 'a.nejati@student.university.ac.ir', '09141234567', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 1, true, '2025-09-25 10:00:00', 1),
+(101, 'Mahsa', 'Amini', 'm.amini@student.university.ac.ir', '09141234568', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 1, true, '2025-09-25 10:00:00', 2),
+(102, 'Hamed', 'Rostami', 'h.rostami@student.university.ac.ir', '09141234569', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 1, true, '2025-09-25 10:00:00', 2),
 
 -- Electrical Engineering Students (103-105)
-(103, 'Negar', 'Shams', 'n.shams@student.university.ac.ir', '09141234570', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 2, true, '2025-09-25 10:00:00'),
-(104, 'Amin', 'Zarei', 'a.zarei@student.university.ac.ir', '09141234571', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 2, true, '2025-09-25 10:00:00'),
+(103, 'Negar', 'Shams', 'n.shams@student.university.ac.ir', '09141234570', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 2, true, '2025-09-25 10:00:00', 5),
+(104, 'Amin', 'Zarei', 'a.zarei@student.university.ac.ir', '09141234571', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 2, true, '2025-09-25 10:00:00', 6),
 
 -- Civil Engineering Students (106-107)
-(106, 'Elham', 'Sharifi', 'e.sharifi@student.university.ac.ir', '09141234572', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 4, true, '2025-09-25 10:00:00'),
+(106, 'Elham', 'Sharifi', 'e.sharifi@student.university.ac.ir', '09141234572', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 4, true, '2025-09-25 10:00:00', 10),
 
 -- Industrial Engineering Students (107-109)
-(107, 'Pouya', 'Forouzan', 'p.forouzan@student.university.ac.ir', '09141234573', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 5, true, '2025-09-25 10:00:00'),
+(107, 'Pouya', 'Forouzan', 'p.forouzan@student.university.ac.ir', '09141234573', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 5, true, '2025-09-25 10:00:00', 12),
 
 -- Telecommunications (108-109)
-(108, 'Niloofar', 'Ebrahimi', 'n.ebrahimi@student.university.ac.ir', '09141234574', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 1, true, '2025-09-25 10:00:00'),
-(109, 'Omid', 'Ghafari', 'o.ghafari@student.university.ac.ir', '09141234575', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 2, true, '2025-09-25 10:00:00'),
+(108, 'Niloofar', 'Ebrahimi', 'n.ebrahimi@student.university.ac.ir', '09141234574', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 1, true, '2025-09-25 10:00:00', 1),
+(109, 'Omid', 'Ghafari', 'o.ghafari@student.university.ac.ir', '09141234575', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 2, true, '2025-09-25 10:00:00', 7),
 
 -- Additional bachelor students (110-115)
-(110, 'Sanaz', 'Mirzaei', 's.mirzaei@student.university.ac.ir', '09141234576', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 1, true, '2025-09-25 10:00:00'),
-(111, 'Arash', 'Soltani', 'a.soltani@student.university.ac.ir', '09141234577', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 2, true, '2025-09-25 10:00:00'),
-(112, 'Golnaz', 'Maleki', 'g.maleki@student.university.ac.ir', '09141234578', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 3, true, '2025-09-25 10:00:00'),
-(113, 'Sina', 'Asadi', 's.asadi@student.university.ac.ir', '09141234579', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 4, true, '2025-09-25 10:00:00'),
-(114, 'Yasmin', 'Sadri', 'y.sadri@student.university.ac.ir', '09141234580', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 5, true, '2025-09-25 10:00:00'),
-(115, 'Ramin', 'Jafari', 'r.jafari@student.university.ac.ir', '09141234581', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 1, true, '2025-09-25 10:00:00');
+(110, 'Sanaz', 'Mirzaei', 's.mirzaei@student.university.ac.ir', '09141234576', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 1, true, '2025-09-25 10:00:00', 4),
+(111, 'Arash', 'Soltani', 'a.soltani@student.university.ac.ir', '09141234577', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 2, true, '2025-09-25 10:00:00', 5),
+(112, 'Golnaz', 'Maleki', 'g.maleki@student.university.ac.ir', '09141234578', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 3, true, '2025-09-25 10:00:00', 8),
+(113, 'Sina', 'Asadi', 's.asadi@student.university.ac.ir', '09141234579', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 4, true, '2025-09-25 10:00:00', 11),
+(114, 'Yasmin', 'Sadri', 'y.sadri@student.university.ac.ir', '09141234580', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 5, true, '2025-09-25 10:00:00', 13),
+(115, 'Ramin', 'Jafari', 'r.jafari@student.university.ac.ir', '09141234581', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 1, true, '2025-09-25 10:00:00', 3);
 
-INSERT INTO student (id, student_number, instructor_id, field_id) VALUES
-                                                                      (100, 401101001, 10, 1),
-                                                                      (101, 401101002, 11, 2),
-                                                                      (102, 401101003, 11, 2),
-                                                                      (103, 401201001, 15, 5),
-                                                                      (104, 401201002, 16, 6),
-                                                                      (106, 401401001, 20, 10),
-                                                                      (107, 401501001, 22, 12),
-                                                                      (108, 401101004, 14, 1),
-                                                                      (109, 401201003, 17, 7),
-                                                                      (110, 401101005, 12, 4),
-                                                                      (111, 401201004, 15, 5),
-                                                                      (112, 401301001, 18, 8),
-                                                                      (113, 401401002, 21, 11),
-                                                                      (114, 401501002, 23, 13),
-                                                                      (115, 401101006, 13, 3);
+INSERT INTO student (id, student_number, instructor_id) VALUES
+                                                                      (100, 401101001, 10),
+                                                                      (101, 401101002, 11),
+                                                                      (102, 401101003, 11),
+                                                                      (103, 401201001, 15),
+                                                                      (104, 401201002, 16),
+                                                                      (106, 401401001, 20),
+                                                                      (107, 401501001, 22),
+                                                                      (108, 401101004, 14),
+                                                                      (109, 401201003, 17),
+                                                                      (110, 401101005, 12),
+                                                                      (111, 401201004, 15),
+                                                                      (112, 401301001, 18),
+                                                                      (113, 401401002, 21),
+                                                                      (114, 401501002, 23),
+                                                                      (115, 401101006, 13);
 
 INSERT INTO bachelor_student (id) VALUES
                                       (100), (101), (102), (103), (104), (106), (107), (108), (109),
@@ -168,44 +168,44 @@ INSERT INTO bachelor_student (id) VALUES
 -- ============================================
 -- 6. MASTER STUDENTS
 -- ============================================
-INSERT INTO users (id, first_name, last_name, email, phone_number, password, department_id, enabled, creation_date) VALUES
+INSERT INTO users (id, first_name, last_name, email, phone_number, password, department_id, enabled, creation_date, field_id) VALUES
 -- Computer Engineering Master Students (200-203)
-(200, 'Pedram', 'Nasiri', 'p.nasiri@student.university.ac.ir', '09151234567', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 1, true, '2025-09-24 10:00:00'),
-(201, 'Setareh', 'Faraji', 's.faraji@student.university.ac.ir', '09151234568', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 1, true, '2025-09-24 10:00:00'),
-(202, 'Ehsan', 'Zare', 'e.zare@student.university.ac.ir', '09151234569', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 1, true, '2025-09-24 10:00:00'),
-(203, 'Nadia', 'Zahedi', 'n.zahedi@student.university.ac.ir', '09151234570', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 1, true, '2025-09-24 10:00:00'),
+(200, 'Pedram', 'Nasiri', 'p.nasiri@student.university.ac.ir', '09151234567', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 1, true, '2025-09-24 10:00:00', 1),
+(201, 'Setareh', 'Faraji', 's.faraji@student.university.ac.ir', '09151234568', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 1, true, '2025-09-24 10:00:00', 2),
+(202, 'Ehsan', 'Zare', 'e.zare@student.university.ac.ir', '09151234569', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 1, true, '2025-09-24 10:00:00', 3),
+(203, 'Nadia', 'Zahedi', 'n.zahedi@student.university.ac.ir', '09151234570', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 1, true, '2025-09-24 10:00:00', 1),
 
 -- Electrical Engineering Master Students (204-207)
-(204, 'Navid', 'Kiani', 'n.kiani@student.university.ac.ir', '09151234571', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 2, true, '2025-09-24 10:00:00'),
-(205, 'Shiva', 'Ramezani', 's.ramezani@student.university.ac.ir', '09151234572', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 2, true, '2025-09-24 10:00:00'),
-(206, 'Erfan', 'Hosseinpour', 'e.hosseinpour@student.university.ac.ir', '09151234573', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 3, true, '2025-09-24 10:00:00'),
-(207, 'Kimia', 'Nouri', 'k.nouri@student.university.ac.ir', '09151234574', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 2, true, '2025-09-24 10:00:00'),
+(204, 'Navid', 'Kiani', 'n.kiani@student.university.ac.ir', '09151234571', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 2, true, '2025-09-24 10:00:00', 5),
+(205, 'Shiva', 'Ramezani', 's.ramezani@student.university.ac.ir', '09151234572', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 2, true, '2025-09-24 10:00:00', 7),
+(206, 'Erfan', 'Hosseinpour', 'e.hosseinpour@student.university.ac.ir', '09151234573', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 3, true, '2025-09-24 10:00:00', 8),
+(207, 'Kimia', 'Nouri', 'k.nouri@student.university.ac.ir', '09151234574', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 2, true, '2025-09-24 10:00:00', 6),
 
 -- Mechanical/Civil/Industrial Master Students (208-214)
-(208, 'Milad', 'Rezapour', 'm.rezapour@student.university.ac.ir', '09151234575', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 3, true, '2025-09-24 10:00:00'),
-(209, 'Rozita', 'Safavi', 'r.safavi@student.university.ac.ir', '09151234576', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 4, true, '2025-09-24 10:00:00'),
-(210, 'Babak', 'Mohseni', 'b.mohseni@student.university.ac.ir', '09151234577', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 5, true, '2025-09-24 10:00:00'),
-(211, 'Dorsa', 'Taghavi', 'd.taghavi@student.university.ac.ir', '09151234578', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 1, true, '2025-09-24 10:00:00'),
-(212, 'Kaveh', 'Parvizi', 'k.parvizi@student.university.ac.ir', '09151234579', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 2, true, '2025-09-24 10:00:00'),
-(213, 'Sepideh', 'Lotfi', 's.lotfi@student.university.ac.ir', '09151234580', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 3, true, '2025-09-24 10:00:00'),
-(214, 'Morteza', 'Habibi', 'm.habibi@student.university.ac.ir', '09151234581', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 4, true, '2025-09-24 10:00:00');
+(208, 'Milad', 'Rezapour', 'm.rezapour@student.university.ac.ir', '09151234575', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 3, true, '2025-09-24 10:00:00', 9),
+(209, 'Rozita', 'Safavi', 'r.safavi@student.university.ac.ir', '09151234576', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 4, true, '2025-09-24 10:00:00', 11),
+(210, 'Babak', 'Mohseni', 'b.mohseni@student.university.ac.ir', '09151234577', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 5, true, '2025-09-24 10:00:00', 13),
+(211, 'Dorsa', 'Taghavi', 'd.taghavi@student.university.ac.ir', '09151234578', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 1, true, '2025-09-24 10:00:00', 4),
+(212, 'Kaveh', 'Parvizi', 'k.parvizi@student.university.ac.ir', '09151234579', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 2, true, '2025-09-24 10:00:00', 5),
+(213, 'Sepideh', 'Lotfi', 's.lotfi@student.university.ac.ir', '09151234580', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 3, true, '2025-09-24 10:00:00', 8),
+(214, 'Morteza', 'Habibi', 'm.habibi@student.university.ac.ir', '09151234581', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 4, true, '2025-09-24 10:00:00', 10);
 
-INSERT INTO student (id, student_number, instructor_id, field_id) VALUES
-                                                                      (200, 402101001, 10, 1),
-                                                                      (201, 402101002, 11, 2),
-                                                                      (202, 402101003, 12, 3),
-                                                                      (203, 402101004, 13, 1),
-                                                                      (204, 402201001, 15, 5),
-                                                                      (205, 402201002, 16, 7),
-                                                                      (206, 402301001, 18, 8),
-                                                                      (207, 402201003, 17, 6),
-                                                                      (208, 402301002, 19, 9),
-                                                                      (209, 402401001, 21, 11),
-                                                                      (210, 402501001, 23, 13),
-                                                                      (211, 402101005, 13, 4),
-                                                                      (212, 402201004, 15, 5),
-                                                                      (213, 402301003, 18, 8),
-                                                                      (214, 402401002, 20, 10);
+INSERT INTO student (id, student_number, instructor_id) VALUES
+                                                                      (200, 402101001, 10),
+                                                                      (201, 402101002, 11),
+                                                                      (202, 402101003, 12),
+                                                                      (203, 402101004, 13),
+                                                                      (204, 402201001, 15),
+                                                                      (205, 402201002, 16),
+                                                                      (206, 402301001, 18),
+                                                                      (207, 402201003, 17),
+                                                                      (208, 402301002, 19),
+                                                                      (209, 402401001, 21),
+                                                                      (210, 402501001, 23),
+                                                                      (211, 402101005, 13),
+                                                                      (212, 402201004, 15),
+                                                                      (213, 402301003, 18),
+                                                                      (214, 402401002, 20);
 
 INSERT INTO master_student (id) VALUES
                                     (200), (201), (202), (203), (204), (205), (206), (207),
@@ -214,32 +214,32 @@ INSERT INTO master_student (id) VALUES
 -- ============================================
 -- 7. PHD STUDENTS
 -- ============================================
-INSERT INTO users (id, first_name, last_name, email, phone_number, password, department_id, enabled, creation_date) VALUES
+INSERT INTO users (id, first_name, last_name, email, phone_number, password, department_id, enabled, creation_date, field_id) VALUES
 -- PhD Students (300-310)
-(300, 'Mojtaba', 'Esmaili', 'm.esmaili@student.university.ac.ir', '09161234567', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 1, true, '2025-09-23 10:00:00'),
-(301, 'Vida', 'Daneshvar', 'v.daneshvar@student.university.ac.ir', '09161234568', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 1, true, '2025-09-23 10:00:00'),
-(302, 'Kourosh', 'Khalili', 'k.khalili@student.university.ac.ir', '09161234569', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 1, true, '2025-09-23 10:00:00'),
-(303, 'Azadeh', 'Ghasemi', 'a.ghasemi@student.university.ac.ir', '09161234570', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 2, true, '2025-09-23 10:00:00'),
-(304, 'Vahid', 'Bahrami', 'v.bahrami@student.university.ac.ir', '09161234571', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 2, true, '2025-09-23 10:00:00'),
-(305, 'Mahdieh', 'Taheri', 'm.taheri@student.university.ac.ir', '09161234572', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 3, true, '2025-09-23 10:00:00'),
-(306, 'Saeid', 'Moslemi', 's.moslemi@student.university.ac.ir', '09161234573', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 4, true, '2025-09-23 10:00:00'),
-(307, 'Elaheh', 'Norouzi', 'e.norouzi@student.university.ac.ir', '09161234574', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 5, true, '2025-09-23 10:00:00'),
-(308, 'Dariush', 'Saberi', 'd.saberi@student.university.ac.ir', '09161234575', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 1, true, '2025-09-23 10:00:00'),
-(309, 'Banafsheh', 'Ahmadian', 'b.ahmadian@student.university.ac.ir', '09161234576', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 2, true, '2025-09-23 10:00:00'),
-(310, 'Farhad', 'Shakeri', 'f.shakeri@student.university.ac.ir', '09161234577', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 3, true, '2025-09-23 10:00:00');
+(300, 'Mojtaba', 'Esmaili', 'm.esmaili@student.university.ac.ir', '09161234567', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 1, true, '2025-09-23 10:00:00', 2),
+(301, 'Vida', 'Daneshvar', 'v.daneshvar@student.university.ac.ir', '09161234568', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 1, true, '2025-09-23 10:00:00', 1),
+(302, 'Kourosh', 'Khalili', 'k.khalili@student.university.ac.ir', '09161234569', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 1, true, '2025-09-23 10:00:00', 3),
+(303, 'Azadeh', 'Ghasemi', 'a.ghasemi@student.university.ac.ir', '09161234570', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 2, true, '2025-09-23 10:00:00', 7),
+(304, 'Vahid', 'Bahrami', 'v.bahrami@student.university.ac.ir', '09161234571', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 2, true, '2025-09-23 10:00:00', 5),
+(305, 'Mahdieh', 'Taheri', 'm.taheri@student.university.ac.ir', '09161234572', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 3, true, '2025-09-23 10:00:00', 8),
+(306, 'Saeid', 'Moslemi', 's.moslemi@student.university.ac.ir', '09161234573', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 4, true, '2025-09-23 10:00:00', 10),
+(307, 'Elaheh', 'Norouzi', 'e.norouzi@student.university.ac.ir', '09161234574', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 5, true, '2025-09-23 10:00:00', 12),
+(308, 'Dariush', 'Saberi', 'd.saberi@student.university.ac.ir', '09161234575', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 1, true, '2025-09-23 10:00:00', 4),
+(309, 'Banafsheh', 'Ahmadian', 'b.ahmadian@student.university.ac.ir', '09161234576', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 2, true, '2025-09-23 10:00:00', 6),
+(310, 'Farhad', 'Shakeri', 'f.shakeri@student.university.ac.ir', '09161234577', '$2a$10$Ji8MmZJ0ESOoNy3TmOb5pemnC1.LHyPSAWVQfdX9QXADL8s2Pz5Wa', 3, true, '2025-09-23 10:00:00', 9);
 
-INSERT INTO student (id, student_number, instructor_id, field_id) VALUES
-                                                                      (300, 403101001, 10, 2),
-                                                                      (301, 403101002, 11, 1),
-                                                                      (302, 403101003, 13, 3),
-                                                                      (303, 403201001, 15, 7),
-                                                                      (304, 403201002, 16, 5),
-                                                                      (305, 403301001, 18, 8),
-                                                                      (306, 403401001, 20, 10),
-                                                                      (307, 403501001, 22, 12),
-                                                                      (308, 403101004, 12, 4),
-                                                                      (309, 403201003, 17, 6),
-                                                                      (310, 403301002, 19, 9);
+INSERT INTO student (id, student_number, instructor_id) VALUES
+                                                                      (300, 403101001, 10),
+                                                                      (301, 403101002, 11),
+                                                                      (302, 403101003, 13),
+                                                                      (303, 403201001, 15),
+                                                                      (304, 403201002, 16),
+                                                                      (305, 403301001, 18),
+                                                                      (306, 403401001, 20),
+                                                                      (307, 403501001, 22),
+                                                                      (308, 403101004, 12),
+                                                                      (309, 403201003, 17),
+                                                                      (310, 403301002, 19);
 
 INSERT INTO phd_student (id) VALUES
                                  (300), (301), (302), (303), (304), (305), (306), (307), (308), (309), (310);

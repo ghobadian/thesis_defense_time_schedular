@@ -1,6 +1,6 @@
 package ir.kghobad.thesis_defense_time_schedular.model.dto.meeting;
 
-import ir.kghobad.thesis_defense_time_schedular.model.dto.SimpleUserOutputDto;
+import ir.kghobad.thesis_defense_time_schedular.model.dto.user.SimpleUserOutputDto;
 import ir.kghobad.thesis_defense_time_schedular.model.dto.form.ThesisFormOutputDTO;
 import ir.kghobad.thesis_defense_time_schedular.model.dto.TimeSlotDTO;
 import ir.kghobad.thesis_defense_time_schedular.model.entity.ThesisDefenseMeeting;

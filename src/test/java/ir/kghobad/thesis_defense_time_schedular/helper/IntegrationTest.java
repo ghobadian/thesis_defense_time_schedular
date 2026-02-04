@@ -1,4 +1,4 @@
-package ir.kghobad.thesis_defense_time_schedular.controller;
+package ir.kghobad.thesis_defense_time_schedular.helper;
 
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;

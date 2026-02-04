@@ -1,11 +1,10 @@
 package ir.kghobad.thesis_defense_time_schedular.controller.admin;
 
 import ir.kghobad.thesis_defense_time_schedular.model.dto.PhoneUpdateDTO;
-import ir.kghobad.thesis_defense_time_schedular.model.dto.SimpleUserOutputDto;
 import ir.kghobad.thesis_defense_time_schedular.model.dto.SystemStatsDTO;
 import ir.kghobad.thesis_defense_time_schedular.model.dto.meeting.ThesisDefenseMeetingDetailsOutputDTO;
 import ir.kghobad.thesis_defense_time_schedular.model.dto.meeting.ThesisDefenseMeetingOutputDTO;
-import ir.kghobad.thesis_defense_time_schedular.model.dto.student.PasswordChangeInputDTO;
+import ir.kghobad.thesis_defense_time_schedular.model.dto.user.student.PasswordChangeInputDTO;
 import ir.kghobad.thesis_defense_time_schedular.service.admin.AdminService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -28,11 +27,6 @@ public class AdminController {
     @GetMapping("/stats")
     public ResponseEntity<SystemStatsDTO> getSystemStats() {
         return ResponseEntity.ok(service.getSystemStats());
-    }
-
-    @GetMapping("/professors")
-    public ResponseEntity<List<SimpleUserOutputDto>> getProfessors() {
-        return ResponseEntity.ok(service.getProfessors());
     }
 
     @GetMapping("/meetings")

@@ -32,8 +32,8 @@ public class ProfessorMeetingController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<?> createMeeting(@RequestBody MeetingCreationInputDTO input) {
-        service.acceptAndSchedule(input);
+    public ResponseEntity<?> acceptFormAsManagerAndCreateMeeting(@RequestBody MeetingCreationInputDTO input) {
+        service.acceptFormAsManagerAndCreateMeeting(input);
         return ResponseEntity.ok("Meeting created");
     }
 

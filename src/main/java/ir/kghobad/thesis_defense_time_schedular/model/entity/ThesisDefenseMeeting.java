@@ -2,7 +2,7 @@ package ir.kghobad.thesis_defense_time_schedular.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import ir.kghobad.thesis_defense_time_schedular.model.dto.SimpleUserOutputDto;
+import ir.kghobad.thesis_defense_time_schedular.model.dto.user.SimpleUserOutputDto;
 import ir.kghobad.thesis_defense_time_schedular.model.entity.association.DefenseMeetingProfessorAssociation;
 import ir.kghobad.thesis_defense_time_schedular.model.entity.thesisform.ThesisForm;
 import ir.kghobad.thesis_defense_time_schedular.model.entity.user.Professor;
@@ -11,6 +11,7 @@ import ir.kghobad.thesis_defense_time_schedular.model.enums.MeetingState;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -66,17 +67,17 @@ public class ThesisDefenseMeeting {
     @Column(name = "submission_date")
     @Setter
     @Getter
-    private Date submissionDate;
+    private LocalDateTime submissionDate;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "update_date")
     @Setter
     @Getter
-    private Date updateDate;
+    private LocalDateTime updateDate;
 
     public ThesisDefenseMeeting() {
-        this.submissionDate = new Date();
-        this.updateDate = new Date();
+        this.submissionDate = LocalDateTime.now();
+        this.updateDate = LocalDateTime.now();
     }
 
 

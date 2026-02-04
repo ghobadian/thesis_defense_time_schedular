@@ -31,5 +31,5 @@ spring:
 server:
   servlet:
     context-path: /api/v1
-frontend.url: ${FRONTEND_URL}
-rate-limit.max-submitted-forms: ${RATE_LIMIT_MAX_SUBMITTED_FORMS}
+frontend.url: ${FRONTEND_URL:localhost:3000}
+rate-limit.max-submitted-forms: ${RATE_LIMIT_MAX_SUBMITTED_FORMS:3}

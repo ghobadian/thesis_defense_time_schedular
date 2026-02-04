@@ -2,7 +2,7 @@ package ir.kghobad.thesis_defense_time_schedular.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import ir.kghobad.thesis_defense_time_schedular.model.entity.user.student.Student;
+import ir.kghobad.thesis_defense_time_schedular.model.entity.user.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -38,7 +38,7 @@ public class Field {
     private Department department;
 
     @OneToMany(mappedBy = "field")
-    private final Set<Student> students = new HashSet<>();
+    private final Set<User> users = new HashSet<>();
 
     public Field(Long id, String name) {
         this.id = id;
@@ -49,18 +49,10 @@ public class Field {
 
     }
 
-    public void addStudent(Student student) {
-        if (!this.students.contains(student)) {
-            students.add(student);
-            student.setField(this);
+    public void addUser(User user) {
+        if (!this.users.contains(user)) {
+            users.add(user);
+            user.setField(this);
         }
     }
-
-    public void removeStudent(Student student) {
-        if (this.students.contains(student)) {
-            students.remove(student);
-            student.setField(null);
-        }
-    }
-
 }
