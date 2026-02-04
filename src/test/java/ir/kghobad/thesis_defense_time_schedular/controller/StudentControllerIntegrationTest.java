@@ -1,6 +1,8 @@
 package ir.kghobad.thesis_defense_time_schedular.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import ir.kghobad.thesis_defense_time_schedular.helper.BaseIntegrationTest;
+import ir.kghobad.thesis_defense_time_schedular.helper.StudentMockHelper;
 import ir.kghobad.thesis_defense_time_schedular.model.dto.form.ThesisFormInputDTO;
 import ir.kghobad.thesis_defense_time_schedular.model.entity.Department;
 import ir.kghobad.thesis_defense_time_schedular.model.entity.Field;
@@ -11,15 +13,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
 import static ir.kghobad.thesis_defense_time_schedular.helper.TestDataBuilder.DEFAULT_PASSWORD;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -32,6 +30,8 @@ class StudentControllerIntegrationTest extends BaseIntegrationTest {//todo asser
 
     @Autowired
     private ObjectMapper objectMapper;
+    @Autowired
+    private StudentMockHelper studentMockHelper;
 
     @Test
     void testCreateThesisForm() throws Exception {
@@ -58,11 +58,6 @@ class StudentControllerIntegrationTest extends BaseIntegrationTest {//todo asser
 
 
         String token = getAuthToken("student1@university.edu", DEFAULT_PASSWORD);
-        mockMvc.perform(post("/student/create-form")
-                .header("Authorization", "Bearer " + token)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(formDTO)))
-                .andExpect(status().isOk())
-                .andExpect(content().string("Thesis form created successfully"));
+        studentMockHelper.createThesisForm(formDTO, token);
     }
 }

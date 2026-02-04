@@ -1,17 +1,21 @@
 classDiagram
     class User {
         <<abstract>>
-        +long id
+        +Long id
+        +String firstName
+        +String lastName
         +String email
         +String phoneNumber
-        +Role role
+        +String password
+        +boolean enabled
         +Department department
+        +getRole() Role
         +login()
     }
 
     class Student {
         <<abstract>>
-        +long studentNumber
+        +Long studentNumber
         +Professor instructor
         +Field field
         +createThesisForm()
@@ -27,30 +31,39 @@ classDiagram
     }
 
     class Professor {
-        +id id
-        +Department department
-        +boolean isManager
-        +acceptForm(ThesisForm form)
-        +rejectForm(ThesisForm form)
-        +suggestJuries(ThesisForm form)
-        +specifyAvailableTime(ThesisDefenseMeeting meeting)
+        +boolean manager
+        +Field field
+        +Set~Student~ students
+        +Set~ThesisForm~ supervisedForms
+        +Set~DefenseMeetingProfessorAssociation~ defenseMeetingProfessorAssociations
+        +Set~TimeSlotProfessorAssociation~ timeSlotProfessorAssociations
+        +getRole() Role
+        +addStudent(Student)
+        +removeStudent(Student)
+        +addMeeting(ThesisDefenseMeeting)
+        +removeMeeting(ThesisDefenseMeeting)
+        +addTimeSlotAssociation(TimeSlotProfessorAssociation)
+        +removeAvailableSlot(TimeSlot)
     }
 
     class Admin {
-        +registerStudent(Student student)
-        +registerStudents(List~Student~ students)
-        +acceptForm(ThesisForm form)
-        +rejectForm(ThesisForm form)
+        +getRole() Role
+        +registerStudent(Student)
+        +registerStudents(List~Student~)
+        +acceptForm(ThesisForm)
+        +rejectForm(ThesisForm)
     }
 
     class ThesisForm {
         <<abstract>>
-        +long id
+        +Long id
         +Student student
         +Professor instructor
-        +FormStatus status
+        +FormState state
         +Date submissionDate
-        +List~Professor~ suggestedJuries
+        +Date updateDate
+        +isApprovedByAdmin() boolean
+        +isApprovedByManager() boolean
     }
 
     class BachelorThesisForm {
@@ -62,57 +75,163 @@ classDiagram
     class PhDThesisForm {
     }
 
-    class Thesis {
-        +long id
-        +String title
-        +String abstract
-        +Student author
-        +Professor supervisor
-    }
-
     class ThesisDefenseMeeting {
-        +long id
+        +Long id
         +ThesisForm thesisForm
-        +List~Professor~ juries
-        +Date selectedDate
-        +TimePeriod selectedTime
-        +List~TimeSlot~ availableSlots
+        +TimeSlot selectedTimeSlot
+        +Set~TimeSlot~ availableSlots
+        +Set~DefenseMeetingProfessorAssociation~ defenseMeetingProfessorAssociations
+        +Double score
+        +MeetingState state
+        +String location
+        +Date submissionDate
+        +Date updateDate
+        +addJury(Professor)
+        +removeJury(Professor)
+        +addTimeSlot(TimeSlot)
+        +removeTimeSlot(TimeSlot)
+        +getSuggestedJuries() List
+        +getJuriesWithScores() Map
+        +allProfessorsScored() boolean
+        +calculateAverageScore() Double
+        +updateProfessorScore(Professor, Double)
     }
 
     class TimeSlot {
-        +Date date
+        +Long id
+        +LocalDate date
         +TimePeriod timePeriod
-        +List~Professor~ availableProfessors
+        +ThesisDefenseMeeting defenseMeeting
+        +Set~TimeSlotProfessorAssociation~ timeSlotProfessorAssociations
+        +addAvailableProfessor(Professor)
+        +removeAvailableProfessor(Professor)
+        +getProfessorsIds() Set~Long~
+        +isProfessorAvailable(Long) boolean
+        +hasProfessor(Professor) boolean
+        +compareTo(TimeSlot) int
+    }
+
+    class DefenseMeetingProfessorAssociation {
+        +Long id
+        +ThesisDefenseMeeting defenseMeeting
+        +Professor professor
+        +Double score
+    }
+
+    class TimeSlotProfessorAssociation {
+        +Long id
+        +TimeSlot timeSlot
+        +Professor professor
     }
 
     class Department {
         +Long id
         +String name
-        +List~Student~ students
-        +List~Professor~ professors
-        +List~Admin~ admins
+        +Set~User~ users
+        +Set~Field~ fields
+        +addUser(User)
+        +removeUser(User)
+        +addField(Field)
+        +removeField(Field)
     }
 
     class Field {
         +Long id
+        +String name
+        +boolean active
+        +Department department
+        +Set~Student~ students
+        +addStudent(Student)
+        +removeStudent(Student)
     }
 
+    class TimeSlotDTO {
+        +Long id
+        +LocalDate date
+        +TimePeriod timePeriod
+        +from(TimeSlot) TimeSlotDTO
+    }
 
+    class MeetingState {
+        <<enumeration>>
+        JURIES_SELECTED
+        JURIES_SPECIFIED_TIME
+        STUDENT_SPECIFIED_TIME
+        SCHEDULED
+        COMPLETED
+        CANCELED
+    }
+
+    class FormState {
+        <<enumeration>>
+        SUBMITTED
+        INSTRUCTOR_APPROVED
+        INSTRUCTOR_REJECTED
+        ADMIN_APPROVED
+        ADMIN_REJECTED
+        MANAGER_APPROVED
+        MANAGER_REJECTED
+    }
+
+    class TimePeriod {
+        <<enumeration>>
+        PERIOD_7_30_9_00
+        PERIOD_9_00_10_30
+        PERIOD_10_30_12_00
+        PERIOD_13_30_15_00
+        PERIOD_15_30_17_00
+    }
+
+    class Role {
+        <<enumeration>>
+        STUDENT
+        PROFESSOR
+        MANAGER
+        ADMIN
+    }
+
+%% Inheritance relationships
     User <|-- Student
     User <|-- Professor
     User <|-- Admin
     Student <|-- BachelorStudent
     Student <|-- MasterStudent
     Student <|-- PhDStudent
-    Student "1" --> "1" Professor : has instructor
     ThesisForm <|-- BachelorThesisForm
     ThesisForm <|-- MasterThesisForm
     ThesisForm <|-- PhDThesisForm
+
+%% User - Department relationship
+    User "*" --> "1" Department : belongs to
+
+%% Student relationships
+    Student "*" --> "1" Professor : has instructor
+    Student "*" --> "1" Field : studies in
+
+%% Field - Department relationship
+    Field "*" --> "1" Department : belongs to
+
+%% Professor - Field relationship
+    Professor "*" --> "1" Field : specializes in
+
+%% ThesisForm relationships
     ThesisForm "1" --> "1" Student : created by
-    ThesisForm "1" --> "1" Professor : supervised by
-    ThesisForm "1" --> "*" Professor : suggested juries
+    ThesisForm "*" --> "1" Professor : supervised by
+
+%% ThesisDefenseMeeting relationships
     ThesisDefenseMeeting "1" --> "1" ThesisForm : for
-    ThesisDefenseMeeting "1" --> "*" TimeSlot : available slots
-    TimeSlot "*" --> "*" Professor : available professors
-    Thesis "1" --> "1" Student : written by
-    Thesis "1" --> "1" Professor : supervised by
+    ThesisDefenseMeeting "1" --> "0..1" TimeSlot : selected slot
+    ThesisDefenseMeeting "1" *-- "*" TimeSlot : available slots
+
+%% Association class relationships (Many-to-Many with attributes)
+    ThesisDefenseMeeting "1" *-- "*" DefenseMeetingProfessorAssociation : has
+    Professor "1" *-- "*" DefenseMeetingProfessorAssociation : participates in
+
+    TimeSlot "1" *-- "*" TimeSlotProfessorAssociation : has
+    Professor "1" *-- "*" TimeSlotProfessorAssociation : available at
+
+%% Enum usage
+    ThesisDefenseMeeting --> MeetingState : uses
+    ThesisForm --> FormState : uses
+    TimeSlot --> TimePeriod : uses
+    User --> Role : has

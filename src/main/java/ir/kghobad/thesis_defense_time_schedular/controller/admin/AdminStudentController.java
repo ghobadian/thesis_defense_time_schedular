@@ -1,7 +1,7 @@
 package ir.kghobad.thesis_defense_time_schedular.controller.admin;
 
-import ir.kghobad.thesis_defense_time_schedular.model.dto.student.StudentOutputDTO;
-import ir.kghobad.thesis_defense_time_schedular.model.dto.student.StudentRegistrationInputDTO;
+import ir.kghobad.thesis_defense_time_schedular.model.dto.user.student.StudentOutputDTO;
+import ir.kghobad.thesis_defense_time_schedular.model.dto.user.student.StudentRegistrationInputDTO;
 import ir.kghobad.thesis_defense_time_schedular.service.admin.AdminStudentService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

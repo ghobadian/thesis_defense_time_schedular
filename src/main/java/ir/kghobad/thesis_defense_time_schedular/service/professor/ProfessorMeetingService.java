@@ -5,7 +5,7 @@ import ir.kghobad.thesis_defense_time_schedular.dao.ThesisDefenseMeetingReposito
 import ir.kghobad.thesis_defense_time_schedular.dao.ThesisFormRepository;
 import ir.kghobad.thesis_defense_time_schedular.dao.TimeSlotRepository;
 import ir.kghobad.thesis_defense_time_schedular.model.dto.JuryMemberAvailability;
-import ir.kghobad.thesis_defense_time_schedular.model.dto.SimpleUserOutputDto;
+import ir.kghobad.thesis_defense_time_schedular.model.dto.user.SimpleUserOutputDto;
 import ir.kghobad.thesis_defense_time_schedular.model.dto.TimeSlotDTO;
 import ir.kghobad.thesis_defense_time_schedular.model.dto.meeting.*;
 import ir.kghobad.thesis_defense_time_schedular.model.entity.ThesisDefenseMeeting;
@@ -25,7 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Clock;
 import java.time.LocalDate;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
@@ -55,7 +55,7 @@ public class ProfessorMeetingService {
     }
 
     @Transactional
-    public void acceptAndSchedule(MeetingCreationInputDTO input) {
+    public void acceptFormAsManagerAndCreateMeeting(MeetingCreationInputDTO input) {
         ThesisForm form = thesisFormRepository.findById(input.getFormId())
                 .orElseThrow(() -> new RuntimeException("Form not found. Can't Accept Form"));
 
@@ -71,7 +71,7 @@ public class ProfessorMeetingService {
     private void suggestJuries(ThesisDefenseMeeting meeting, Set<Long> juryIds) {
         List<Professor> juries = professorRepository.findAllById(juryIds);
         meeting.addJury(juries);
-        meeting.setUpdateDate(new Date());
+        meeting.setUpdateDate(LocalDateTime.now());
 
         log.info("Juries suggested for meeting. Meeting: {}, Juries: {}, by manager id: {}", meeting, juries, jwtUtil.getCurrentUserId());
         meetingRepository.save(meeting);
@@ -122,7 +122,7 @@ public class ProfessorMeetingService {
         if (allJuriesSpecified) {
             log.debug("All juries are specified. changing meeting state to JURIES_SPECIFIED_TIME");
             meeting.setState(MeetingState.JURIES_SPECIFIED_TIME);
-            meeting.setUpdateDate(new Date());
+            meeting.setUpdateDate(LocalDateTime.now());
             meetingRepository.save(meeting);
         }
     }
@@ -156,7 +156,7 @@ public class ProfessorMeetingService {
 
         form.setState(FormState.MANAGER_APPROVED);
         form.setDefenseMeeting(meeting);
-        Date now = new Date();
+        LocalDateTime now = LocalDateTime.now();
         form.setUpdateDate(now);
         form.setManagerReviewedAt(now);
 
@@ -227,7 +227,7 @@ public class ProfessorMeetingService {
             log.info("All professors have scored the meeting. Meeting: {}, average score: {}", meeting, meeting.getScore());
         }
 
-        meeting.setUpdateDate(new Date());
+        meeting.setUpdateDate(LocalDateTime.now());
         meetingRepository.save(meeting);
     }
 
@@ -245,7 +245,7 @@ public class ProfessorMeetingService {
         }
 
         meeting.setState(MeetingState.CANCELED);
-        meeting.setUpdateDate(new Date());
+        meeting.setUpdateDate(LocalDateTime.now());
         meetingRepository.save(meeting);
     }
 
@@ -270,7 +270,7 @@ public class ProfessorMeetingService {
         }
 
         meeting.setState(MeetingState.SCHEDULED);
-        meeting.setUpdateDate(new Date());
+        meeting.setUpdateDate(LocalDateTime.now());
         meeting.setLocation(input.getLocation());
         meetingRepository.save(meeting);//todo fix this. logic is flawed. only if student has chosen the time, manager can set location and update meeting state
     }

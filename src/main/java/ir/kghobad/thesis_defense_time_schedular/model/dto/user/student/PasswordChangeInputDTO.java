@@ -1,4 +1,4 @@
-package ir.kghobad.thesis_defense_time_schedular.model.dto.student;
+package ir.kghobad.thesis_defense_time_schedular.model.dto.user.student;
 
 import lombok.Getter;
 import lombok.Setter;

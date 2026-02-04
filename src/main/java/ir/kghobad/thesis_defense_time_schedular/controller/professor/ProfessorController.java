@@ -1,9 +1,9 @@
 package ir.kghobad.thesis_defense_time_schedular.controller.professor;
 
 import ir.kghobad.thesis_defense_time_schedular.model.dto.PhoneUpdateDTO;
-import ir.kghobad.thesis_defense_time_schedular.model.dto.SimpleUserOutputDto;
+import ir.kghobad.thesis_defense_time_schedular.model.dto.user.SimpleUserOutputDto;
 import ir.kghobad.thesis_defense_time_schedular.model.dto.TimeSlotDTO;
-import ir.kghobad.thesis_defense_time_schedular.model.dto.student.PasswordChangeInputDTO;
+import ir.kghobad.thesis_defense_time_schedular.model.dto.user.student.PasswordChangeInputDTO;
 import ir.kghobad.thesis_defense_time_schedular.service.professor.ProfessorService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;

@@ -1,8 +1,8 @@
 package ir.kghobad.thesis_defense_time_schedular.service.admin;
 
 import ir.kghobad.thesis_defense_time_schedular.dao.*;
-import ir.kghobad.thesis_defense_time_schedular.model.dto.student.StudentOutputDTO;
-import ir.kghobad.thesis_defense_time_schedular.model.dto.student.StudentRegistrationInputDTO;
+import ir.kghobad.thesis_defense_time_schedular.model.dto.user.student.StudentOutputDTO;
+import ir.kghobad.thesis_defense_time_schedular.model.dto.user.student.StudentRegistrationInputDTO;
 import ir.kghobad.thesis_defense_time_schedular.model.entity.Department;
 import ir.kghobad.thesis_defense_time_schedular.model.entity.Field;
 import ir.kghobad.thesis_defense_time_schedular.model.entity.user.Professor;
@@ -81,7 +81,7 @@ public class AdminStudentService {
                 student.getDepartment().removeUser(student);
             }
             student.setField(field);
-            field.addStudent(student);
+            field.addUser(student);
         }
 
         if (!skipEmptyFields || dto.getInstructorId() != null) {

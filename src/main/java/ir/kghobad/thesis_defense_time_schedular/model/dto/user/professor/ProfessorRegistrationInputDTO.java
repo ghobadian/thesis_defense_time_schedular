@@ -1,6 +1,5 @@
-package ir.kghobad.thesis_defense_time_schedular.model.dto.student;
+package ir.kghobad.thesis_defense_time_schedular.model.dto.user.professor;
 
-import ir.kghobad.thesis_defense_time_schedular.model.enums.StudentType;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -12,7 +11,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class StudentRegistrationInputDTO {
+public class ProfessorRegistrationInputDTO {
     @NotBlank(message = "First name is required")
     private String firstName;
     
@@ -27,21 +26,13 @@ public class StudentRegistrationInputDTO {
     @Pattern(regexp = "^\\+?[0-9]{10,15}$", message = "Phone number should be valid")
     private String phoneNumber;
     
-    @NotNull(message = "Student number is required")
-    private Long studentNumber;
-    
-    @NotNull(message = "Student type is required")
-    private StudentType studentType;
-    
     @NotNull(message = "Department ID is required")
     private Long departmentId;
     
-    @NotNull(message = "Field ID is required")
     private Long fieldId;
-    
-    @NotNull(message = "Instructor ID is required")
-    private Long instructorId;
     
     @NotBlank(message = "Password is required")
     private String password;
+
+    private Boolean manager;//TODO add support for assigning students, forms and meetings to a professor as an admin
 }

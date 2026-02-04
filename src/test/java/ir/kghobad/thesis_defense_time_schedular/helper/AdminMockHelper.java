@@ -1,23 +1,29 @@
 package ir.kghobad.thesis_defense_time_schedular.helper;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import ir.kghobad.thesis_defense_time_schedular.model.dto.user.student.StudentRegistrationInputDTO;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
+import java.util.List;
+
 import static ir.kghobad.thesis_defense_time_schedular.helper.TestDataBuilder.DEFAULT_PASSWORD;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @Component
 public class AdminMockHelper {
 
     private final MockMvc mockMvc;
+    private final ObjectMapper objectMapper;
 
-    public AdminMockHelper(MockMvc mockMvc) {
+    public AdminMockHelper(MockMvc mockMvc, ObjectMapper objectMapper) {
         this.mockMvc = mockMvc;
+        this.objectMapper = objectMapper;
     }
-
-    // ==================== Department Endpoints ====================
 
     public ResultActions getAllDepartments(String token) throws Exception {
         return mockMvc.perform(get("/departments")
@@ -174,30 +180,14 @@ public class AdminMockHelper {
                 .content(studentJson));
     }
 
-    // ==================== Admin Student Registration ====================
-
-    public ResultActions registerStudent(String token) throws Exception {
-        String studentJson = """
-            {
-                "firstName": "Ali",
-                "lastName": "Mohammadi",
-                "email": "ali.mohammadi@student.kntu.ac.ir",
-                "phoneNumber": "09391234568",
-                "password": %s,
-                "departmentId": 1,
-                "studentNumber": "98001238",
-                "instructorId": 3,
-                "fieldId": 1
-            }
-            """.formatted(DEFAULT_PASSWORD);
-
-        return mockMvc.perform(post("/admin/register-student")
+    public ResultActions registerStudents(List<StudentRegistrationInputDTO> dtos, String token) throws Exception {
+        return mockMvc.perform(post("/admin/students")
                 .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(studentJson));
+                .content(objectMapper.writeValueAsString(dtos)))
+                .andExpect(status().isOk())
+                .andExpect(content().string("Students registered successfully"));
     }
-
-    // ==================== Thesis Management Endpoints ====================
 
     public ResultActions createThesis(Long authorId, Long supervisorId, String token) throws Exception {
         String thesisJson = String.format("""
@@ -275,8 +265,6 @@ public class AdminMockHelper {
         return mockMvc.perform(get("/defense-meetings")
                 .header("Authorization", "Bearer " + token));
     }
-
-    // ==================== Time Slot Management ====================
 
     public ResultActions createTimeSlot(String token) throws Exception {
         String timeSlotJson = """

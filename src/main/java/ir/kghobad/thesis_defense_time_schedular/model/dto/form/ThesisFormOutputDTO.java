@@ -1,8 +1,13 @@
 package ir.kghobad.thesis_defense_time_schedular.model.dto.form;
 
+import ir.kghobad.thesis_defense_time_schedular.model.entity.Field;
 import ir.kghobad.thesis_defense_time_schedular.model.entity.thesisform.ThesisForm;
+import ir.kghobad.thesis_defense_time_schedular.model.entity.user.Professor;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Setter
 @Getter
@@ -26,6 +31,8 @@ public class ThesisFormOutputDTO {
     private String adminReviewedAt;
     private String managerReviewedAt;
     private String rejectionReason;
+    private String revisionMessage;
+    private String revisionRequestedAt;
 
 
     public static ThesisFormOutputDTO from(ThesisForm form) {
@@ -39,16 +46,18 @@ public class ThesisFormOutputDTO {
         output.setStudentNumber(form.getStudent().getStudentNumber());
         output.setStudentEmail(form.getStudent().getEmail());
         output.setState(form.getState().toString());
-        output.setFieldName(form.getField().getName());
+        output.setFieldName(Optional.ofNullable(form.getField()).map(Field::getName).orElse(null));
         output.setInstructorId(form.getInstructor().getId());
-        output.setInstructorFirstName(form.getInstructor().getFirstName());
-        output.setInstructorLastName(form.getInstructor().getLastName());
+        output.setInstructorFirstName(Optional.of(form.getInstructor()).map(Professor::getFirstName).orElse(null));
+        output.setInstructorLastName(Optional.of(form.getInstructor()).map(Professor::getLastName).orElse(null));
         output.setCreatedAt(form.getSubmissionDate().toString());
-        output.setUpdatedAt(form.getUpdateDate().toString());
+        output.setUpdatedAt(Optional.ofNullable(form.getUpdateDate()).map(LocalDateTime::toString).orElse(null));
         output.setInstructorReviewedAt(form.getInstructorReviewedAt() != null ? form.getInstructorReviewedAt().toString() : null);
         output.setAdminReviewedAt(form.getAdminReviewedAt() != null ? form.getAdminReviewedAt().toString() : null);
         output.setManagerReviewedAt(form.getManagerReviewedAt() != null ? form.getManagerReviewedAt().toString() : null);
         output.setRejectionReason(form.getRejectionReason());
+        output.setRevisionMessage(form.getRevisionMessage());
+        output.setRevisionRequestedAt(form.getRevisionRequestedAt() != null ? form.getRevisionRequestedAt().toString() : null);
         return output;
     }
 }
