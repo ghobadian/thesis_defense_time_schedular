@@ -26,8 +26,6 @@ spring:
     init:
       mode: never
       data-locations: classpath:data-prod.sql
-  profiles:
-    active: dev
 #  flyway:
 #    enabled: true
 #    locations: classpath:db/migration
