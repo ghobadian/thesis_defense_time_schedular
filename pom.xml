@@ -10,10 +10,11 @@
 	</parent>
 	<groupId>ir.kghobad</groupId>
 	<artifactId>thesis-defense-time-schedular</artifactId>
-	<version>1.0.0</version>
+	<version>${application.version}</version>
 	<name>thesis-defense-time-schedular</name>
 	<description>Thesis Defense Time Schedular</description>
 	<properties>
+		<application.version>1.0.1</application.version>
 		<java.version>21</java.version>
 		<jsonwebtoken.version>0.11.5</jsonwebtoken.version>
 	</properties>
@@ -138,6 +139,22 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+				<includes>
+					<include>banner.txt</include>
+				</includes>
+			</resource>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>false</filtering>
+				<excludes>
+					<exclude>banner.txt</exclude>
+				</excludes>
+			</resource>
+		</resources>
 	</build>
 
 </project>
