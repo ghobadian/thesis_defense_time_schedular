@@ -217,7 +217,7 @@ export const LoginForm: React.FC = () => {
                                 prof123
                             </div>
                             <div className="bg-white p-2 rounded shadow-sm">
-                                <span className="font-medium">Student:</span><br/>
+                                <span className="font-medium">Student::</span><br/>
                                 a.nejati@student.university.ac.ir<br/>
                                 student123
                             </div>
