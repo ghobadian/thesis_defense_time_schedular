@@ -1,7 +1,7 @@
 # Thesis Defense Time Scheduler System
-
 ![poster.png](src/main/resources/poster.png)
 
+The projects frontend can be found at [https://github.com/ghobadian/thesis_defense_time_schedular_frontend/]
 A comprehensive web-based system for managing thesis defense scheduling in academic institutions. The system facilitates the entire workflow from thesis form submission to defense meeting scheduling, involving students, professors, and admins.
 
 ## Table of Contents
