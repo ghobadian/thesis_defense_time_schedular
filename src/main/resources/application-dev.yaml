@@ -26,6 +26,13 @@ spring:
     properties:
       hibernate:
         format_sql: true
+#        dialect: org.hibernate.dialect.MySQLDialect
+#      jakarta:
+#        persistence:
+#          schema-generation:
+#            scripts:
+#              action: create
+#              create-target: src/main/resources/db/migration/V1__initial_schema.sql
     show-sql: true
     defer-datasource-initialization: true
   liquibase.enabled: false
@@ -33,6 +40,8 @@ spring:
     init:
       mode: embedded
       data-locations: classpath:data-prod.sql
+  flyway:
+    enabled: false
 server:
   servlet:
     context-path: /api/v1
