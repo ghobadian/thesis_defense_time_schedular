@@ -1,5 +1,6 @@
 package ir.kghobad.thesis_defense_time_schedular.controller;
 
+import ir.kghobad.thesis_defense_time_schedular.helper.BaseIntegrationTest;
 import ir.kghobad.thesis_defense_time_schedular.model.dto.auth.LoginDTO;
 import ir.kghobad.thesis_defense_time_schedular.model.dto.auth.RefreshTokenRequestDTO;
 import ir.kghobad.thesis_defense_time_schedular.model.entity.Department;

@@ -1,6 +1,6 @@
 jwt:
-  expiration: 86400000
-  secret: mySecretKeyForJWTShouldBeAtLeast256BitsLongForHS256Algorithm
+  expiration: ${JWT_EXPIRATION}
+  secret: ${JWT_SECRET}
 logging:
   level:
     ir:
@@ -9,10 +9,10 @@ spring:
   application:
     name: thesis-defense-time-schedular
   datasource:
-    driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/myapp
-    username: postgres
-    password: dev123
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${DB_URL}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
   jpa:
     hibernate:
       ddl-auto: validate
@@ -20,18 +20,19 @@ spring:
       hibernate:
         format_sql: true
     show-sql: true
+    defer-datasource-initialization: true
+  liquibase.enabled: false
   sql:
     init:
       mode: never
-#      data-locations: classpath:data-prod.sql
-  liquibase:
-    change-log: classpath:db/changelog/db.changelog-master.xml
-    contexts: dev,prod
-    default-schema: public
-    drop-first: true
-    enabled: true
-  profiles:
-    active: dev
+      data-locations: classpath:data-prod.sql
+#  flyway:
+#    enabled: true
+#    locations: classpath:db/migration
+#    baseline-on-migrate: true
+#    baseline-version: 0
 server:
   servlet:
     context-path: /api/v1
+frontend.url: ${FRONTEND_URL:localhost:3000}
+rate-limit.max-submitted-forms: ${RATE_LIMIT_MAX_SUBMITTED_FORMS:3}

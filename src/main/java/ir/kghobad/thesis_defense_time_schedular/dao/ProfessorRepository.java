@@ -2,6 +2,7 @@ package ir.kghobad.thesis_defense_time_schedular.dao;
 
 import ir.kghobad.thesis_defense_time_schedular.model.entity.user.Professor;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -10,7 +11,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
-public interface ProfessorRepository extends JpaRepository<Professor, Long> {
+public interface ProfessorRepository extends JpaRepository<Professor, Long>, JpaSpecificationExecutor<Professor> {
     @Query("SELECT p.manager FROM Professor p WHERE p.id = ?1")
     boolean isManager(Long instructorId);
 
@@ -35,4 +36,7 @@ public interface ProfessorRepository extends JpaRepository<Professor, Long> {
 
     @Query("SELECT COUNT(p) > 0 FROM Professor p WHERE p.id = :professorId AND p.manager = true")
     boolean existsManagerById(Long professorId);
+
+    boolean existsByPhoneNumber(String phoneNumber);
+    boolean existsByEmail(String email);
 }

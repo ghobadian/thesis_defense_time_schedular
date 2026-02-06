@@ -1,8 +1,11 @@
 package ir.kghobad.thesis_defense_time_schedular.controller;
 
-import ir.kghobad.thesis_defense_time_schedular.model.dto.meeting.AvailableTimeInputDTO;
-import ir.kghobad.thesis_defense_time_schedular.model.dto.form.FormSuggestionInputDTO;
+import ir.kghobad.thesis_defense_time_schedular.helper.BaseIntegrationTest;
+import ir.kghobad.thesis_defense_time_schedular.helper.ProfessorMockHelper;
+import ir.kghobad.thesis_defense_time_schedular.model.dto.user.SimpleUserOutputDto;
 import ir.kghobad.thesis_defense_time_schedular.model.dto.TimeSlotDTO;
+import ir.kghobad.thesis_defense_time_schedular.model.dto.meeting.AvailableTimeInputDTO;
+import ir.kghobad.thesis_defense_time_schedular.model.dto.meeting.MeetingCreationInputDTO;
 import ir.kghobad.thesis_defense_time_schedular.model.entity.Department;
 import ir.kghobad.thesis_defense_time_schedular.model.entity.Field;
 import ir.kghobad.thesis_defense_time_schedular.model.entity.ThesisDefenseMeeting;
@@ -10,22 +13,29 @@ import ir.kghobad.thesis_defense_time_schedular.model.entity.thesisform.ThesisFo
 import ir.kghobad.thesis_defense_time_schedular.model.entity.user.Professor;
 import ir.kghobad.thesis_defense_time_schedular.model.entity.user.student.Student;
 import ir.kghobad.thesis_defense_time_schedular.model.enums.FormState;
+import ir.kghobad.thesis_defense_time_schedular.model.enums.MeetingState;
 import ir.kghobad.thesis_defense_time_schedular.model.enums.StudentType;
 import ir.kghobad.thesis_defense_time_schedular.model.enums.TimePeriod;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 import static ir.kghobad.thesis_defense_time_schedular.helper.TestDataBuilder.DEFAULT_PASSWORD;
 import static org.hamcrest.Matchers.hasSize;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class ProfessorControllerIntegrationTest extends BaseIntegrationTest {
+    @Autowired
+    private ProfessorMockHelper professorMockHelper;
     
     @Test
     public void testGetThesisForms_Success() throws Exception {
@@ -91,11 +101,9 @@ public class ProfessorControllerIntegrationTest extends BaseIntegrationTest {
         form = thesisFormRepository.save(form);
         
         String token = getAuthToken("instructor@test.com", DEFAULT_PASSWORD);
-        
-        mockMvc.perform(post("/professor/accept-form/" + form.getId())
-                .header("Authorization", "Bearer " + token))
-                .andExpect(status().isOk())
-                .andExpect(content().string("Form accepted"));
+
+        professorMockHelper.acceptForm(form.getId(), token);
+
         
         ThesisForm updatedForm = thesisFormRepository.findById(form.getId()).orElseThrow();
         assert(updatedForm.getState() == FormState.INSTRUCTOR_APPROVED);
@@ -106,8 +114,8 @@ public class ProfessorControllerIntegrationTest extends BaseIntegrationTest {
         Department dept = departmentRepository.save(testDataBuilder.createDepartment("Computer Science"));
         Field field = fieldRepository.save(testDataBuilder.createField("Software Engineering", dept));
         
-        Professor instructor = professorRepository.save(
-            testDataBuilder.createManager("instructor@test.com", "inst", "instl", dept, "09123854234")
+        Professor manager = professorRepository.save(
+            testDataBuilder.createManager("manager@test.com", "inst", "instl", dept, "09123854234")
         );
         Professor jury1 = professorRepository.save(
             testDataBuilder.createProfessor("jury1@test.com", "inst", "inst", dept, "09123854235")
@@ -118,35 +126,33 @@ public class ProfessorControllerIntegrationTest extends BaseIntegrationTest {
         
         Student student = studentRepository.save(
             testDataBuilder.createStudent("student@test.com", "Student", "User", 
-                12345L, StudentType.MASTER, dept, field, instructor, "09121234562")
+                12345L, StudentType.MASTER, dept, field, manager, "09121234562")
         );
         
         ThesisForm form = new ThesisForm();
         form.setTitle("Test Thesis");
         form.setAbstractText("Test Abstract");
         form.setStudent(student);
-        form.setInstructor(instructor);
+        form.setInstructor(manager);
         form.setState(FormState.ADMIN_APPROVED);
         form = thesisFormRepository.save(form);
         
-        String token = getAuthToken("instructor@test.com", DEFAULT_PASSWORD);
+        String token = getAuthToken("manager@test.com", DEFAULT_PASSWORD);
 
-        mockMvc.perform(post("/professor/accept-form/" + form.getId())
-                        .header("Authorization", "Bearer " + token))
-                .andExpect(status().isOk())
-                .andExpect(content().string("Form accepted"));
-
+        MeetingCreationInputDTO input = new MeetingCreationInputDTO();
+        input.setFormId(form.getId());
+        input.setJuryIds(Set.of(jury1.getId(), jury2.getId()));
+        professorMockHelper.acceptFormAsManagerAndCreateMeeting(input, token);
 
         ThesisDefenseMeeting meeting = thesisDefenseMeetingRepository.findAll().getFirst();
         assertNotNull(meeting);
-
-        FormSuggestionInputDTO input = new FormSuggestionInputDTO(meeting.getId(), Arrays.asList(jury1.getId(), jury2.getId()));
-        mockMvc.perform(post("/professor/suggest-juries")
-                .header("Authorization", "Bearer " + token)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(input)))
-                .andExpect(status().isOk())
-                .andExpect(content().string("Juries suggested"));
+        assertEquals(form.getTitle(), meeting.getThesisForm().getTitle());
+        List<SimpleUserOutputDto> suggestedJuries = meeting.getSuggestedJuries();
+        assertEquals(3, suggestedJuries.size());
+        assertTrue(suggestedJuries.stream().anyMatch(s -> s.getId().equals(manager.getId())));
+        assertTrue(suggestedJuries.stream().anyMatch(s -> s.getId().equals(jury1.getId())));
+        assertTrue(suggestedJuries.stream().anyMatch(s -> s.getId().equals(jury2.getId())));
+        assertEquals(MeetingState.JURIES_SELECTED, meeting.getState());
     }
     
     @Test
@@ -163,7 +169,7 @@ public class ProfessorControllerIntegrationTest extends BaseIntegrationTest {
                         12345L, StudentType.MASTER, dept, field, professor, "09121234562")
         );
         ThesisForm form = thesisFormRepository.save(testDataBuilder.createThesisForm(
-                "Test Thesis", "Test Abstract", student, professor, FormState.INSTRUCTOR_APPROVED, new Date(), null
+                "Test Thesis", "Test Abstract", student, professor, FormState.INSTRUCTOR_APPROVED, LocalDateTime.now(), null
         ));
 
         ThesisDefenseMeeting meeting = thesisDefenseMeetingRepository.save(testDataBuilder.createThesisDefenseMeeting(new ArrayList<>(), List.of(professor), form));
@@ -171,11 +177,11 @@ public class ProfessorControllerIntegrationTest extends BaseIntegrationTest {
         String token = getAuthToken("prof@test.com", DEFAULT_PASSWORD);
         
         AvailableTimeInputDTO availableTimeInputDTo = new AvailableTimeInputDTO();
-        availableTimeInputDTo.setTimeSlots(Set.of(new TimeSlotDTO(LocalDate.now().plusDays(7), TimePeriod.PERIOD_7_30_9_00)));
+        availableTimeInputDTo.setTimeSlots(Set.of(new TimeSlotDTO(1L, LocalDate.now().plusDays(7), TimePeriod.PERIOD_7_30_9_00)));
         availableTimeInputDTo.setMeetingId(professor.getId());
         availableTimeInputDTo.setMeetingId(meeting.getId());
         
-        mockMvc.perform(post("/professor/give-time")
+        mockMvc.perform(post("/professor/meetings/give-time")
                 .param("professorId", professor.getId().toString())
                 .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)

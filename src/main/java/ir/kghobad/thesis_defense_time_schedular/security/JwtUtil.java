@@ -1,6 +1,8 @@
 package ir.kghobad.thesis_defense_time_schedular.security;
 
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import ir.kghobad.thesis_defense_time_schedular.model.entity.user.User;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,7 +19,7 @@ import java.util.function.Function;
 
 @Component
 public class JwtUtil {
-    @Value("${jwt.secret}")
+    @Value("${jwt.secret:mySecretKeyForJWTShouldBeAtLeast256BitsLongForHS256Algorithm}")
     private String secret;
 
     @Value("${jwt.expiration:86400000}")
