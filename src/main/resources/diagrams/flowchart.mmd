@@ -1,42 +1,58 @@
-flowchart TD
-    Start([Start]) --> Draft[Student creates form]
+    flowchart TB
+        START([🚀 START])
+    END_SUCCESS([✅ Defense Completed])
+    END_CANCEL([❌ Meeting Canceled])
 
-    Draft --> Submitted[Student submits form]
+    %% Student Initial Action
+    START --> S1[Student Creates Thesis Form]
+    S1 --> SUBMITTED[Form State: SUBMITTED]
 
-    Submitted --> InstructorReview[Form sent to instructor]
+    %% Instructor Review
+    SUBMITTED --> I_REVIEW{Instructor Reviews}
+    I_REVIEW -->|Approve| INST_APPROVED[Form State: INSTRUCTOR_APPROVED]
+    I_REVIEW -->|Reject| INST_REJECTED[Form State: INSTRUCTOR_REJECTED]
+    INST_REJECTED --> S1
 
-    InstructorReview --> InstructorRejected{Instructor rejects}
-    InstructorReview --> InstructorApproved{Instructor accepts}
+    %% Admin Review
+    INST_APPROVED --> A_REVIEW{Admin Reviews}
+    A_REVIEW -->|Approve| ADMIN_APPROVED[Form State: ADMIN_APPROVED]
+    A_REVIEW -->|Reject| ADMIN_REJECTED[Form State: ADMIN_REJECTED]
+    ADMIN_REJECTED --> S1
 
-    InstructorRejected --> End1([Process Failed])
+    %% Manager Review & Meeting Creation
+    ADMIN_APPROVED --> M_REVIEW{Manager Reviews}
+    M_REVIEW -->|Reject| MGR_REJECTED[Form State: MANAGER_REJECTED]
+    MGR_REJECTED --> S1
+    M_REVIEW -->|Approve| MGR_APPROVED[Form State: MANAGER_APPROVED]
+    MGR_APPROVED --> CREATE_MEETING[Meeting Created]
+    CREATE_MEETING --> SUGGEST_JURY[Manager Suggests Juries\n+ Instructor Auto-Added]
 
-    InstructorApproved --> AdminReview[Form sent to admin]
+    %% Jury Time Specification
+    SUGGEST_JURY --> JURY_TIME[Each Jury Specifies\nAvailable Time Slots]
+    JURY_TIME --> ALL_JURY{All Juries\nSpecified Time?}
+    ALL_JURY -->|No| JURY_TIME
+    ALL_JURY -->|Yes| JURIES_SPECIFIED[Meeting State: JURIES_SPECIFIED_TIME]
 
-    AdminReview --> AdminRejected{Admin rejects}
-    AdminReview --> AdminApproved{Admin accepts}
+    %% Student Time Selection
+    JURIES_SPECIFIED --> SHOW_INTERSECT[Show Time Slot Intersections\nto Student]
+    SHOW_INTERSECT --> STUDENT_CHOOSE[Student Chooses Time Slot]
+    STUDENT_CHOOSE --> STUDENT_SPECIFIED[Meeting State: STUDENT_SPECIFIED_TIME]
 
-    AdminRejected --> End1([Process Failed])
+    %% Manager Scheduling
+    STUDENT_SPECIFIED --> MGR_SCHEDULE[Manager Sets Location]
+    MGR_SCHEDULE --> SCHEDULED[Meeting State: SCHEDULED]
 
-    AdminApproved --> ManagerReview[Form sent to department manager]
+    %% Defense & Scoring
+    SCHEDULED --> DEFENSE[Defense Takes Place]
+    DEFENSE --> JURY_SCORE[Each Jury Gives Score]
+    JURY_SCORE --> ALL_SCORED{All Juries\nScored?}
+    ALL_SCORED -->|No| JURY_SCORE
+    ALL_SCORED -->|Yes| CALC_AVG[Calculate Average Score]
+    CALC_AVG --> COMPLETED[Meeting State: COMPLETED]
+    COMPLETED --> END_SUCCESS
 
-    ManagerReview --> ManagerRejected{Manager rejects}
-    ManagerReview --> JurySelection{Manager approves & suggests juries}
-
-    ManagerRejected --> End1([Process Failed])
-
-    JurySelection --> TimeCollection[Juries notified]
-
-    TimeCollection --> TimeCollectionInProgress[Each professor specifies available time periods<br/>1.5 hour slots from today to n weeks later]
-
-    TimeCollectionInProgress --> TimeCollectionComplete[All professors submitted times]
-
-    TimeCollectionComplete --> CommonTimesFound{Common slots available}
-    TimeCollectionComplete --> NoCommonTimes{No common slots}
-
-    NoCommonTimes --> End1[Process Failed]
-
-    CommonTimesFound --> StudentTimeSelection[Show options to student]
-
-    StudentTimeSelection --> Scheduled[Student selects time]
-
-    Scheduled --> End([Defense scheduled])
+    %% Cancellation Path
+    SCHEDULED --> CANCEL{Manager\nCancels?}
+    CANCEL -->|Yes| CANCELED[Meeting State: CANCELED]
+    CANCELED --> END_CANCEL
+    CANCEL -->|No| DEFENSE

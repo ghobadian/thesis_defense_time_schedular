@@ -1,29 +1,25 @@
-package ir.kghobad.thesis_defense_time_schedular.service;
+package ir.kghobad.thesis_defense_time_schedular.service.student;
 
-import ir.kghobad.thesis_defense_time_schedular.dao.*;
-import ir.kghobad.thesis_defense_time_schedular.exception.ThesisFormLimitExceededException;
-import ir.kghobad.thesis_defense_time_schedular.model.dto.*;
-import ir.kghobad.thesis_defense_time_schedular.model.dto.form.ThesisFormInputDTO;
-import ir.kghobad.thesis_defense_time_schedular.model.dto.form.ThesisFormOutputDTO;
+import ir.kghobad.thesis_defense_time_schedular.dao.ProfessorRepository;
+import ir.kghobad.thesis_defense_time_schedular.dao.StudentRepository;
+import ir.kghobad.thesis_defense_time_schedular.dao.ThesisDefenseMeetingRepository;
+import ir.kghobad.thesis_defense_time_schedular.dao.TimeSlotRepository;
+import ir.kghobad.thesis_defense_time_schedular.model.dto.user.SimpleUserOutputDto;
+import ir.kghobad.thesis_defense_time_schedular.model.dto.TimeSlotDTO;
 import ir.kghobad.thesis_defense_time_schedular.model.dto.meeting.ThesisDefenseMeetingDetailsOutputDTO;
 import ir.kghobad.thesis_defense_time_schedular.model.dto.meeting.ThesisDefenseMeetingOutputDTO;
 import ir.kghobad.thesis_defense_time_schedular.model.dto.meeting.TimeSlotSelectionInputDTO;
 import ir.kghobad.thesis_defense_time_schedular.model.entity.ThesisDefenseMeeting;
 import ir.kghobad.thesis_defense_time_schedular.model.entity.TimeSlot;
-import ir.kghobad.thesis_defense_time_schedular.model.entity.thesisform.ThesisForm;
-import ir.kghobad.thesis_defense_time_schedular.model.entity.user.Professor;
 import ir.kghobad.thesis_defense_time_schedular.model.entity.user.student.Student;
-import ir.kghobad.thesis_defense_time_schedular.model.enums.FormState;
 import ir.kghobad.thesis_defense_time_schedular.model.enums.MeetingState;
 import ir.kghobad.thesis_defense_time_schedular.security.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -33,44 +29,12 @@ import java.util.stream.Collectors;
 @Transactional
 @RequiredArgsConstructor
 @Log4j2
-public class StudentService {
+public class StudentMeetingService {
     private final StudentRepository studentRepository;
     private final ProfessorRepository professorRepository;
-    private final ThesisFormRepository thesisFormRepository;
     private final ThesisDefenseMeetingRepository thesisDefenseMeetingRepository;
     private final JwtUtil jwtUtil;
     private final TimeSlotRepository timeSlotRepository;
-
-    @Value("${rate-limit.max-submitted-forms}")
-    private int maxSubmittedForms;
-
-    public void createThesisForm(ThesisFormInputDTO dto) {
-        Long studentId = jwtUtil.getCurrentUserId();
-        double submittedFormsCount = thesisFormRepository.countByStudentIdAndState(studentId, FormState.SUBMITTED);
-        if (submittedFormsCount >= maxSubmittedForms) {
-            throw new ThesisFormLimitExceededException(
-                    String.format("Maximum limit of %d submitted forms reached. " +
-                                    "Please wait for your existing forms to be processed.",
-                            maxSubmittedForms)
-            );
-        }
-        Student student = studentRepository.findById(studentId).orElseThrow(() -> new RuntimeException("Student not found"));
-
-        Professor thesisInstructor = professorRepository.findById(dto.getInstructorId()).orElseThrow(() -> new RuntimeException("Instructor not found"));
-
-        ThesisForm form = new ThesisForm();
-        form.setTitle(dto.getTitle());
-        form.setAbstractText(dto.getAbstractText());
-        form.setStudent(student);
-        form.setInstructor(thesisInstructor);
-        form.setState(FormState.SUBMITTED);
-        form.setSubmissionDate(new Date());
-        form.setUpdateDate(new Date());
-        form.setStudentType(student.getStudentType());
-        form.setField(student.getField());
-
-        thesisFormRepository.save(form);
-    }
 
     public List<ThesisDefenseMeetingOutputDTO> listMeetings() {
         return thesisDefenseMeetingRepository.findByStudentId(jwtUtil.getCurrentUserId()).stream()
@@ -116,11 +80,6 @@ public class StudentService {
         meeting.setSelectedTimeSlot(timeslot);
         meeting.setState(MeetingState.STUDENT_SPECIFIED_TIME);
         thesisDefenseMeetingRepository.save(meeting);
-    }
-
-    public List<ThesisFormOutputDTO> getThesisForms() {
-        return thesisFormRepository.findByStudentId(jwtUtil.getCurrentUserId()).stream()
-                .map(ThesisFormOutputDTO::from).toList();
     }
 
     public List<SimpleUserOutputDto> listProfessors() {

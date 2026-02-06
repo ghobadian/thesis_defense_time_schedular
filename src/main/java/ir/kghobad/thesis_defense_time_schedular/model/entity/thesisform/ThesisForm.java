@@ -12,7 +12,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "thesis_form")
@@ -56,13 +56,36 @@ public class ThesisForm {
     @Column(name = "submission_date")
     @Setter
     @Getter
-    private Date submissionDate;
+    private LocalDateTime submissionDate = LocalDateTime.now();
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "instructor_reviewed_at")
+    @Setter
+    @Getter
+    private LocalDateTime instructorReviewedAt;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "admin_reviewed_at")
+    @Setter
+    @Getter
+    private LocalDateTime adminReviewedAt;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "manager_reviewed_at")
+    @Setter
+    @Getter
+    private LocalDateTime managerReviewedAt;
+
+    @Column(name = "rejection_reason")
+    @Setter
+    @Getter
+    private String rejectionReason;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "update_date")
     @Setter
     @Getter
-    private Date updateDate;
+    private LocalDateTime updateDate;
 
     @OneToOne(mappedBy = "thesisForm", cascade = CascadeType.ALL, orphanRemoval = true)
     @Setter
@@ -81,10 +104,15 @@ public class ThesisForm {
     @Getter
     private StudentType studentType;
 
-    @Column(name = "comment")
+    @Column(length = 1000)
     @Setter
     @Getter
-    private String comment;
+    private String revisionMessage;  // Current revision request message
+
+    @Column
+    @Setter
+    @Getter
+    private LocalDateTime revisionRequestedAt;
 
     public ThesisForm() {
 

@@ -29,14 +29,56 @@ public class DefenseMeetingProfessorAssociation {
     @JoinColumn(name = "professor_id", nullable = false)
     private Professor professor;
 
+    @Getter
+    @Setter
+    @Column(name = "score")
+    private Double score;
+
     @Override
-    public boolean equals(Object object) {
-        if (!(object instanceof DefenseMeetingProfessorAssociation that)) return false;
-        return Objects.equals(defenseMeeting, that.defenseMeeting) && Objects.equals(professor, that.professor);
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        DefenseMeetingProfessorAssociation that = (DefenseMeetingProfessorAssociation) o;
+
+        // compare defenseMeeting: by reference, then by id if both present
+        boolean defenseEqual;
+        if (this.defenseMeeting == that.defenseMeeting) {
+            defenseEqual = true;
+        } else if (this.defenseMeeting != null && that.defenseMeeting != null) {
+            defenseEqual = Objects.equals(this.defenseMeeting.getId(), that.defenseMeeting.getId());
+        } else {
+            defenseEqual = false;
+        }
+
+        // compare professor: by reference, then by id if both present
+        boolean professorEqual;
+        if (this.professor == that.professor) {
+            professorEqual = true;
+        } else if (this.professor != null && that.professor != null) {
+            professorEqual = Objects.equals(this.professor.getId(), that.professor.getId());
+        } else {
+            professorEqual = false;
+        }
+
+        return defenseEqual && professorEqual;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(defenseMeeting, professor);
+        int defenseHash = 0;
+        if (defenseMeeting != null) {
+            defenseHash = defenseMeeting.getId() != null
+                    ? defenseMeeting.getId().hashCode()
+                    : System.identityHashCode(defenseMeeting);
+        }
+
+        int professorHash = 0;
+        if (professor != null) {
+            professorHash = professor.getId() != null
+                    ? professor.getId().hashCode()
+                    : System.identityHashCode(professor);
+        }
+
+        return Objects.hash(defenseHash, professorHash);
     }
 }

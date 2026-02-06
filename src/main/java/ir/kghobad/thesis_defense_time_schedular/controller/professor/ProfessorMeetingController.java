@@ -32,8 +32,8 @@ public class ProfessorMeetingController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<?> createMeeting(@RequestBody MeetingCreationInputDTO input) {
-        service.acceptAndSchedule(input);
+    public ResponseEntity<?> acceptFormAsManagerAndCreateMeeting(@RequestBody MeetingCreationInputDTO input) {
+        service.acceptFormAsManagerAndCreateMeeting(input);
         return ResponseEntity.ok("Meeting created");
     }
 
@@ -43,10 +43,10 @@ public class ProfessorMeetingController {
         return ResponseEntity.ok("Meeting scheduled");
     }
 
-    @PostMapping("/complete")
-    public ResponseEntity<?> completeMeeting(@RequestBody MeetingCompletionInputDTO input) {
+    @PostMapping("/score")
+    public ResponseEntity<?> addScore(@RequestBody MeetingCompletionInputDTO input) {
         service.completeMeeting(input);
-        return ResponseEntity.ok("Meeting completed");
+        return ResponseEntity.ok("Score submitted");
     }
 
     @GetMapping("/{meetingId}/timeslots")

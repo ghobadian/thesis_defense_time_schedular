@@ -1,4 +1,4 @@
-package ir.kghobad.thesis_defense_time_schedular.model.dto;
+package ir.kghobad.thesis_defense_time_schedular.model.dto.user;
 
 import ir.kghobad.thesis_defense_time_schedular.model.entity.user.User;
 import lombok.*;

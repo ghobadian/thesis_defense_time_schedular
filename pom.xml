@@ -10,10 +10,11 @@
 	</parent>
 	<groupId>ir.kghobad</groupId>
 	<artifactId>thesis-defense-time-schedular</artifactId>
-	<version>1.0.0</version>
+	<version>${application.version}</version>
 	<name>thesis-defense-time-schedular</name>
 	<description>Thesis Defense Time Schedular</description>
 	<properties>
+		<application.version>1.0.1</application.version>
 		<java.version>21</java.version>
 		<jsonwebtoken.version>0.11.5</jsonwebtoken.version>
 	</properties>
@@ -55,8 +56,9 @@
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
 		<dependency>
-			<groupId>org.postgresql</groupId>
-			<artifactId>postgresql</artifactId>
+			<groupId>com.mysql</groupId>
+			<artifactId>mysql-connector-j</artifactId>
+			<scope>runtime</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -94,10 +96,6 @@
 			<version>2.3.1</version>
 		</dependency>
 		<dependency>
-			<groupId>org.liquibase</groupId>
-			<artifactId>liquibase-core</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
 		</dependency>
@@ -123,10 +121,12 @@
 						<path>
 							<groupId>org.projectlombok</groupId>
 							<artifactId>lombok</artifactId>
+							<version>${lombok.version}</version>
 						</path>
 						<path>
 							<groupId>org.springframework.boot</groupId>
 							<artifactId>spring-boot-configuration-processor</artifactId>
+							<version>${project.parent.version}</version>
 						</path>
 					</annotationProcessorPaths>
 				</configuration>
@@ -136,6 +136,22 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+				<includes>
+					<include>banner.txt</include>
+				</includes>
+			</resource>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>false</filtering>
+				<excludes>
+					<exclude>banner.txt</exclude>
+				</excludes>
+			</resource>
+		</resources>
 	</build>
 
 </project>

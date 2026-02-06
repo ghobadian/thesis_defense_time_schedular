@@ -1,11 +1,13 @@
 package ir.kghobad.thesis_defense_time_schedular.model.dto.meeting;
 
+import ir.kghobad.thesis_defense_time_schedular.model.dto.user.SimpleUserOutputDto;
 import ir.kghobad.thesis_defense_time_schedular.model.dto.TimeSlotDTO;
 import ir.kghobad.thesis_defense_time_schedular.model.entity.ThesisDefenseMeeting;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.List;
+import java.util.Map;
 
 @Getter
 @Setter
@@ -22,6 +24,8 @@ public class ThesisDefenseMeetingDetailsOutputDTO {
     private String meetingStatus;
     private String selectedTimeSlot;
     private List<TimeSlotDTO> availableTimeSlots;
+    private Map<Long, Double> juriesScores;
+    private List<SimpleUserOutputDto> juryMembers;
 
     public static ThesisDefenseMeetingDetailsOutputDTO from(ThesisDefenseMeeting meeting) {
         ThesisDefenseMeetingDetailsOutputDTO dto = new ThesisDefenseMeetingDetailsOutputDTO();
@@ -36,6 +40,8 @@ public class ThesisDefenseMeetingDetailsOutputDTO {
         dto.setFieldName(meeting.getThesisForm().getField().getName());
         dto.setMeetingStatus(meeting.getState().name());
         dto.setSelectedTimeSlot(meeting.getSelectedTimeSlot() != null ? meeting.getSelectedTimeSlot().toString() : null);
+        dto.setJuryMembers(meeting.getSuggestedJuries());
+        dto.setJuriesScores(meeting.getJuriesWithScores());
         return dto;
     }
 }

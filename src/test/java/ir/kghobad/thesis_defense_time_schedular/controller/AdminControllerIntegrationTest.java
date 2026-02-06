@@ -1,7 +1,9 @@
 package ir.kghobad.thesis_defense_time_schedular.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import ir.kghobad.thesis_defense_time_schedular.model.dto.student.StudentRegistrationInputDTO;
+import ir.kghobad.thesis_defense_time_schedular.helper.AdminMockHelper;
+import ir.kghobad.thesis_defense_time_schedular.helper.BaseIntegrationTest;
+import ir.kghobad.thesis_defense_time_schedular.model.dto.user.student.StudentRegistrationInputDTO;
 import ir.kghobad.thesis_defense_time_schedular.model.entity.Department;
 import ir.kghobad.thesis_defense_time_schedular.model.entity.Field;
 import ir.kghobad.thesis_defense_time_schedular.model.entity.thesisform.ThesisForm;
@@ -11,22 +13,25 @@ import ir.kghobad.thesis_defense_time_schedular.model.entity.user.student.Studen
 import ir.kghobad.thesis_defense_time_schedular.model.enums.FormState;
 import ir.kghobad.thesis_defense_time_schedular.model.enums.StudentType;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 import static ir.kghobad.thesis_defense_time_schedular.helper.TestDataBuilder.DEFAULT_PASSWORD;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class AdminControllerIntegrationTest extends BaseIntegrationTest {
-    
+
+    @Autowired
+    private AdminMockHelper adminMockHelper;
+
     @Test
     public void testRegisterSingleStudent_Success() throws Exception {
         Department dept = departmentRepository.save(testDataBuilder.createDepartment("Computer Science"));
@@ -39,12 +44,7 @@ public class AdminControllerIntegrationTest extends BaseIntegrationTest {
         String token = getAuthToken("admin@test.com", DEFAULT_PASSWORD);
 
         StudentRegistrationInputDTO registrationInputDTO = testDataBuilder.getRegistrationInputDTO(dept, field, instructor);
-        mockMvc.perform(post("/admin/register-student")
-                .header("Authorization", "Bearer " + token)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(registrationInputDTO)))
-                .andExpect(status().isOk())
-                .andExpect(content().string("Student registered successfully"));
+        adminMockHelper.registerStudents(List.of(registrationInputDTO), token);
 
         assertEquals(1, studentRepository.count());
         assertEquals(1, professorRepository.count());
@@ -57,7 +57,7 @@ public class AdminControllerIntegrationTest extends BaseIntegrationTest {
 
 
     @Test
-    public void testRegisterMultipleStudents_Success() throws Exception {
+    public void testRegisterMultipleStudents_Success() throws Exception {//TODO assert that no test uses mockMVC directly
         Department dept = departmentRepository.save(testDataBuilder.createDepartment("Computer Science"));
         Field field = fieldRepository.save(testDataBuilder.createField("Software Engineering", dept));
         Professor instructor = professorRepository.save(
@@ -79,13 +79,9 @@ public class AdminControllerIntegrationTest extends BaseIntegrationTest {
                 instructor.getId(), DEFAULT_PASSWORD
             )
         );
+
+        adminMockHelper.registerStudents(dtos, token);
         
-        mockMvc.perform(post("/admin/register-students")
-                .header("Authorization", "Bearer " + token)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(dtos)))
-                .andExpect(status().isOk())
-                .andExpect(content().string("Students registered successfully"));
 
         assertEquals(2, studentRepository.count());
     }
@@ -96,8 +92,9 @@ public class AdminControllerIntegrationTest extends BaseIntegrationTest {
             "Student", "One", "student1@test.com", "09121234567",
             12345L, StudentType.MASTER, 1L, 1L, 1L, DEFAULT_PASSWORD
         );
-        
-        mockMvc.perform(post("/admin/register-student")
+
+
+        mockMvc.perform(post("/admin/students")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(dto)))
                 .andExpect(status().isUnauthorized());
@@ -112,11 +109,11 @@ public class AdminControllerIntegrationTest extends BaseIntegrationTest {
         );
         Student student1 = studentRepository.save(testDataBuilder.createStudent("student1@test.com", "Student", "One", 12345L,
                 StudentType.MASTER, dept, field, instructor, "09121234567"));
-        ThesisForm submittedForm = thesisFormRepository.save(testDataBuilder.createThesisForm("Form 1", "abstract", student1, instructor, FormState.SUBMITTED, new Date(), field));
-        ThesisForm instructorApprovedForm = thesisFormRepository.save(testDataBuilder.createThesisForm("Form 2", "abstract", student1, instructor, FormState.INSTRUCTOR_APPROVED, new Date(), field));
-        ThesisForm adminApprovedForm = thesisFormRepository.save(testDataBuilder.createThesisForm("Form 3", "abstract", student1, instructor, FormState.ADMIN_APPROVED, new Date(), field));
-        ThesisForm adminRejectedForm = thesisFormRepository.save(testDataBuilder.createThesisForm("Form 4", "abstract", student1, instructor, FormState.ADMIN_REJECTED, new Date(), field));
-        ThesisForm managerApprovedForm = thesisFormRepository.save(testDataBuilder.createThesisForm("Form 5", "abstract", student1, instructor, FormState.MANAGER_APPROVED, new Date(), field));
+        ThesisForm submittedForm = thesisFormRepository.save(testDataBuilder.createThesisForm("Form 1", "abstract", student1, instructor, FormState.SUBMITTED, LocalDateTime.now(), field));
+        ThesisForm instructorApprovedForm = thesisFormRepository.save(testDataBuilder.createThesisForm("Form 2", "abstract", student1, instructor, FormState.INSTRUCTOR_APPROVED, LocalDateTime.now(), field));
+        ThesisForm adminApprovedForm = thesisFormRepository.save(testDataBuilder.createThesisForm("Form 3", "abstract", student1, instructor, FormState.ADMIN_APPROVED, LocalDateTime.now(), field));
+        ThesisForm adminRejectedForm = thesisFormRepository.save(testDataBuilder.createThesisForm("Form 4", "abstract", student1, instructor, FormState.ADMIN_REJECTED, LocalDateTime.now(), field));
+        ThesisForm managerApprovedForm = thesisFormRepository.save(testDataBuilder.createThesisForm("Form 5", "abstract", student1, instructor, FormState.MANAGER_APPROVED, LocalDateTime.now(), field));
 
         adminRepository.save(testDataBuilder.createAdmin("admin@test.com", "Admin", "User", "09123456789"));
         String token = getAuthToken("admin@test.com", DEFAULT_PASSWORD);
@@ -127,9 +124,13 @@ public class AdminControllerIntegrationTest extends BaseIntegrationTest {
                 .andExpect(status().isOk())
                 .andReturn().getResponse();
         JsonNode result = objectMapper.readTree(authorization.getContentAsString());
-        assertEquals(1, result.size());
+        assertEquals(2, result.size());
         assertEquals(instructorApprovedForm.getTitle(), result.get(0).get("title").asText());
         assertEquals(instructorApprovedForm.getStudent().getId(), result.get(0).get("studentId").longValue());
         assertEquals(instructorApprovedForm.getAbstractText(), result.get(0).get("abstractText").asText());
+
+        assertEquals(adminRejectedForm.getTitle(), result.get(1).get("title").asText());
+        assertEquals(adminRejectedForm.getStudent().getId(), result.get(1).get("studentId").longValue());
+        assertEquals(adminRejectedForm.getAbstractText(), result.get(1).get("abstractText").asText());
     }
 }

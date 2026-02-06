@@ -2,7 +2,6 @@ package ir.kghobad.thesis_defense_time_schedular.model.entity.user;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import ir.kghobad.thesis_defense_time_schedular.model.entity.Field;
 import ir.kghobad.thesis_defense_time_schedular.model.entity.ThesisDefenseMeeting;
 import ir.kghobad.thesis_defense_time_schedular.model.entity.TimeSlot;
 import ir.kghobad.thesis_defense_time_schedular.model.entity.association.DefenseMeetingProfessorAssociation;
@@ -36,18 +35,11 @@ public class Professor extends User {
     @OneToMany(mappedBy = "instructor")
     private final Set<ThesisForm> supervisedForms = new HashSet<>(512);
 
-    @OneToMany(mappedBy = "professor", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "professor")
     private final Set<DefenseMeetingProfessorAssociation> defenseMeetingProfessorAssociations = new HashSet<>(512);
 
     @OneToMany(mappedBy = "professor", cascade = CascadeType.ALL, orphanRemoval = true)
     private final Set<TimeSlotProfessorAssociation> timeSlotProfessorAssociations = new HashSet<>(1024);
-
-    @ManyToOne
-    @JoinColumn(name = "field_id")
-    @Getter
-    @Setter
-    private Field field;
-
 
     @Override
     public Role getRole() {

@@ -3,11 +3,12 @@ package ir.kghobad.thesis_defense_time_schedular.model.entity.user;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import ir.kghobad.thesis_defense_time_schedular.model.entity.Department;
+import ir.kghobad.thesis_defense_time_schedular.model.entity.Field;
 import ir.kghobad.thesis_defense_time_schedular.model.enums.Role;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "users")
@@ -16,7 +17,7 @@ import java.util.Date;
 @Getter
 @Setter
 @EqualsAndHashCode
-@ToString(of = {"firstName", "lastName"})
+@ToString(of = {"firstName", "lastName", "email"})
 @AllArgsConstructor
 public abstract class User {
     @Id
@@ -42,11 +43,15 @@ public abstract class User {
     @JoinColumn(name = "department_id")
     private Department department;
 
+    @ManyToOne
+    @JoinColumn(name = "field_id")
+    private Field field;
+
     @Column(name = "enabled")
     private boolean enabled;
 
     @Column(name = "creation_date", nullable = false)
-    private Date creationDate = new Date();
+    private LocalDateTime creationDate = LocalDateTime.now();
 
     public User() {
 

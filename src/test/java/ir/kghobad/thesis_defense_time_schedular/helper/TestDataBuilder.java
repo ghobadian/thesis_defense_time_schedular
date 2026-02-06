@@ -1,6 +1,6 @@
 package ir.kghobad.thesis_defense_time_schedular.helper;
 
-import ir.kghobad.thesis_defense_time_schedular.model.dto.student.StudentRegistrationInputDTO;
+import ir.kghobad.thesis_defense_time_schedular.model.dto.user.student.StudentRegistrationInputDTO;
 import ir.kghobad.thesis_defense_time_schedular.model.entity.Department;
 import ir.kghobad.thesis_defense_time_schedular.model.entity.Field;
 import ir.kghobad.thesis_defense_time_schedular.model.entity.ThesisDefenseMeeting;
@@ -17,7 +17,7 @@ import ir.kghobad.thesis_defense_time_schedular.model.enums.StudentType;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Component
@@ -116,7 +116,7 @@ public class TestDataBuilder {
     }
 
     public ThesisForm createThesisForm(String title, String abstractText, Student student, Professor instructor,
-                                       FormState state, Date submissionDate, Field field) {
+                                       FormState state, LocalDateTime submissionDate, Field field) {
         ThesisForm thesisForm = new ThesisForm();
         thesisForm.setTitle(title);
         thesisForm.setAbstractText(abstractText);

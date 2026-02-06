@@ -1,91 +1,59 @@
 package ir.kghobad.thesis_defense_time_schedular.helper;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import ir.kghobad.thesis_defense_time_schedular.model.dto.form.ThesisFormInputDTO;
+import ir.kghobad.thesis_defense_time_schedular.model.dto.form.ThesisFormOutputDTO;
+import ir.kghobad.thesis_defense_time_schedular.model.dto.meeting.ThesisDefenseMeetingOutputDTO;
+import ir.kghobad.thesis_defense_time_schedular.model.dto.meeting.TimeSlotSelectionInputDTO;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
+import java.util.List;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @Component
 public class StudentMockHelper {
 
     private final MockMvc mockMvc;
+    private final ObjectMapper objectMapper;
 
-    public StudentMockHelper(MockMvc mockMvc) {
+    public StudentMockHelper(MockMvc mockMvc, ObjectMapper objectMapper) {
         this.mockMvc = mockMvc;
+        this.objectMapper = objectMapper;
     }
 
     // ==================== Student Thesis Form Endpoints ====================
 
-    public ResultActions createThesisForm(String token) throws Exception {
-        String thesisFormJson = """
-            {
-                "title": "AI-Powered Healthcare Diagnosis System",
-                "abstractText": "This thesis investigates the application of artificial intelligence in healthcare diagnosis...",
-                "studentId": 9,
-                "instructorId": 3,
-                "fieldId": 1,
-                "suggestedJuryIds": [4, 5]
-            }
-            """;
-
-        return mockMvc.perform(post("/student/create-form")
+    public ResultActions createThesisForm(ThesisFormInputDTO formDTO, String token) throws Exception {
+        return mockMvc.perform(post("/student/forms")
                 .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(thesisFormJson));
+                .content(objectMapper.writeValueAsString(formDTO)))
+                .andExpect(status().isOk())
+                .andExpect(content().string("Thesis form created successfully"));
     }
 
-    public ResultActions createThesisFormWithCustomData(String title, String abstractText,
-                                                       Long studentId, Long instructorId,
-                                                       Long fieldId, Long[] suggestedJuryIds,
-                                                       String token) throws Exception {
-        StringBuilder juryIdsJson = new StringBuilder("[");
-        if (suggestedJuryIds != null && suggestedJuryIds.length > 0) {
-            for (int i = 0; i < suggestedJuryIds.length; i++) {
-                juryIdsJson.append(suggestedJuryIds[i]);
-                if (i < suggestedJuryIds.length - 1) {
-                    juryIdsJson.append(", ");
-                }
-            }
-        }
-        juryIdsJson.append("]");
 
-        String thesisFormJson = String.format("""
-            {
-                "title": "%s",
-                "abstractText": "%s",
-                "studentId": %d,
-                "instructorId": %d,
-                "fieldId": %d,
-                "suggestedJuryIds": %s
-            }
-            """, title, abstractText, studentId, instructorId, fieldId, juryIdsJson);
-
-        return mockMvc.perform(post("/student/create-form")
-                .header("Authorization", "Bearer " + token)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(thesisFormJson));
+    public List<ThesisFormOutputDTO> getMyThesisForms(String token) throws Exception {
+        String response = mockMvc.perform(get("/student/forms")
+                .header("Authorization", "Bearer " + token)).andReturn().getResponse().getContentAsString();
+        return objectMapper.readValue(response, new TypeReference<>() {});
     }
 
-    // ==================== Student View Endpoints ====================
 
-    public ResultActions getMyThesisForms(String token) throws Exception {
-        return mockMvc.perform(get("/student/my-forms")
-                .header("Authorization", "Bearer " + token));
+    public List<ThesisDefenseMeetingOutputDTO> getMyDefenseMeeting(String token) throws Exception {
+        String response = mockMvc.perform(get("/student/meetings")
+                .header("Authorization", "Bearer " + token)).andReturn().getResponse().getContentAsString();
+        return objectMapper.readValue(response, new TypeReference<>() {});
     }
 
-    public ResultActions getMyThesis(String token) throws Exception {
-        return mockMvc.perform(get("/student/my-thesis")
-                .header("Authorization", "Bearer " + token));
-    }
-
-    public ResultActions getMyDefenseMeeting(String token) throws Exception {
-        return mockMvc.perform(get("/student/my-defense")
-                .header("Authorization", "Bearer " + token));
-    }
-
-    // ==================== Student Profile Endpoints ====================
 
     public ResultActions updateProfile(String firstName, String lastName, String phoneNumber, String token) throws Exception {
         String profileJson = String.format("""
@@ -114,5 +82,12 @@ public class StudentMockHelper {
                 .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(passwordJson));
+    }
+
+    public ResultActions chooseTimeSlot(TimeSlotSelectionInputDTO input, String token) throws Exception {
+        return mockMvc.perform(post("/student/meetings/time-slots")
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(input)));
     }
 }

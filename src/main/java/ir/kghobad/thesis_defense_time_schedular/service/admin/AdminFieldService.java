@@ -50,5 +50,5 @@ public class AdminFieldService {
             throw new IllegalArgumentException("Field not found with ID: " + id);
         }
         fieldRepository.deactivateField(id);
-    }// TODO read the gemini 3 response for deletion best practices
+    }
 }

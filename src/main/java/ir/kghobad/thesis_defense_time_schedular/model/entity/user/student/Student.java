@@ -15,7 +15,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -38,19 +38,13 @@ public abstract class Student extends User {
     @Setter
     private Professor instructor;
 
-    @ManyToOne
-    @JoinColumn(name = "field_id")
-    @Getter
-    @Setter
-    private Field field;
-
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ThesisForm> thesisForms = new HashSet<>(16);
 
     @Column(name = "graduation_date")
     @Getter
     @Setter
-    private Date graduationDate;
+    private LocalDateTime graduationDate;
 
 
     public Student(Long id,
@@ -64,10 +58,9 @@ public abstract class Student extends User {
                    Long studentNumber,
                    Professor instructor,
                    Field field) {
-        super(id, firstName, lastName, email, phoneNumber, password, department, enabled, new Date());
+        super(id, firstName, lastName, email, phoneNumber, password, department, field, enabled, LocalDateTime.now());
         this.studentNumber = studentNumber;
         this.instructor = instructor;
-        this.field = field;
     }
 
     public Student() {
@@ -104,6 +97,10 @@ public abstract class Student extends User {
 
     public List<ThesisFormOutputDTO> getThesisForms() {
         return thesisForms.stream().map(ThesisFormOutputDTO::from).toList();
+    }
+
+    public boolean isGraduated() {
+        return this.graduationDate != null && this.graduationDate.isBefore(LocalDateTime.now());
     }
 
 

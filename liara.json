@@ -1,0 +1,9 @@
+{
+  "platform": "docker",
+  "app": "thesis-back",
+  "port": 8080,
+  "disks": [],
+  "build": {
+    "location": "germany"
+  }
+}
