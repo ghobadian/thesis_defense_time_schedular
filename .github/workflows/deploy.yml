@@ -1,0 +1,53 @@
+name: Deploy to Ubuntu Server
+
+on:
+  push:
+    branches: [ "dev" ]
+
+jobs:
+  build-test-deploy:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: maven
+
+      # ===== TEST PHASE =====
+      - name: Run All Tests
+        run: mvn verify -B
+
+      - name: Upload Test Results
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: target/surefire-reports/
+
+      # ===== BUILD PHASE =====
+      - name: Verify Docker is active
+        run: docker info
+
+      - name: Build Docker Image
+        run: docker build -t myapp:latest .
+
+      # ===== DEPLOY PHASE =====
+      - name: Stop Old Container (if exists)
+        run: docker stop myapp_container || true
+
+      - name: Remove Old Container
+        run: docker rm myapp_container || true
+
+      - name: Run New Container
+        run: |
+          docker run -d \
+          --name myapp_container \
+          --restart unless-stopped \
+          -p 80:80 \
+          myapp:latest
