@@ -1,0 +1,59 @@
+{
+  "dashboard": "داشبورد",
+  "editFormModal": {
+    "abstract": "چکیده",
+    "abstractPlaceholder": "چکیده پایان‌نامه خود را وارد کنید (حداقل ۵۰ کاراکتر)",
+    "cancel": "انصراف",
+    "errors": {
+      "abstractMaxLength": "چکیده نباید بیش از ۲۰۰۰ کاراکتر باشد",
+      "abstractMinLength": "چکیده باید حداقل ۵۰ کاراکتر باشد",
+      "abstractRequired": "چکیده الزامی است",
+      "instructorRequired": "لطفاً یک استاد راهنما انتخاب کنید",
+      "titleMaxLength": "عنوان نباید بیش از ۲۰۰ کاراکتر باشد",
+      "titleMinLength": "عنوان باید حداقل ۱۰ کاراکتر باشد",
+      "titleRequired": "عنوان الزامی است"
+    },
+    "instructor": "استاد راهنما",
+    "required": "*",
+    "revisionRequested": "درخواست بازنگری",
+    "saveChanges": "ذخیره تغییرات",
+    "saving": "در حال ذخیره...",
+    "thesisTitle": "عنوان پایان‌نامه",
+    "thesisTitlePlaceholder": "عنوان پایان‌نامه خود را وارد کنید",
+    "title": "ویرایش فرم پایان‌نامه"
+  },
+  "form": {
+    "thesis-forms": "فرم ها"
+  },
+  "modal": {
+    "buttons": {
+      "cancel": "لغو",
+      "save": "ذخیره تغییرات",
+      "saving": "در حال ذخیره..."
+    },
+    "errors": {
+      "titleMaxLength": "عنوان نباید بیشتر از ۲۰۰ کاراکتر باشد",
+      "titleMinLength": "عنوان باید حداقل ۱۰ کاراکتر باشد",
+      "titleRequired": "عنوان الزامی است"
+    },
+    "fields": {
+      "abstract": "چکیده",
+      "instructor": "استاد راهنما",
+      "thesisTitle": "عنوان پایان‌نامه"
+    },
+    "revisionRequested": "درخواست اصلاح",
+    "title": "ویرایش فرم پایان‌نامه"
+  },
+  "navbar": {
+    "logout": "خروج",
+    "switchLanguage": "تغییر زبان",
+    "title": "سامانه زمان‌بندی دفاع پایان‌نامه"
+  },
+  "roles": {
+    "admin": "مدیر سیستم",
+    "manager": "مدیر گروه",
+    "professor": "استاد",
+    "student": "دانشجو",
+    "user": "کاربر"
+  }
+}

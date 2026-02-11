@@ -1,0 +1,11 @@
+{
+  "app": "thesis-front",
+  "port": 80,
+  "build": {
+    "location": "germany",
+    "args": {
+      "REACT_APP_API_BASE_URL": "https://thesis-back.liara.run/api/v1"
+    }
+  },
+  "disks": []
+}

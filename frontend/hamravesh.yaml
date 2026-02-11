@@ -1,0 +1,13 @@
+name: thesis-frontend
+type: docker
+dockerfile: Dockerfile
+port: 80
+health_check:
+  path: /
+  interval: 30
+resources:
+  memory: 128Mi
+  cpu: 0.25
+build_args:
+  - name: REACT_APP_API_BASE_URL
+    value: "${REACT_APP_API_BASE_URL}"

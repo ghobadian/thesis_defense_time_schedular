@@ -1,0 +1,97 @@
+{
+  "dashboard": "Dashboard",
+  "editFormModal": {
+    "abstract": "Abstract",
+    "abstractPlaceholder": "Enter your thesis abstract (minimum 50 characters)",
+    "cancel": "Cancel",
+    "errors": {
+      "abstractMaxLength": "Abstract must not exceed 2000 characters",
+      "abstractMinLength": "Abstract must be at least 50 characters",
+      "abstractRequired": "Abstract is required",
+      "instructorRequired": "Please select an instructor",
+      "titleMaxLength": "Title must not exceed 200 characters",
+      "titleMinLength": "Title must be at least 10 characters",
+      "titleRequired": "Title is required"
+    },
+    "instructor": "Instructor",
+    "required": "*",
+    "revisionRequested": "Revision Requested",
+    "saveChanges": "Save Changes",
+    "saving": "Saving...",
+    "thesisTitle": "Thesis Title",
+    "thesisTitlePlaceholder": "Enter your thesis title",
+    "title": "Edit Thesis Form"
+  },
+  "form": {
+    "thesis-forms": "Thesis Forms",
+    "description": "Track the status of your thesis form submissions",
+    "create-new-form": "Create New Form",
+    "create-first-form": "Create Your First Form",
+    "errors": {
+      "no-forms": "No Thesis Forms Yet",
+      "no-forms-subtitle": "You haven't submitted any thesis forms. Start by creating your first form."
+    }
+  },
+  "meeting": {
+    "meetings": "Defense Meetings",
+    "hide-details": "Hide Details",
+    "hide-timeslots": "Hide Time Slots",
+    "load-failed": "Failed to load meetings.",
+    "location-tbd": "Location TBD",
+    "my-defense-meetings": "My Defense Meetings",
+    "no-meeting-found": "No meetings found.",
+    "select-time-slot": "Select Time Slot",
+    "thesis-information": "Thesis Information",
+    "time-pending": "Time pending",
+    "timeslots-comparison": "Time Slots Comparison",
+    "view-details": "View Details",
+    "view-forms": "View your thesis defense meetings and select available time slots",
+    "view-timeslots": "View Time Slots"
+  },
+  "profile": "Profile",
+  "navbar": {
+    "logout": "Logout",
+    "switchLanguage": "Switch language",
+    "title": "Thesis Defense Scheduler"
+  },
+  "roles": {
+    "admin": "Admin",
+    "manager": "Manager",
+    "professor": "Professor",
+    "student": "Student",
+    "user": "User"
+  },
+  "states": {
+    "CANCELED": "Canceled",
+    "COMPLETED": "Completed",
+    "JURIES_SELECTED": "Awaiting Jury Time Selection",
+    "JURIES_SPECIFIED_TIME": {
+      "non-student": "Awaiting Student Selection",
+      "student": "Ready for Your Selection"
+    },
+    "SCHEDULED": "Scheduled",
+    "STUDENT_SPECIFIED_TIME": "Awaiting Manager Schedule"
+  },
+  "users": {
+    "instructor": {
+      "instructor": "Instructor",
+      "instructor-name": "Instructor Name",
+      "my-students": "My Students"
+    },
+    "admin": {
+      "students-management": "Students Management",
+      "professors-management": "Professors Management",
+      "departments-management": "Departments Management",
+      "fields-management": "Fields Management"
+    },
+    "jury-members": "Jury Members",
+    "student": {
+      "abstract": "Abstract",
+      "email": "Email",
+      "field": "Field",
+      "name": "Student Name",
+      "number": "Student Number",
+      "student": "Student"
+    }
+  }
+}
