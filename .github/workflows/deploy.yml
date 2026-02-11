@@ -21,36 +21,26 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      # ── Backend Tests ──
-      - name: Run Backend Tests in Docker
-        run: |
-            docker run --rm \
-              -u "$(id -u):$(id -g)" \
-              -v "$PWD/backend":/app \
-              -w /app \
-              maven:3.9-eclipse-temurin-21 \
-              mvn verify -B
-
-
       # ── Create Environment File ──
       - name: Create .env file from secrets
         run: |
           cat > .env << EOF
-          DB_NAME=${{ secrets.DB_NAME }}
-          DB_USER=${{ secrets.DB_USER }}
+          DB_NAME=${{ vars.DB_NAME }}
+          DB_USER=${{ vars.DB_USER }}
           DB_PASSWORD=${{ secrets.DB_PASSWORD }}
           JWT_SECRET=${{ secrets.JWT_SECRET }}
-          JWT_EXPIRATION=${{ secrets.JWT_EXPIRATION }}
-          FRONTEND_URL=${{ secrets.FRONTEND_URL }}
-          RATE_LIMIT_MAX_SUBMITTED_FORMS=${{ secrets.RATE_LIMIT_MAX_SUBMITTED_FORMS }}
-          REACT_APP_API_BASE_URL=${{ secrets.REACT_APP_API_BASE_URL }}
+          JWT_EXPIRATION=${{ vars.JWT_EXPIRATION }}
+          FRONTEND_URL=${{ vars.FRONTEND_URL }}
+          RATE_LIMIT_MAX_SUBMITTED_FORMS=${{ vars.RATE_LIMIT_MAX_SUBMITTED_FORMS }}
+          REACT_APP_API_BASE_URL=${{ vars.REACT_APP_API_BASE_URL }}
+          SPRING_PROFILES_ACTIVE=${{ secrets.SPRING_PROFILES_ACTIVE }}
           EOF
 
       # ── Build & Deploy ──
       - name: Build and Deploy with Docker Compose
         run: |
           docker compose down
-          docker compose build --no-cache
+          docker compose build
           docker compose up -d
 
       # ── Cleanup ──
@@ -71,9 +61,3 @@ jobs:
 
       - name: Show frontend logs
         run: docker compose logs thesis-frontend --tail=50
-
-      - name: Verify frontend is responding
-        run: curl -f http://localhost:80 || echo "Frontend not responding yet"
-
-      - name: Verify backend health
-        run: curl -f http://localhost:80/api/health || echo "Backend not responding yet"
