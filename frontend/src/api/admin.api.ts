@@ -2,6 +2,7 @@ import axios from 'axios';
 import { API_BASE_URL } from './config';
 import {Meeting, ProfessorRegistrationInput, ProfessorSearch, RevisionTarget, StudentUpdateRequest} from "../types";
 
+
 const getApi = () => {
     const token = localStorage.getItem('auth-storage');
     const authData = token ? JSON.parse(token) : null;
