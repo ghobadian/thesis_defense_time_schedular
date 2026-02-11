@@ -11,10 +11,13 @@ jobs:
     environment: prod
 
     steps:
-      - name: Force clean workspace
+      - name: Clean root-owned files from previous run
         run: |
-          sudo rm -rf "$GITHUB_WORKSPACE/backend/target" || true
-          sudo rm -rf "$GITHUB_WORKSPACE/backend/.m2" || true
+          docker run --rm \
+            -v "$GITHUB_WORKSPACE":/workspace \
+            alpine:latest \
+            sh -c "rm -rf /workspace/backend/target /workspace/backend/.m2 /workspace/target"
+
       - name: Checkout Code
         uses: actions/checkout@v4
 
