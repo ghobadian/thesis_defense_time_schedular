@@ -1,0 +1,33 @@
+jwt:
+  expiration: ${JWT_EXPIRATION}
+  secret: ${JWT_SECRET}
+logging:
+  level:
+    ir:
+      kghobad: DEBUG
+spring:
+  application:
+    name: thesis-defense-time-schedular
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${DB_URL}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        format_sql: true
+    show-sql: true
+    defer-datasource-initialization: true
+  liquibase.enabled: false
+  sql:
+    init:
+      mode: never
+      data-locations: classpath:data-prod.sql
+server:
+  servlet:
+    context-path: /api/v1
+frontend.url: ${FRONTEND_URL:localhost:3000}
+rate-limit.max-submitted-forms: ${RATE_LIMIT_MAX_SUBMITTED_FORMS:3}
