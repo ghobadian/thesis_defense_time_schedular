@@ -1,0 +1,46 @@
+@import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+
+/* Import Persian-friendly fonts */
+
+/* Base styles */
+body {
+    font-family: 'Inter', 'Vazirmatn', system-ui, sans-serif;
+}
+
+/* RTL specific styles */
+html[dir="rtl"] body {
+    font-family: 'Vazirmatn', 'Inter', system-ui, sans-serif;
+}
+
+/* Ensure proper text alignment in RTL */
+html[dir="rtl"] input,
+html[dir="rtl"] textarea {
+    text-align: right;
+}
+
+html[dir="ltr"] input,
+html[dir="ltr"] textarea {
+    text-align: left;
+}
+
