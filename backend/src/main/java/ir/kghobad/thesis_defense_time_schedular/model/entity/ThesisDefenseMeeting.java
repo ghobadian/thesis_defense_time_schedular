@@ -108,6 +108,26 @@ public class ThesisDefenseMeeting {
         }
     }
 
+    public void clearJuries() {
+        Iterator<DefenseMeetingProfessorAssociation> iterator =
+                this.defenseMeetingProfessorAssociations.iterator();
+
+        while (iterator.hasNext()) {
+            DefenseMeetingProfessorAssociation association = iterator.next();
+            Professor professor = association.getProfessor();
+
+            if (professor != null) {
+                professor.removeMeetingProfessorAssociation(association);
+            }
+
+            association.setDefenseMeeting(null);
+            association.setProfessor(null);
+
+            iterator.remove();
+        }
+    }
+
+
     private DefenseMeetingProfessorAssociation findOrCreateAssociation(Professor professor) {
         return this.defenseMeetingProfessorAssociations.stream()
                 .filter(a -> a.getProfessor().equals(professor))
