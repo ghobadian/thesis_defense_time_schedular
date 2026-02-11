@@ -1,40 +1,35 @@
-# Multi-stage build for optimized image size
-FROM maven:3.9-eclipse-temurin-21 AS build
-
+# ── Stage 1: Resolve dependencies (cached until pom.xml changes) ──
+FROM maven:3.9-eclipse-temurin-21 AS deps
 WORKDIR /app
-
-# Copy pom.xml and download dependencies (cached layer)
 COPY pom.xml .
 RUN mvn dependency:go-offline -B -q
 
-# Copy source code and build
+# ── Stage 2: Run tests (cached until src/ changes) ──
+FROM deps AS test
 COPY src ./src
-RUN mvn clean package -DskipTests -q
+RUN mvn verify -B -q
 
-# Production stage
+# ── Stage 3: Build production JAR (reuses test stage, no recompile) ──
+FROM test AS build
+RUN mvn package -DskipTests -q
+
+# ── Stage 4: Production runtime ──
 FROM eclipse-temurin:21-jre-alpine
 
 WORKDIR /app
 
-# Install wget for healthcheck
 RUN apk add --no-cache wget
 
-# Create a non-root user for security
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup
 
-# Copy the built JAR from build stage
 COPY --from=build /app/target/*.jar app.jar
 
-# Change ownership to non-root user
 RUN chown -R appuser:appgroup /app
 
-# Switch to non-root user
 USER appuser
 
-# Expose port 8080 (Spring Boot default)
 EXPOSE 8080
 
-# Run the application
 ENTRYPOINT ["java", \
     "-XX:+UseContainerSupport", \
     "-XX:MaxRAMPercentage=75.0", \
