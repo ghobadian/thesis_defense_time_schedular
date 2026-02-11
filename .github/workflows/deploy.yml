@@ -11,6 +11,10 @@ jobs:
     environment: prod
 
     steps:
+      - name: Force clean workspace
+        run: |
+          sudo rm -rf "$GITHUB_WORKSPACE/backend/target" || true
+          sudo rm -rf "$GITHUB_WORKSPACE/backend/.m2" || true
       - name: Checkout Code
         uses: actions/checkout@v4
 
