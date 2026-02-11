@@ -1,0 +1,69 @@
+# .github/workflows/deploy.yml
+name: Monorepo Deployment
+
+on:
+  push:
+    branches: ["main"]
+
+jobs:
+  test-and-deploy:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      # ── Backend Tests ──
+      - name: Run Backend Tests in Docker
+        run: |
+          docker run --rm \
+            -v "$PWD/backend":/app \
+            -w /app \
+            maven:3.9-eclipse-temurin-21 \
+            mvn verify -B
+
+      # ── Create Environment File ──
+      - name: Create .env file from secrets
+        run: |
+          cat > .env << EOF
+          DB_NAME=${{ secrets.DB_NAME }}
+          DB_USER=${{ secrets.DB_USER }}
+          DB_PASSWORD=${{ secrets.DB_PASSWORD }}
+          JWT_SECRET=${{ secrets.JWT_SECRET }}
+          JWT_EXPIRATION=${{ secrets.JWT_EXPIRATION }}
+          FRONTEND_URL=${{ secrets.FRONTEND_URL }}
+          RATE_LIMIT_MAX_SUBMITTED_FORMS=${{ secrets.RATE_LIMIT_MAX_SUBMITTED_FORMS }}
+          REACT_APP_API_BASE_URL=${{ secrets.REACT_APP_API_BASE_URL }}
+          EOF
+
+      # ── Build & Deploy ──
+      - name: Build and Deploy with Docker Compose
+        run: |
+          docker compose down
+          docker compose build --no-cache
+          docker compose up -d
+
+      # ── Cleanup ──
+      - name: Clean up old images
+        run: docker image prune -f
+
+      # ── Health Verification ──
+      - name: Wait for services to be healthy
+        run: |
+          echo "Waiting for services to start..."
+          sleep 30
+
+      - name: Show running containers
+        run: docker compose ps
+
+      - name: Show backend logs
+        run: docker compose logs thesis-backend --tail=50
+
+      - name: Show frontend logs
+        run: docker compose logs thesis-frontend --tail=50
+
+      - name: Verify frontend is responding
+        run: curl -f http://localhost:80 || echo "Frontend not responding yet"
+
+      - name: Verify backend health
+        run: curl -f http://localhost:80/api/health || echo "Backend not responding yet"
