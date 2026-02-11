@@ -2,6 +2,7 @@ package ir.kghobad.thesis_defense_time_schedular.controller;
 
 import ir.kghobad.thesis_defense_time_schedular.helper.BaseIntegrationTest;
 import ir.kghobad.thesis_defense_time_schedular.helper.ProfessorMockHelper;
+import ir.kghobad.thesis_defense_time_schedular.model.dto.meeting.MeetingJuriesReassignmentInputDTO;
 import ir.kghobad.thesis_defense_time_schedular.model.dto.user.SimpleUserOutputDto;
 import ir.kghobad.thesis_defense_time_schedular.model.dto.TimeSlotDTO;
 import ir.kghobad.thesis_defense_time_schedular.model.dto.meeting.AvailableTimeInputDTO;
@@ -36,6 +37,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class ProfessorControllerIntegrationTest extends BaseIntegrationTest {
     @Autowired
     private ProfessorMockHelper professorMockHelper;
+
     
     @Test
     public void testGetThesisForms_Success() throws Exception {
@@ -153,8 +155,22 @@ public class ProfessorControllerIntegrationTest extends BaseIntegrationTest {
         assertTrue(suggestedJuries.stream().anyMatch(s -> s.getId().equals(jury1.getId())));
         assertTrue(suggestedJuries.stream().anyMatch(s -> s.getId().equals(jury2.getId())));
         assertEquals(MeetingState.JURIES_SELECTED, meeting.getState());
+
+
+        MeetingJuriesReassignmentInputDTO juriesReassignmentInputDTO = new MeetingJuriesReassignmentInputDTO();
+        juriesReassignmentInputDTO.setMeetingId(meeting.getId());
+        juriesReassignmentInputDTO.setJuryIds(Set.of(jury1.getId()));
+        professorMockHelper.reassignJuries(juriesReassignmentInputDTO, token);
+
+        meeting = thesisDefenseMeetingRepository.findAll().getFirst();
+        suggestedJuries = meeting.getSuggestedJuries();
+        assertEquals(1, suggestedJuries.size());
+        assertFalse(suggestedJuries.stream().anyMatch(s -> s.getId().equals(manager.getId())));
+        assertTrue(suggestedJuries.stream().anyMatch(s -> s.getId().equals(jury1.getId())));
+        assertFalse(suggestedJuries.stream().anyMatch(s -> s.getId().equals(jury2.getId())));
+
     }
-    
+
     @Test
     public void testGiveTime_Success() throws Exception {
         Department dept = departmentRepository.save(testDataBuilder.createDepartment("Computer Science"));

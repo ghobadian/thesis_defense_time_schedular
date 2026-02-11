@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import ir.kghobad.thesis_defense_time_schedular.model.dto.meeting.AvailableTimeInputDTO;
 import ir.kghobad.thesis_defense_time_schedular.model.dto.meeting.MeetingCompletionInputDTO;
 import ir.kghobad.thesis_defense_time_schedular.model.dto.meeting.MeetingCreationInputDTO;
+import ir.kghobad.thesis_defense_time_schedular.model.dto.meeting.MeetingJuriesReassignmentInputDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -46,6 +47,15 @@ public class ProfessorMockHelper {
                         .header("Authorization", "Bearer " + token))
                 .andExpect(status().isOk())
                 .andExpect(content().string("Meeting created"));
+    }
+
+    public ResultActions reassignJuries(MeetingJuriesReassignmentInputDTO input, String token) throws Exception {
+        return mockMvc.perform(post("/professor/meetings/reassign-juries")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(input))
+                        .header("Authorization", "Bearer " + token))
+                .andExpect(status().isOk())
+                .andExpect(content().string("Juries reassigned"));
     }
 
     public ResultActions rejectForm(Long professorId, Long formId, String token) throws Exception {

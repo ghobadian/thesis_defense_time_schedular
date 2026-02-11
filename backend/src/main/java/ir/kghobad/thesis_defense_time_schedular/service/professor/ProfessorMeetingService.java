@@ -70,6 +70,8 @@ public class ProfessorMeetingService {
 
     private void suggestJuries(ThesisDefenseMeeting meeting, Set<Long> juryIds) {
         List<Professor> juries = professorRepository.findAllById(juryIds);
+        meeting.clearJuries();
+        meetingRepository.flush();
         meeting.addJury(juries);
         meeting.setUpdateDate(LocalDateTime.now());
 
@@ -279,4 +281,12 @@ public class ProfessorMeetingService {
         meetingRepository.save(meeting);//todo fix this. logic is flawed. only if student has chosen the time, manager can set location and update meeting state
     }
 
+    public void reassignJuries(MeetingJuriesReassignmentInputDTO input) {
+        if (!professorRepository.existsManagerById(jwtUtil.getCurrentUserId())) {
+            throw new AuthorizationDeniedException("Only managers can schedule meetings");
+        }
+
+        ThesisDefenseMeeting meeting = meetingRepository.findById(input.getMeetingId()).orElseThrow();
+        suggestJuries(meeting, input.getJuryIds());
+    }
 }

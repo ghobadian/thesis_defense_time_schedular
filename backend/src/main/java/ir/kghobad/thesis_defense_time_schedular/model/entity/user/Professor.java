@@ -116,6 +116,10 @@ public class Professor extends User {
         this.defenseMeetingProfessorAssociations.add(association);
     }
 
+    public void removeMeetingProfessorAssociation(DefenseMeetingProfessorAssociation association) {
+        this.defenseMeetingProfessorAssociations.remove(association);
+    }
+
     public boolean containsAssociation(DefenseMeetingProfessorAssociation association) {
         return this.defenseMeetingProfessorAssociations.contains(association);
     }
