@@ -16,7 +16,7 @@ jobs:
 
       # ── Backend Tests ──
       - name: Run Backend Tests in Docker
-          run: |
+        run: |
             docker run --rm \
               -u "$(id -u):$(id -g)" \
               -v "$PWD/backend":/app \
