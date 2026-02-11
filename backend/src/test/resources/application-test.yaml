@@ -29,7 +29,10 @@ spring:
   sql:
     init:
       mode: never
-#      data-locations: classpath:data-test.sql
 server:
   servlet:
     context-path: /api/v1
+frontend:
+  url: http://localhost:3000
+rate-limit:
+  max-submitted-forms: 3
