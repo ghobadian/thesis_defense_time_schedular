@@ -57,7 +57,7 @@ jobs:
             echo "=========================================="
             
             # Build and start the HTTP-only frontend (uses nginx-init.conf)
-            docker compose -f $COMPOSE_FILE --profile init build thesis-frontend-init
+            docker compose -f $COMPOSE_FILE --profile init build --no-cache thesis-frontend-init
             docker compose -f $COMPOSE_FILE --profile init up -d thesis-frontend-init
             
             # Wait for nginx to be ready
