@@ -71,7 +71,7 @@ jobs:
             
             # Request the certificate
             echo "Requesting SSL certificate from Let's Encrypt..."
-            docker compose -f $COMPOSE_FILE run --rm --entrypoint "" certbot certbot certonly
+            docker compose -f $COMPOSE_FILE run --rm --entrypoint "certbot" certbot certonly
             docker compose -f $COMPOSE_FILE run --rm certbot certonly \
               --webroot \
               --webroot-path=/var/www/certbot \
@@ -87,7 +87,7 @@ jobs:
               echo "✅ SSL certificate generated successfully!"
             else
               echo "❌ SSL certificate generation failed!"
-              docker compose -f $COMPOSE_FILE run --rm --entrypoint "" certbot certbot certificates
+              docker compose -f $COMPOSE_FILE run --rm --entrypoint "certbot" certbot certificates
               exit 1
             fi
             
