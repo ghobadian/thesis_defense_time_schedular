@@ -35,7 +35,7 @@ jobs:
           MAX_FUTURE_DAYS=${{ vars.MAX_FUTURE_DAYS }}
           RATE_LIMIT_MAX_SUBMITTED_FORMS=${{ vars.RATE_LIMIT_MAX_SUBMITTED_FORMS }}
           REACT_APP_API_BASE_URL=${{ vars.REACT_APP_API_BASE_URL }}
-          SPRING_PROFILES_ACTIVE=${{ secrets.SPRING_PROFILES_ACTIVE }}
+          SPRING_PROFILES_ACTIVE=${{ var.SPRING_PROFILES_ACTIVE }}
           EOF
 
       - name: Check SSL certificate exists
