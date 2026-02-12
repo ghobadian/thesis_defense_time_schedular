@@ -1,5 +1,5 @@
 services:
-  postgres:
+  thesis-db:
     image: postgres:16-alpine
     container_name: thesis-db
     environment:
@@ -36,7 +36,7 @@ services:
       RATE_LIMIT_MAX_SUBMITTED_FORMS: ${RATE_LIMIT_MAX_SUBMITTED_FORMS}
       SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE}
     depends_on:
-      postgres:
+      thesis-db:
         condition: service_healthy
     networks:
       - thesis-network
@@ -47,12 +47,29 @@ services:
       timeout: 10s
       retries: 3
 
+  thesis-frontend-init:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.prod
+      args:
+        NGINX_CONF: nginx-init.conf
+    container_name: thesis-frontend-init
+    ports:
+      - "80:80"
+    volumes:
+      - certbot_webroot:/var/www/certbot
+    networks:
+      - thesis-network
+    profiles:
+      - init
+
   frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile.prod
       args:
         REACT_APP_API_BASE_URL: ${REACT_APP_API_BASE_URL}
+        NGINX_CONF: nginx-prod.conf
     container_name: thesis-frontend
     ports:
       - "80:80"
@@ -67,13 +84,15 @@ services:
     restart: unless-stopped
 
   certbot:
-    image: certbot/certbot
+    image: certbot/certbot:latest
     container_name: thesis-certbot
     volumes:
       - certbot_webroot:/var/www/certbot
       - certbot_certs:/etc/letsencrypt
     entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
     restart: unless-stopped
+    networks:
+      - thesis-network
 
 volumes:
   postgres_data:

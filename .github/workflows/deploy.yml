@@ -43,27 +43,65 @@ jobs:
       # ── Build & Deploy ──
       - name: Build and Deploy with Docker Compose
         run: |
-          docker compose -f docker-compose.prod.yml down
-          if [ ! -f "/var/lib/docker/volumes/$(basename $PWD)_certbot_certs/_data/live/thesis.kghobad.ir/fullchain.pem" ]; then
+          COMPOSE_FILE="docker-compose.prod.yml"
+          CERT_PATH="/var/lib/docker/volumes/thesis_defense_time_schedular_certbot_certs/_data/live/thesis.kghobad.ir/fullchain.pem"
+          
+          # Stop any running containers
+          docker compose -f $COMPOSE_FILE --profile init down --remove-orphans 2>/dev/null || true
+          docker compose -f $COMPOSE_FILE down --remove-orphans 2>/dev/null || true
+          
+          # Check if SSL certificate exists
+          if [ ! -f "$CERT_PATH" ]; then
+            echo "=========================================="
             echo "No SSL cert found. Running initial cert generation..."
+            echo "=========================================="
             
-            # Start only frontend on port 80 with a temp nginx config
-            docker compose -f docker-compose.prod.yml up -d frontend
-            sleep 5
+            # Build and start the HTTP-only frontend (uses nginx-init.conf)
+            docker compose -f $COMPOSE_FILE --profile init build thesis-frontend-init
+            docker compose -f $COMPOSE_FILE --profile init up -d thesis-frontend-init
             
-            # Get certificate
-            docker compose -f docker-compose.prod.yml run --rm certbot certonly \
+            # Wait for nginx to be ready
+            echo "Waiting for nginx to start..."
+            sleep 10
+            
+            # Verify nginx is running and serving ACME path
+            echo "Testing ACME challenge path..."
+            docker compose -f $COMPOSE_FILE --profile init logs thesis-frontend-init
+            curl -v http://localhost/.well-known/acme-challenge/test 2>&1 || echo "Note: 404 is expected, we just need nginx to respond"
+            
+            # Request the certificate
+            echo "Requesting SSL certificate from Let's Encrypt..."
+            docker compose -f $COMPOSE_FILE run --rm certbot certonly \
               --webroot \
               --webroot-path=/var/www/certbot \
               -d thesis.kghobad.ir \
               --email kooshaghobadian@gmail.com \
               --agree-tos \
-              --no-eff-email
+              --no-eff-email \
+              --non-interactive \
+              --verbose
             
-            docker -f docker-compose.prod.yml compose down
+            # Check if cert was created
+            if [ -f "$CERT_PATH" ]; then
+              echo "✅ SSL certificate generated successfully!"
+            else
+              echo "❌ SSL certificate generation failed!"
+              docker compose -f $COMPOSE_FILE run --rm certbot certificates
+              exit 1
+            fi
+            
+            # Stop the init frontend
+            docker compose -f $COMPOSE_FILE --profile init down
+          else
+            echo "✅ SSL cert already exists, skipping generation."
           fi
-          docker compose -f docker-compose.prod.yml build
-          docker compose -f docker-compose.prod.yml up -d
+          
+          # Now build and deploy the full production stack
+          echo "=========================================="
+          echo "Building and deploying production stack..."
+          echo "=========================================="
+          docker compose -f $COMPOSE_FILE build
+          docker compose -f $COMPOSE_FILE up -d
 
       # ── Cleanup ──
       - name: Clean up old images
@@ -76,10 +114,10 @@ jobs:
           sleep 30
 
       - name: Show running containers
-        run: docker compose ps
+        run: docker compose -f docker-compose.prod.yml ps
 
       - name: Show backend logs
-        run: docker compose logs thesis-backend --tail=50
+        run: docker compose -f docker-compose.prod.yml logs thesis-backend --tail=50
 
       - name: Show frontend logs
-        run: docker compose logs thesis-frontend --tail=50
+        run: docker compose -f docker-compose.prod.yml logs thesis-frontend --tail=50
