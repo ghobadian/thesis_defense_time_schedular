@@ -1,6 +1,9 @@
+app.max-future-days: 30
 jwt:
   expiration: 86400000
   secret: mySecretKeyForJWTShouldBeAtLeast256BitsLongForHS256Algorithm
+  refresh:
+    expiration: 604800000
 logging:
   level:
     ir:
@@ -18,7 +21,7 @@ spring:
   datasource:
     driver-class-name: org.h2.Driver
     password: ''
-    url: jdbc:h2:mem:testdb;MODE=MySQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
     username: sa
   jpa:
     hibernate:
@@ -26,13 +29,6 @@ spring:
     properties:
       hibernate:
         format_sql: true
-#        dialect: org.hibernate.dialect.MySQLDialect
-#      jakarta:
-#        persistence:
-#          schema-generation:
-#            scripts:
-#              action: create
-#              create-target: src/main/resources/db/migration/V1__initial_schema.sql
     show-sql: true
     defer-datasource-initialization: true
   liquibase.enabled: false

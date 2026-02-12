@@ -19,13 +19,13 @@ import java.util.function.Function;
 
 @Component
 public class JwtUtil {
-    @Value("${jwt.secret:mySecretKeyForJWTShouldBeAtLeast256BitsLongForHS256Algorithm}")
+    @Value("${jwt.secret}")
     private String secret;
 
-    @Value("${jwt.expiration:86400000}")
+    @Value("${jwt.expiration}")
     private Long expiration;
 
-    @Value("${jwt.refresh.expiration:604800000}")
+    @Value("${jwt.refresh.expiration}")
     private Long refreshExpiration;
 
     private SecretKey getSigningKey() {

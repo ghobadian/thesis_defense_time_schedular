@@ -51,21 +51,37 @@ services:
   frontend:
     build:
       context: ./frontend
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.prod
       args:
         REACT_APP_API_BASE_URL: ${REACT_APP_API_BASE_URL}
     container_name: thesis-frontend
     ports:
       - "80:80"
       - "443:443"
+    volumes:
+      - certbot_webroot:/var/www/certbot:ro
+      - certbot_certs:/etc/letsencrypt:ro
     depends_on:
       - backend
     networks:
       - thesis-network
     restart: unless-stopped
 
+  certbot:
+    image: certbot/certbot
+    container_name: thesis-certbot
+    volumes:
+      - certbot_webroot:/var/www/certbot
+      - certbot_certs:/etc/letsencrypt
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+    restart: unless-stopped
+
 volumes:
   postgres_data:
+    driver: local
+  certbot_webroot:
+    driver: local
+  certbot_certs:
     driver: local
 
 networks:

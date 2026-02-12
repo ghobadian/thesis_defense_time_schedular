@@ -1,6 +1,9 @@
+app.max-future-days: ${MAX_FUTURE_DAYS}
 jwt:
   expiration: ${JWT_EXPIRATION}
   secret: ${JWT_SECRET}
+  refresh:
+    expiration: ${JWT_REFRESH_EXPIRATION}
 logging:
   level:
     ir:
@@ -18,12 +21,11 @@ spring:
       ddl-auto: validate
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
-    show-sql: true
-    defer-datasource-initialization: true
+    show-sql: false
   liquibase:
-    enabled: false
+    enabled: true
+    change-log: classpath:db/changelog/db.changelog-master.yaml
   sql:
     init:
       mode: never

@@ -20,7 +20,7 @@ public class AuthenticationService {
     private final JwtUtil jwtUtil;
     private final AuthenticationManager authenticationManager;
     
-    @Value("${jwt.expiration:86400000}")
+    @Value("${jwt.expiration}")
     private Long jwtExpiration;
 
     public AuthenticationService(UserRepository userRepository, 
