@@ -26,11 +26,15 @@ jobs:
         run: |
           cat > .env << EOF
           DB_NAME=${{ vars.DB_NAME }}
-          DB_USER=${{ vars.DB_USER }}
           DB_PASSWORD=${{ secrets.DB_PASSWORD }}
-          JWT_SECRET=${{ secrets.JWT_SECRET }}
-          JWT_EXPIRATION=${{ vars.JWT_EXPIRATION }}
+          DB_URL=${{ vars.DB_URL }}
+          DB_USER=${{ vars.DB_USER }}
+          DOMAIN=${{ vars.DOMAIN }}
           FRONTEND_URL=${{ vars.FRONTEND_URL }}
+          JWT_EXPIRATION=${{ vars.JWT_EXPIRATION }}
+          JWT_REFRESH_EXPIRATION=${{ vars.JWT_REFRESH_EXPIRATION }}
+          JWT_SECRET=${{ secrets.JWT_SECRET }}
+          MAX_FUTURE_DAYS=${{ vars.MAX_FUTURE_DAYS }}
           RATE_LIMIT_MAX_SUBMITTED_FORMS=${{ vars.RATE_LIMIT_MAX_SUBMITTED_FORMS }}
           REACT_APP_API_BASE_URL=${{ vars.REACT_APP_API_BASE_URL }}
           SPRING_PROFILES_ACTIVE=${{ secrets.SPRING_PROFILES_ACTIVE }}
