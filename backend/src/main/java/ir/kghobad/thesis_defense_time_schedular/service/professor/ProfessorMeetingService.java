@@ -40,7 +40,7 @@ public class ProfessorMeetingService {
     private final ProfessorRepository professorRepository;
     private final TimeSlotRepository timeSlotRepository;
 
-    @Value("${app.max-future-days:30}")
+    @Value("${app.max-future-days}")
     private long maxFutureDays;
 
     public List<ThesisDefenseMeetingOutputDTO> getMeetings() {

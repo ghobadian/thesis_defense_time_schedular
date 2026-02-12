@@ -39,9 +39,27 @@ jobs:
       # ── Build & Deploy ──
       - name: Build and Deploy with Docker Compose
         run: |
-          docker compose down
-          docker compose build
-          docker compose up -d
+          docker compose -f docker-compose.prod.yml down
+          if [ ! -f "/var/lib/docker/volumes/$(basename $PWD)_certbot_certs/_data/live/thesis.kghobad.ir/fullchain.pem" ]; then
+            echo "No SSL cert found. Running initial cert generation..."
+            
+            # Start only frontend on port 80 with a temp nginx config
+            docker compose up -d frontend
+            sleep 5
+            
+            # Get certificate
+            docker compose run --rm certbot certonly \
+              --webroot \
+              --webroot-path=/var/www/certbot \
+              -d thesis.kghobad.ir \
+              --email your-email@example.com \
+              --agree-tos \
+              --no-eff-email
+            
+            docker compose down
+          fi
+          docker compose -f docker-compose.prod.yml build
+          docker compose -f docker-compose.prod.yml up -d
 
       # ── Cleanup ──
       - name: Clean up old images
