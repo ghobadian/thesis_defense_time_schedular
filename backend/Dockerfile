@@ -4,6 +4,7 @@ WORKDIR /app
 COPY pom.xml .
 RUN mvn dependency:go-offline -B -q
 
+
 # ── Stage 2: Build production JAR (reuses test stage, no recompile) ──
 FROM deps AS build
 RUN mvn package -DskipTests -q
