@@ -35,7 +35,7 @@ jobs:
           MAX_FUTURE_DAYS=${{ vars.MAX_FUTURE_DAYS }}
           RATE_LIMIT_MAX_SUBMITTED_FORMS=${{ vars.RATE_LIMIT_MAX_SUBMITTED_FORMS }}
           REACT_APP_API_BASE_URL=${{ vars.REACT_APP_API_BASE_URL }}
-          SPRING_PROFILES_ACTIVE=${{ var.SPRING_PROFILES_ACTIVE }}
+          SPRING_PROFILES_ACTIVE=${{ vars.SPRING_PROFILES_ACTIVE }}
           EOF
 
       - name: Check SSL certificate exists
@@ -63,7 +63,7 @@ jobs:
 
       - name: Wait and verify
         run: |
-          sleep 30
+          sleep 60
           docker compose -f docker-compose.prod.yml ps
           docker compose -f docker-compose.prod.yml logs thesis-backend --tail=20
           docker compose -f docker-compose.prod.yml logs thesis-frontend --tail=20
