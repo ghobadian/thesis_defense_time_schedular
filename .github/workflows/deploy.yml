@@ -71,8 +71,16 @@ jobs:
           
             # Request the certificate
             echo "Requesting SSL certificate from Let's Encrypt..."
-            docker compose -f $COMPOSE_FILE run --rm --entrypoint "certbot" certbot certonly
-            docker compose -f $COMPOSE_FILE run --rm --entrypoint "sh" certbot -c "certbot certonly --webroot --webroot-path=/var/www/certbot -d thesis.kghobad.ir --email kooshaghobadian@gmail.com --agree-tos --no-eff-email --non-interactive --verbose"
+            docker compose -f $COMPOSE_FILE run --rm certbot \
+              certonly \
+              --webroot \
+              --webroot-path=/var/www/certbot \
+              -d thesis.kghobad.ir \
+              --email kooshaghobadian@gmail.com \
+              --agree-tos \
+              --no-eff-email \
+              --non-interactive \
+              --verbose
           
             # Check if cert was created
             if [ -f "$CERT_PATH" ]; then
