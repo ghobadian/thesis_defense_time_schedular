@@ -25,7 +25,7 @@ services:
     environment:
       DB_NAME: ${DB_NAME}
       DB_PASSWORD: ${DB_PASSWORD}
-      DB_URL: jdbc:postgresql://postgres:5432/${DB_NAME}
+      DB_URL: jdbc:postgresql://thesis-db:5432/${DB_NAME}
       DB_USER: ${DB_USER}
       DOMAIN: ${DOMAIN}
       FRONTEND_URL: ${FRONTEND_URL}
@@ -47,59 +47,26 @@ services:
       timeout: 10s
       retries: 3
 
-  thesis-frontend-init:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile.prod
-      args:
-        NGINX_CONF: nginx-init.conf
-    container_name: thesis-frontend-init
-    ports:
-      - "80:80"
-    volumes:
-      - certbot_webroot:/var/www/certbot
-    networks:
-      - thesis-network
-    profiles:
-      - init
-
   frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile.prod
       args:
         REACT_APP_API_BASE_URL: ${REACT_APP_API_BASE_URL}
-        NGINX_CONF: nginx-prod.conf
     container_name: thesis-frontend
     ports:
       - "80:80"
       - "443:443"
     volumes:
-      - certbot_webroot:/var/www/certbot:ro
-      - certbot_certs:/etc/letsencrypt:ro
+      - /etc/letsencrypt:/etc/letsencrypt:ro
     depends_on:
       - backend
     networks:
       - thesis-network
     restart: unless-stopped
 
-  certbot:
-    image: certbot/certbot:latest
-    container_name: thesis-certbot
-    volumes:
-      - certbot_webroot:/var/www/certbot
-      - certbot_certs:/etc/letsencrypt
-    command: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
-    restart: unless-stopped
-    networks:
-      - thesis-network
-
 volumes:
   postgres_data:
-    driver: local
-  certbot_webroot:
-    driver: local
-  certbot_certs:
     driver: local
 
 networks:
