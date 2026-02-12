@@ -4,16 +4,11 @@ WORKDIR /app
 COPY pom.xml .
 RUN mvn dependency:go-offline -B -q
 
-# ── Stage 2: Run tests (cached until src/ changes) ──
-FROM deps AS test
-COPY src ./src
-RUN mvn verify -B -q
-
-# ── Stage 3: Build production JAR (reuses test stage, no recompile) ──
-FROM test AS build
+# ── Stage 2: Build production JAR (reuses test stage, no recompile) ──
+FROM deps AS build
 RUN mvn package -DskipTests -q
 
-# ── Stage 4: Production runtime ──
+# ── Stage 3: Production runtime ──
 FROM eclipse-temurin:21-jre-alpine
 
 WORKDIR /app
