@@ -1,4 +1,5 @@
 databaseChangeLog:
-  - includeAll:
-      path: db/changelog/migrations
-      relativeToChangelogFile: false
+  - include:
+      file: db/changelog/init-changelog.xml
+  - include:
+      file: db/changelog/seed-data-changelog.xml
