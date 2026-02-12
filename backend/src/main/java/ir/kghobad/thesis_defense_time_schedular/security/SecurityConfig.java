@@ -68,6 +68,8 @@ public class SecurityConfig {
             .sessionManagement(session ->
                 session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
+                .requestMatchers("/actuator/health").permitAll()
+                .requestMatchers("/actuator/**").denyAll()
                 .requestMatchers("/auth/**").permitAll()
                 .requestMatchers("/admin/**").hasAuthority(Role.ADMIN.getValue())
                 .requestMatchers("/professor/**").hasAnyAuthority(Role.PROFESSOR.getValue(), Role.MANAGER.getValue())
