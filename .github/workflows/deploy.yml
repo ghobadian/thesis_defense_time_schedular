@@ -64,6 +64,6 @@ jobs:
       - name: Wait and verify
         run: |
           sleep 60
-          docker compose -f docker-compose.prod.yml ps
-          docker compose -f docker-compose.prod.yml logs thesis-backend --tail=20
-          docker compose -f docker-compose.prod.yml logs thesis-frontend --tail=20
+          docker ps
+          docker logs thesis-backend --tail=20
+          docker logs thesis-frontend --tail=20
