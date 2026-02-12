@@ -1,4 +1,4 @@
-app.max-future-days: ${MAX_FUTURE_DAYS}
+max-future-days: ${MAX_FUTURE_DAYS}
 jwt:
   expiration: ${JWT_EXPIRATION}
   secret: ${JWT_SECRET}
