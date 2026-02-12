@@ -1,3 +1,46 @@
+# .github/workflows/deploy.yml
+name: Monorepo Deployment
+
+on:
+  push:
+    branches: ["main"]
+
+jobs:
+  test-and-deploy:
+    runs-on: self-hosted
+    environment: prod
+
+    steps:
+      - name: Clean root-owned files from previous run
+        run: |
+          docker run --rm \
+            -v "$GITHUB_WORKSPACE":/workspace \
+            alpine:latest \
+            sh -c "rm -rf /workspace/backend/target /workspace/backend/.m2 /workspace/target"
+
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      # ── Create Environment File ──
+      - name: Create .env file from secrets
+        run: |
+          cat > .env << EOF
+          DB_NAME=${{ vars.DB_NAME }}
+          DB_PASSWORD=${{ secrets.DB_PASSWORD }}
+          DB_URL=${{ vars.DB_URL }}
+          DB_USER=${{ vars.DB_USER }}
+          DOMAIN=${{ vars.DOMAIN }}
+          FRONTEND_URL=${{ vars.FRONTEND_URL }}
+          JWT_EXPIRATION=${{ vars.JWT_EXPIRATION }}
+          JWT_REFRESH_EXPIRATION=${{ vars.JWT_REFRESH_EXPIRATION }}
+          JWT_SECRET=${{ secrets.JWT_SECRET }}
+          MAX_FUTURE_DAYS=${{ vars.MAX_FUTURE_DAYS }}
+          RATE_LIMIT_MAX_SUBMITTED_FORMS=${{ vars.RATE_LIMIT_MAX_SUBMITTED_FORMS }}
+          REACT_APP_API_BASE_URL=${{ vars.REACT_APP_API_BASE_URL }}
+          SPRING_PROFILES_ACTIVE=${{ secrets.SPRING_PROFILES_ACTIVE }}
+          EOF
+
+      # ── Build & Deploy ──
       - name: Build and Deploy with Docker Compose
         run: |
           COMPOSE_FILE="docker-compose.prod.yml"
@@ -28,21 +71,22 @@
           
             # Request the certificate
             echo "Requesting SSL certificate from Let's Encrypt..."
+            docker compose -f $COMPOSE_FILE run --rm --entrypoint "certbot" certbot certonly
             docker compose -f $COMPOSE_FILE run --rm --entrypoint "sh" certbot -c "certbot certonly --webroot --webroot-path=/var/www/certbot -d thesis.kghobad.ir --email kooshaghobadian@gmail.com --agree-tos --no-eff-email --non-interactive --verbose"
-            
+          
             # Check if cert was created
             if [ -f "$CERT_PATH" ]; then
-              echo "SSL certificate generated successfully!"
+              echo "✅ SSL certificate generated successfully!"
             else
-              echo "SSL certificate generation failed!"
-              docker compose -f $COMPOSE_FILE run --rm --entrypoint "sh" certbot -c "certbot certificates"
+              echo "❌ SSL certificate generation failed!"
+              docker compose -f $COMPOSE_FILE run --rm --entrypoint "certbot" certbot certificates
               exit 1
             fi
           
             # Stop the init frontend
             docker compose -f $COMPOSE_FILE --profile init down
           else
-            echo "SSL cert already exists, skipping generation."
+            echo "✅ SSL cert already exists, skipping generation."
           fi
           
           # Now build and deploy the full production stack
@@ -51,3 +95,22 @@
           echo "=========================================="
           docker compose -f $COMPOSE_FILE build
           docker compose -f $COMPOSE_FILE up -d
+
+      # ── Cleanup ──
+      - name: Clean up old images
+        run: docker image prune -f
+
+      # ── Health Verification ──
+      - name: Wait for services to be healthy
+        run: |
+          echo "Waiting for services to start..."
+          sleep 30
+
+      - name: Show running containers
+        run: docker compose -f docker-compose.prod.yml ps
+
+      - name: Show backend logs
+        run: docker compose -f docker-compose.prod.yml logs thesis-backend --tail=50
+
+      - name: Show frontend logs
+        run: docker compose -f docker-compose.prod.yml logs thesis-frontend --tail=50
