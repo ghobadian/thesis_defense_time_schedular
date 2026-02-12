@@ -48,7 +48,7 @@ jobs:
             echo "No SSL cert found. Running initial cert generation..."
             
             # Start only frontend on port 80 with a temp nginx config
-            docker compose up -d frontend
+            docker compose -f docker-compose.prod.yml up -d frontend
             sleep 5
             
             # Get certificate
@@ -60,7 +60,7 @@ jobs:
               --agree-tos \
               --no-eff-email
             
-            docker compose down
+            docker -f docker-compose.prod.yml compose down
           fi
           docker compose -f docker-compose.prod.yml build
           docker compose -f docker-compose.prod.yml up -d
