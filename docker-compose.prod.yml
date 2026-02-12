@@ -1,7 +1,7 @@
 # docker-compose.yml
 services:
   postgres:
-    image: postgres:15-alpine
+    image: postgres:16-alpine
     container_name: thesis-db
     environment:
       POSTGRES_DB: ${DB_NAME}
