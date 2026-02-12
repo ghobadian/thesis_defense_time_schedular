@@ -38,28 +38,25 @@ jobs:
           SPRING_PROFILES_ACTIVE=${{ secrets.SPRING_PROFILES_ACTIVE }}
           EOF
 
-      - name: Ensure SSL certificate exists
+      - name: Check SSL certificate exists
         run: |
           if [ ! -f /etc/letsencrypt/live/thesis.kghobad.ir/fullchain.pem ]; then
-            echo "Obtaining SSL certificate..."
-            # Stop anything on port 80 so certbot can use it
-            docker compose -f docker-compose.prod.yml down --remove-orphans 2>/dev/null || true
-            sudo certbot certonly \
-              --standalone \
-              -d thesis.kghobad.ir \
-              --email kooshaghobadian@gmail.com \
-              --agree-tos \
-              --no-eff-email \
-              --non-interactive
-          else
-            echo "✅ SSL certificate already exists."
+            echo "============================================"
+            echo "❌ SSL certificate not found!"
+            echo ""
+            echo "SSH into the server and run:"
+            echo "  sudo certbot certonly --standalone -d thesis.kghobad.ir --email kooshaghobadian@gmail.com --agree-tos --non-interactive"
+            echo "============================================"
+            exit 1
           fi
+          echo "✅ SSL certificate found."
 
       - name: Build and Deploy
         run: |
           docker compose -f docker-compose.prod.yml down --remove-orphans 2>/dev/null || true
           docker compose -f docker-compose.prod.yml build
           docker compose -f docker-compose.prod.yml up -d
+
 
       - name: Clean up old images
         run: docker image prune -f
