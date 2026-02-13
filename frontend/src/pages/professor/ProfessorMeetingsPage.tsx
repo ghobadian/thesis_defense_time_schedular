@@ -205,7 +205,6 @@ export const ProfessorMeetingsPage: React.FC = () => {
                     formId={reassignMeeting.thesis?.id ?? 0}
                     onJuriesSelected={handleReassignJuries}
                     instructorId={reassignMeeting.thesis?.instructorId}
-                    minJuryCount={3}
                 />
             )}
         </>
