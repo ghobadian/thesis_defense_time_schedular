@@ -1,6 +1,6 @@
 // src/pages/professor/MyMeetings.tsx
 import React, {useState} from 'react';
-import {useQuery} from '@tanstack/react-query';
+import {useQuery, useMutation} from '@tanstack/react-query';
 import {useNavigate} from 'react-router-dom';
 import {professorAPI} from '../../api/professor.api';
 import {MeetingView} from '../../components/common/MeetingView';
@@ -20,6 +20,21 @@ export const ProfessorMeetingsPage: React.FC = () => {
     const { data: meetings, isLoading, error, refetch } = useQuery({
         queryKey: ['myMeetings'],
         queryFn: professorAPI.getMyMeetings,
+    });
+
+    // Cancel meeting mutation
+    const cancelMeetingMutation = useMutation({
+        mutationFn: (meetingId: number) => professorAPI.cancelMeeting(meetingId),
+        onSuccess: () => {
+            refetch();
+        },
+        onError: (error: any) => {
+            const message =
+                error?.response?.data?.message ||
+                error?.message ||
+                'Failed to cancel the meeting. Please try again.';
+            alert(message);
+        },
     });
 
     const canSelectTime = (meeting: Meeting): boolean => {
@@ -49,6 +64,19 @@ export const ProfessorMeetingsPage: React.FC = () => {
             MeetingState.STUDENT_SPECIFIED_TIME,
             MeetingState.SCHEDULED
         ].includes(meeting.state);
+    };
+
+    // Determine if the current user can cancel a given meeting
+    const canCancelMeeting = (meeting: Meeting): boolean => {
+        if (meeting.state === MeetingState.COMPLETED || meeting.state === MeetingState.CANCELED) {
+            return false;
+        }
+
+        return role === UserRole.MANAGER;
+    };
+
+    const handleCancelMeeting = (meeting: Meeting) => {
+        cancelMeetingMutation.mutate(meeting.id);
     };
 
     const handleMeetingAction = (meeting: Meeting) => {
@@ -93,6 +121,10 @@ export const ProfessorMeetingsPage: React.FC = () => {
                 renderTimeSlotsComparison={(meeting) => (
                     <TimeSlotsComparison meetingId={meeting.id} />
                 )}
+                // Cancel meeting props
+                onCancelMeeting={handleCancelMeeting}
+                canCancelMeeting={canCancelMeeting}
+                isCancelling={cancelMeetingMutation.isPending}
                 renderAdditionalContent={(meeting, isExpanded) => (
                     <>
                         {/* Schedule Meeting Button for Manager */}

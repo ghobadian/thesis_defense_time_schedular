@@ -246,10 +246,6 @@ public class ProfessorMeetingService {
         ThesisDefenseMeeting meeting = meetingRepository.findById(meetingId)
                 .orElseThrow(() -> new RuntimeException("Meeting not found"));
 
-        if (meeting.getState() != MeetingState.SCHEDULED) {
-            throw new IllegalStateException("Only scheduled meetings can be cancelled");
-        }
-
         meeting.setState(MeetingState.CANCELED);
         meeting.setUpdateDate(LocalDateTime.now());
         meetingRepository.save(meeting);
