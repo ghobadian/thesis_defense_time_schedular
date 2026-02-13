@@ -13,12 +13,12 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
 @Table(name = "professor")
 @DiscriminatorValue("PROFESSOR")
-@EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @AllArgsConstructor
 @NoArgsConstructor
@@ -45,7 +45,6 @@ public class Professor extends User {
     public Role getRole() {
         return isManager() ? Role.MANAGER : Role.PROFESSOR;
     }
-
 
     public void addStudent(Student student) {
         students.add(student);
@@ -122,5 +121,17 @@ public class Professor extends User {
 
     public boolean containsAssociation(DefenseMeetingProfessorAssociation association) {
         return this.defenseMeetingProfessorAssociations.contains(association);
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (!(object instanceof Professor professor)) return false;
+        if (!super.equals(object)) return false;
+        return manager == professor.manager;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), manager);
     }
 }

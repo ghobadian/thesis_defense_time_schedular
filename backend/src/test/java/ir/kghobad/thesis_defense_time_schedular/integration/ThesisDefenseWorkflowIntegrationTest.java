@@ -2,6 +2,9 @@ package ir.kghobad.thesis_defense_time_schedular.integration;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import ir.kghobad.thesis_defense_time_schedular.helper.*;
+import ir.kghobad.thesis_defense_time_schedular.helper.apiHelper.AdminMockHelper;
+import ir.kghobad.thesis_defense_time_schedular.helper.apiHelper.ProfessorMockHelper;
+import ir.kghobad.thesis_defense_time_schedular.helper.apiHelper.StudentMockHelper;
 import ir.kghobad.thesis_defense_time_schedular.model.dto.TimeSlotDTO;
 import ir.kghobad.thesis_defense_time_schedular.model.dto.form.ThesisFormInputDTO;
 import ir.kghobad.thesis_defense_time_schedular.model.dto.meeting.*;

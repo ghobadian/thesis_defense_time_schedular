@@ -82,11 +82,12 @@ public class AdminService {// TODO check security of deletion and update apis
     }
 
     public void changePassword(PasswordChangeInputDTO input) {
-        Admin admin = adminRepository.findById(jwtUtil.getCurrentUserId()).orElseThrow();
-        boolean matches = passwordEncoder.matches(input.getCurrentPassword(), admin.getPassword());
+        Admin user = adminRepository.findById(jwtUtil.getCurrentUserId()).orElseThrow();
+        boolean matches = passwordEncoder.matches(input.getCurrentPassword(), user.getPassword());
         if (!matches) {
             throw new RuntimeException("Wrong password");
         }
-        admin.setPassword(passwordEncoder.encode(input.getNewPassword()));
+        user.setPassword(passwordEncoder.encode(input.getNewPassword()));
+        adminRepository.save(user);
     }
 }

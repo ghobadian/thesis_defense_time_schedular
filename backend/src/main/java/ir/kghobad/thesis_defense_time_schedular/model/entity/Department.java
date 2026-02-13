@@ -6,6 +6,7 @@ import ir.kghobad.thesis_defense_time_schedular.model.entity.user.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -13,6 +14,7 @@ import java.util.Set;
 @Entity
 @Table(name = "department")
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+@ToString(of = {"name"})
 public class Department {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

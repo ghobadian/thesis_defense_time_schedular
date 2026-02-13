@@ -35,9 +35,9 @@ public class ProfessorController {
         return ResponseEntity.ok(service.getMyStudents());
     }
 
-    @GetMapping("/list")
-    public ResponseEntity<List<SimpleUserOutputDto>> getProfessors(){
-        return ResponseEntity.ok(service.getProfessors());
+    @GetMapping("/list-competent-juries")
+    public ResponseEntity<List<SimpleUserOutputDto>> getAllCompetentJuriesForSelection(){
+        return ResponseEntity.ok(service.getAllCompetentJuriesForSelection());
     }
 
     @PutMapping("/update-phone")

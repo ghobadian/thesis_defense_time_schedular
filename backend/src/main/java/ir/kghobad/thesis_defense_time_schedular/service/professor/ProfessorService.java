@@ -40,7 +40,7 @@ public class ProfessorService {
         return timeSlotRepository.findByJuryId(currentUserId).stream().map(TimeSlotDTO::from).toList();
     }
 
-    public List<SimpleUserOutputDto> getProfessors() {
+    public List<SimpleUserOutputDto> getAllCompetentJuriesForSelection() {
         return professorRepository.findAllColleagues(jwtUtil.getCurrentUserId()).stream()
                 .map(SimpleUserOutputDto::from).toList();
     }
@@ -61,11 +61,13 @@ public class ProfessorService {
     }
 
     public void changePassword(PasswordChangeInputDTO input) {
-        Professor professor = professorRepository.findById(jwtUtil.getCurrentUserId()).orElseThrow();
-        boolean matches = passwordEncoder.matches(input.getCurrentPassword(), professor.getPassword());
+        Professor user = professorRepository.findById(jwtUtil.getCurrentUserId()).orElseThrow();
+        boolean matches = passwordEncoder.matches(input.getCurrentPassword(), user.getPassword());
         if (!matches) {
             throw new RuntimeException("Wrong password");
         }
-        professor.setPassword(passwordEncoder.encode(input.getNewPassword()));
+        user.setPassword(passwordEncoder.encode(input.getNewPassword()));
+        professorRepository.save(user);
+
     }
 }

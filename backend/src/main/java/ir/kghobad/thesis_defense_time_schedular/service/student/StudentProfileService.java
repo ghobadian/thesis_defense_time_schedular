@@ -18,12 +18,13 @@ public class StudentProfileService {
     private final JwtUtil jwtUtil;
 
     public void changePassword(PasswordChangeInputDTO input) {
-        Student student = studentRepository.findById(jwtUtil.getCurrentUserId()).orElseThrow();
-        boolean matches = passwordEncoder.matches(input.getCurrentPassword(), student.getPassword());
+        Student user = studentRepository.findById(jwtUtil.getCurrentUserId()).orElseThrow();
+        boolean matches = passwordEncoder.matches(input.getCurrentPassword(), user.getPassword());
         if (!matches) {
             throw new RuntimeException("Wrong password");
         }
-        student.setPassword(passwordEncoder.encode(input.getNewPassword()));
+        user.setPassword(passwordEncoder.encode(input.getNewPassword()));
+        studentRepository.save(user);
     }
 
     public StudentOutputDTO getProfile() {
