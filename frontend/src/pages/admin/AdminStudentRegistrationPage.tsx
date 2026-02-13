@@ -69,7 +69,7 @@ const validators = {
     },
 };
 
-export const StudentRegistration: React.FC = () => {
+export const AdminStudentRegistrationPage: React.FC = () => {
     const queryClient = useQueryClient();
     const [formData, setFormData] = useState({
         email: '',

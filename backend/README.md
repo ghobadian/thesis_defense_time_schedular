@@ -180,7 +180,7 @@ This system automates and streamlines the thesis defense scheduling process for 
 - `limit` - Results per page
 - `studentType` - Filter by student type (BACHELOR/MASTER/PHD)
 
-### Admin Departments (`/admin/departments`)
+### Admin AdminDepartmentsPage (`/admin/departments`)
 | Method | Endpoint | Description |
 |:-------|:---------|:------------|
 | GET | `/admin/departments` | List all departments |

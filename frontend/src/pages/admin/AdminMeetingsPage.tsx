@@ -19,7 +19,7 @@ import {
 import {Meeting, MeetingState} from '../../types';
 import { format, parseISO } from 'date-fns';
 
-export const DefenseMeetings: React.FC = () => {
+export const AdminMeetingsPage: React.FC = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [statusFilter, setStatusFilter] = useState<string>('ALL');
     const [selectedMeeting, setSelectedMeeting] = useState<Meeting | null>(null);

@@ -12,7 +12,7 @@ import { JurySelectionModal } from '../../components/common/JurySelectionModal';
 import { RevisionRequestModal } from '../../components/thesis/RevisionRequestModal';
 import { SubmitRevisionModal } from '../../components/thesis/SubmitRevisionModal';
 
-const ProfessorThesisFormsPage: React.FC = () => {
+const ProfessorFormsPage: React.FC = () => {
     const { role } = useAuthStore();
     const queryClient = useQueryClient();
     const [selectedForm, setSelectedForm] = useState<ThesisForm | null>(null);
@@ -420,4 +420,4 @@ const ProfessorThesisFormsPage: React.FC = () => {
     );
 };
 
-export default ProfessorThesisFormsPage;
+export default ProfessorFormsPage;

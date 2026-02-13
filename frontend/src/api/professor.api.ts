@@ -63,6 +63,8 @@ export const professorAPI = {
         return response.data;
     },
 
+
+
     cancelMeeting: async (meetingId: number) => {
         const response = await getApi().post(`/meetings/${meetingId}/cancel`);
         return response.data;

@@ -11,7 +11,7 @@ import {Meeting, MeetingState, UserRole} from '../../types';
 import {useAuthStore} from '../../store/authStore';
 import {Button} from '../../components/common/Button';
 
-export const MyMeetings: React.FC = () => {
+export const ProfessorMeetingsPage: React.FC = () => {
     const navigate = useNavigate();
     const { userId, role } = useAuthStore();
     const [scheduleMeetingModal, setScheduleMeetingModal] = useState<Meeting | null>(null);
@@ -136,4 +136,4 @@ export const MyMeetings: React.FC = () => {
     );
 };
 
-export default MyMeetings;
+export default ProfessorMeetingsPage;

@@ -10,7 +10,7 @@ import { Calendar, Clock, ArrowLeft, Users } from 'lucide-react';
 import { TimePeriod, TimeSlot } from '../../types';
 import { useAuthStore } from '../../store/authStore';
 
-export const SpecifyMeetingTimeSlots: React.FC = () => {
+export const ProfessorSpecifyMeetingTimeSlotsPage: React.FC = () => {
     const { meetingId } = useParams<{ meetingId: string }>();
     const navigate = useNavigate();
     const queryClient = useQueryClient();

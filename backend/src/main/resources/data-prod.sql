@@ -13,7 +13,7 @@ INSERT INTO department (id, name) VALUES
                                       (5, 'Industrial Engineering');
 
 -- ============================================
--- 2. FIELDS (Study Fields within Departments)
+-- 2. FIELDS (Study Fields within AdminDepartmentsPage)
 -- ============================================
 INSERT INTO field (id, name, department_id, active) VALUES
 -- Computer Engineering Fields
@@ -908,7 +908,7 @@ UNION ALL SELECT 'Manager Professors', COUNT(*) FROM professor WHERE is_manager 
 UNION ALL SELECT 'Bachelor Students', COUNT(*) FROM bachelor_student
 UNION ALL SELECT 'Master Students', COUNT(*) FROM master_student
 UNION ALL SELECT 'PhD Students', COUNT(*) FROM phd_student
-UNION ALL SELECT 'Departments', COUNT(*) FROM department
+UNION ALL SELECT 'AdminDepartmentsPage', COUNT(*) FROM department
 UNION ALL SELECT 'Fields', COUNT(*) FROM field
 UNION ALL SELECT 'Active Fields', COUNT(*) FROM field WHERE active = true
 UNION ALL SELECT 'Thesis Forms', COUNT(*) FROM thesis_form

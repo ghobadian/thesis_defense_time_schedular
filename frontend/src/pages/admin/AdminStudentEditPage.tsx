@@ -73,7 +73,7 @@ const validators = {
     },
 };
 
-export default function StudentEdit() {
+export default function AdminStudentEditPage() {
     const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();
     const queryClient = useQueryClient();
