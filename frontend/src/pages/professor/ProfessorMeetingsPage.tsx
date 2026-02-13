@@ -3,7 +3,7 @@ import React, {useState} from 'react';
 import {useQuery, useMutation} from '@tanstack/react-query';
 import {useNavigate} from 'react-router-dom';
 import {professorAPI} from '../../api/professor.api';
-import {MeetingView} from '../../components/common/MeetingView';
+import {MeetingView} from '../../components/common/meeting/MeetingView';
 import {TimeSlotsComparison} from '../../components/professor/TimeSlotsComparison';
 import {JuryScoresPanel} from '../../components/professor/JuryScoresPanel';
 import {ScheduleMeetingModal} from '../../components/professor/ScheduleMeetingModal';

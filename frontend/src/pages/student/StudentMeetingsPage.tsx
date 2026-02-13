@@ -2,7 +2,7 @@
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { studentAPI } from '../../api/student.api';
-import { MeetingView } from '../../components/common/MeetingView';
+import { MeetingView } from '../../components/common/meeting/MeetingView';
 import { TimeSlotSelection } from '../../components/student/TimeSlotSelection';
 import { Meeting, MeetingState } from '../../types';
 
