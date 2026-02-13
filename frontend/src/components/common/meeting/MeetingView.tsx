@@ -18,6 +18,9 @@ export interface MeetingViewProps {
     onCancelMeeting?: (meeting: Meeting) => void;
     canCancelMeeting?: (meeting: Meeting) => boolean;
     isCancelling?: boolean;
+    // Reassign Juries
+    onReassignJuries?: (meeting: Meeting) => void;
+    canReassignJuries?: (meeting: Meeting) => boolean;
 }
 
 export const MeetingView: React.FC<MeetingViewProps> = ({
@@ -33,6 +36,8 @@ export const MeetingView: React.FC<MeetingViewProps> = ({
                                                             onCancelMeeting,
                                                             canCancelMeeting,
                                                             isCancelling,
+                                                            onReassignJuries,
+                                                            canReassignJuries,
                                                         }) => {
     const [expandedMeetingId, setExpandedMeetingId] = useState<number | null>(null);
     const [showTimeSlotsForMeeting, setShowTimeSlotsForMeeting] = useState<number | null>(null);
@@ -82,6 +87,8 @@ export const MeetingView: React.FC<MeetingViewProps> = ({
                     onCancelMeeting={onCancelMeeting}
                     isCancelling={isCancelling}
                     renderAdditionalContent={renderAdditionalContent}
+                    showReassignJuriesButton={canReassignJuries?.(meeting) ?? false}
+                    onReassignJuries={onReassignJuries}
                 />
             ))}
         </div>

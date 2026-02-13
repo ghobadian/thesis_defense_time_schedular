@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import {
     Calendar, Clock, Users, ChevronDown, ChevronUp,
-    MapPin, Eye, EyeOff, XCircle,
+    MapPin, Eye, EyeOff, XCircle, RefreshCw,
 } from 'lucide-react';
 import { Card } from '../Card';
 import { Button } from '../Button';
@@ -29,6 +29,9 @@ interface MeetingCardProps {
     showCancelButton: boolean;
     onCancelMeeting?: (meeting: Meeting) => void;
     isCancelling?: boolean;
+    // Reassign Juries
+    showReassignJuriesButton?: boolean;
+    onReassignJuries?: (meeting: Meeting) => void;
     // Additional content
     renderAdditionalContent?: (meeting: Meeting, isExpanded: boolean) => React.ReactNode;
 }
@@ -48,6 +51,8 @@ export const MeetingCard: React.FC<MeetingCardProps> = ({
                                                             showCancelButton,
                                                             onCancelMeeting,
                                                             isCancelling = false,
+                                                            showReassignJuriesButton = false,
+                                                            onReassignJuries,
                                                             renderAdditionalContent,
                                                         }) => {
     const [showCancelConfirm, setShowCancelConfirm] = useState(false);
@@ -133,6 +138,17 @@ export const MeetingCard: React.FC<MeetingCardProps> = ({
                                 ) : (
                                     <><Eye className="h-4 w-4 mr-2" /> View Time Slots</>
                                 )}
+                            </Button>
+                        )}
+
+                        {showReassignJuriesButton && onReassignJuries && (
+                            <Button
+                                variant="secondary"
+                                onClick={() => onReassignJuries(meeting)}
+                                className="whitespace-nowrap"
+                            >
+                                <RefreshCw className="h-4 w-4 mr-2" />
+                                Reassign Juries
                             </Button>
                         )}
 

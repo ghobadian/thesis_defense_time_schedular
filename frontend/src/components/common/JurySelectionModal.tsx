@@ -5,12 +5,11 @@ import { professorAPI } from '../../api/professor.api';
 import { Modal } from './Modal';
 import { Button } from './Button';
 import { Professor } from "../../types";
+import { JURY_SELECTION_CONFIG } from '../../api/config';
 
-// Configuration constants - can be moved to a separate config file
-export const JURY_SELECTION_CONFIG = {
-    MIN_JURY_MEMBERS: 3,
-    MAX_JURY_MEMBERS: 10, // Optional: you can also add a max limit
-};
+const minJuryCount = JURY_SELECTION_CONFIG.MIN_JURY_MEMBERS
+const maxJuryCount = JURY_SELECTION_CONFIG.MAX_JURY_MEMBERS
+
 
 interface JurySelectionModalProps {
     isOpen: boolean;
@@ -29,8 +28,6 @@ export const JurySelectionModal: React.FC<JurySelectionModalProps> = ({
                                                                           meetingId,
                                                                           formId,
                                                                           onJuriesSelected,
-                                                                          minJuryCount = JURY_SELECTION_CONFIG.MIN_JURY_MEMBERS,
-                                                                          maxJuryCount,
                                                                           instructorId, // NEW prop
                                                                       }) => {
     const [selectedJuries, setSelectedJuries] = useState<number[]>([]);
