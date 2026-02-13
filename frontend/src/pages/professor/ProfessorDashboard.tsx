@@ -5,7 +5,7 @@ import { ProfessorHome } from './ProfessorHome';
 import { MyStudents } from "./MyStudents";
 import { MyMeetings } from "./MyMeetings";
 import { SpecifyMeetingTimeSlots } from './SpecifyMeetingTimeSlots';
-import {ProfilePage} from "../student/ProfilePage";
+import {ProfilePage} from "../ProfilePage";
 import ProfessorThesisFormsPage from "./ProfessorThesisForms";
 
 export const ProfessorDashboard: React.FC = () => {

@@ -3,7 +3,7 @@ import { Routes, Route } from 'react-router-dom';
 import { Layout } from '../../components/layout/Layout';
 import { StudentHome } from './StudentHome';
 import { MeetingsPage } from './MeetingsPage';
-import { ProfilePage } from './ProfilePage';
+import { ProfilePage } from '../ProfilePage';
 import {ThesisFormCreate} from "../../components/student/ThesisFormCreate";
 import StudentThesisForms from "./StudentThesisForms";
 
