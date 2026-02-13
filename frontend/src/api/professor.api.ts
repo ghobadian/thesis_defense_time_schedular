@@ -122,4 +122,9 @@ export const professorAPI = {
         const response = await getApi().post(`/forms/${formId}/submit-revision`);
         return response.data;
     },
+
+    reassignJuries: async (meetingId: number, juryIds: number[]) => {
+        const response = await getApi().put('/meetings/reassign-juries', {meetingId: meetingId, juryIds: juryIds});
+        return response.data;
+    },
 };

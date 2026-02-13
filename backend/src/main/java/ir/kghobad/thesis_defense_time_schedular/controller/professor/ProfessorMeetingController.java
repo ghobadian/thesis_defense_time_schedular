@@ -43,7 +43,7 @@ public class ProfessorMeetingController {
         return ResponseEntity.ok("Meeting created");
     }
 
-    @PostMapping("/reassign-juries")
+    @PutMapping("/reassign-juries")
     public ResponseEntity<?> reassignJuries(@RequestBody MeetingJuriesReassignmentInputDTO input) {
         service.reassignJuries(input);
         return ResponseEntity.ok("Juries reassigned");

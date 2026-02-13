@@ -55,7 +55,7 @@ public class ProfessorMockHelper {
     }
 
     public ResultActions reassignJuries(MeetingJuriesReassignmentInputDTO input, String token) throws Exception {
-        return mockMvc.perform(post("/professor/meetings/reassign-juries")
+        return mockMvc.perform(put("/professor/meetings/reassign-juries")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(input))
                         .header("Authorization", "Bearer " + token))
