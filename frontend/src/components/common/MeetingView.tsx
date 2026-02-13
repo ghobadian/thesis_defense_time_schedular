@@ -12,7 +12,9 @@ import {
     AlertCircle,
     Mail,
     Eye,
-    EyeOff
+    EyeOff,
+    XCircle,
+    Ban
 } from 'lucide-react';
 import { Meeting, MeetingState, SimpleUser, TimePeriod } from '../../types';
 
@@ -26,7 +28,25 @@ interface MeetingViewProps {
     renderAdditionalContent?: (meeting: Meeting, isExpanded: boolean) => React.ReactNode;
     renderTimeSlotsComparison?: (meeting: Meeting) => React.ReactNode;
     canViewTimeSlots?: (meeting: Meeting) => boolean;
+    onCancelMeeting?: (meeting: Meeting) => void;
+    canCancelMeeting?: (meeting: Meeting) => boolean;
+    isCancelling?: boolean;
 }
+
+// The normal (non-canceled) flow steps in order
+const NORMAL_FLOW_STEPS = [
+    { state: MeetingState.JURIES_SELECTED, label: 'Jury Selected' },
+    { state: MeetingState.JURIES_SPECIFIED_TIME, label: 'Jury Time Specified' },
+    { state: MeetingState.STUDENT_SPECIFIED_TIME, label: 'Student Time Selected' },
+    { state: MeetingState.SCHEDULED, label: 'Meeting Scheduled' },
+    { state: MeetingState.COMPLETED, label: 'Meeting Completed' },
+];
+
+// Map each normal flow state to its index so we can determine "how far" a meeting got
+const STATE_ORDER: Record<string, number> = {};
+NORMAL_FLOW_STEPS.forEach((step, idx) => {
+    STATE_ORDER[step.state] = idx;
+});
 
 export const MeetingView: React.FC<MeetingViewProps> = ({
                                                             meetings,
@@ -38,9 +58,13 @@ export const MeetingView: React.FC<MeetingViewProps> = ({
                                                             renderAdditionalContent,
                                                             renderTimeSlotsComparison,
                                                             canViewTimeSlots,
+                                                            onCancelMeeting,
+                                                            canCancelMeeting,
+                                                            isCancelling,
                                                         }) => {
     const [expandedMeetingId, setExpandedMeetingId] = useState<number | null>(null);
     const [showTimeSlotsForMeeting, setShowTimeSlotsForMeeting] = useState<number | null>(null);
+    const [cancelConfirmMeetingId, setCancelConfirmMeetingId] = useState<number | null>(null);
 
     const toggleMeetingDetails = (meetingId: number) => {
         setExpandedMeetingId(expandedMeetingId === meetingId ? null : meetingId);
@@ -48,6 +72,19 @@ export const MeetingView: React.FC<MeetingViewProps> = ({
 
     const toggleTimeSlotsView = (meetingId: number) => {
         setShowTimeSlotsForMeeting(showTimeSlotsForMeeting === meetingId ? null : meetingId);
+    };
+
+    const handleCancelClick = (meetingId: number) => {
+        setCancelConfirmMeetingId(meetingId);
+    };
+
+    const handleCancelConfirm = (meeting: Meeting) => {
+        onCancelMeeting?.(meeting);
+        setCancelConfirmMeetingId(null);
+    };
+
+    const handleCancelDismiss = () => {
+        setCancelConfirmMeetingId(null);
     };
 
     const getStatusColor = (state: MeetingState) => {
@@ -99,6 +136,159 @@ export const MeetingView: React.FC<MeetingViewProps> = ({
         return periodMap[period] || period;
     };
 
+    /**
+     * Renders the Meeting Progress timeline.
+     *
+     * For CANCELED meetings, we show all normal flow steps but visually indicate
+     * which ones were completed before cancellation, which step was the "last active"
+     * step when cancellation happened, and which steps were never reached.
+     * A red "Meeting Canceled" node is appended at the end.
+     *
+     * For non-canceled meetings, it renders the normal stepper as before.
+     */
+    const renderMeetingTimeline = (meeting: Meeting) => {
+        const isCanceled = meeting.state === MeetingState.CANCELED;
+
+        return (
+            <div>
+                <h4 className="text-lg font-semibold text-gray-900 mb-3">Meeting Progress</h4>
+                <div className="relative">
+                    {/* Vertical line */}
+                    <div className={`absolute left-4 top-0 bottom-0 w-0.5 ${isCanceled ? 'bg-red-200' : 'bg-gray-200'}`}></div>
+
+                    <div className="space-y-4">
+                        {isCanceled ? (
+                            <>
+                                {/*
+                                    For canceled meetings we need to figure out the "last reached" step.
+                                    Since CANCELED is a terminal state that can happen from any step,
+                                    we use the meeting's selectedTimeSlot and other data to infer progress,
+                                    or we default to showing only the first step as completed
+                                    (JURIES_SELECTED, since a meeting must have at least reached that).
+
+                                    A more robust approach: the backend could provide a "canceledFromState" field.
+                                    For now, we infer based on available data:
+                                    - Has selectedTimeSlot + location → was at SCHEDULED
+                                    - Has selectedTimeSlot (no location) → was at STUDENT_SPECIFIED_TIME
+                                    - Has jury members → was at least at JURIES_SELECTED
+
+                                    We'll keep it simple: treat JURIES_SELECTED as the minimum reached state,
+                                    and check further evidence from the meeting data.
+                                */}
+                                {(() => {
+                                    // Determine the last step the meeting reached before cancellation
+                                    let lastReachedIndex = 0; // At minimum, JURIES_SELECTED
+
+                                    if (meeting.selectedTimeSlot && meeting.location) {
+                                        lastReachedIndex = 3; // SCHEDULED
+                                    } else if (meeting.selectedTimeSlot) {
+                                        lastReachedIndex = 2; // STUDENT_SPECIFIED_TIME
+                                    } else if (meeting.juryMembers && meeting.juryMembers.length > 0) {
+                                        // Check if any jury member had specified time
+                                        // Since we can't easily know from the Meeting type alone,
+                                        // we'll check if state progression hints exist.
+                                        // Default: stay at JURIES_SELECTED (index 0)
+                                        lastReachedIndex = 0;
+                                    }
+
+                                    return (
+                                        <>
+                                            {NORMAL_FLOW_STEPS.map((step, index) => {
+                                                const wasCompleted = index < lastReachedIndex;
+                                                const wasLastActive = index === lastReachedIndex;
+                                                const wasNeverReached = index > lastReachedIndex;
+
+                                                return (
+                                                    <div key={step.state} className="relative flex items-center">
+                                                        <div className={`
+                                                            w-8 h-8 rounded-full flex items-center justify-center z-10
+                                                            ${wasCompleted
+                                                                ? 'bg-gray-400 text-white'
+                                                                : wasLastActive
+                                                                    ? 'bg-red-500 text-white ring-4 ring-red-100'
+                                                                    : 'bg-gray-200 text-gray-400'
+                                                            }
+                                                        `}>
+                                                            {wasCompleted ? '✓' : wasLastActive ? '✕' : index + 1}
+                                                        </div>
+                                                        <div className="ml-4">
+                                                            <p className={`font-medium ${
+                                                                wasCompleted
+                                                                    ? 'text-gray-500 line-through'
+                                                                    : wasLastActive
+                                                                        ? 'text-red-700'
+                                                                        : 'text-gray-400'
+                                                            }`}>
+                                                                {step.label}
+                                                            </p>
+                                                            {wasLastActive && (
+                                                                <p className="text-sm text-red-500">
+                                                                    Canceled at this stage
+                                                                </p>
+                                                            )}
+                                                            {wasNeverReached && (
+                                                                <p className="text-sm text-gray-400">
+                                                                    Not reached
+                                                                </p>
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                );
+                                            })}
+
+                                            {/* Canceled terminal node */}
+                                            <div className="relative flex items-center">
+                                                <div className="w-8 h-8 rounded-full flex items-center justify-center z-10 bg-red-600 text-white ring-4 ring-red-100">
+                                                    <Ban className="h-4 w-4" />
+                                                </div>
+                                                <div className="ml-4">
+                                                    <p className="font-semibold text-red-700">
+                                                        Meeting Canceled
+                                                    </p>
+                                                    <p className="text-sm text-red-500">
+                                                        This meeting has been permanently canceled
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </>
+                                    );
+                                })()}
+                            </>
+                        ) : (
+                            /* Normal (non-canceled) flow */
+                            NORMAL_FLOW_STEPS.map((step, index) => {
+                                const currentStateIndex = STATE_ORDER[meeting.state] ?? -1;
+                                const isCurrent = meeting.state === step.state;
+                                const isPast = currentStateIndex > index;
+                                const isActive = isCurrent || isPast;
+
+                                return (
+                                    <div key={step.state} className="relative flex items-center">
+                                        <div className={`
+                                            w-8 h-8 rounded-full flex items-center justify-center z-10
+                                            ${isActive ? 'bg-primary-500 text-white' : 'bg-gray-200 text-gray-500'}
+                                            ${isCurrent ? 'ring-4 ring-primary-100' : ''}
+                                        `}>
+                                            {isPast ? '✓' : index + 1}
+                                        </div>
+                                        <div className="ml-4">
+                                            <p className={`font-medium ${isActive ? 'text-gray-900' : 'text-gray-500'}`}>
+                                                {step.label}
+                                            </p>
+                                            {isCurrent && (
+                                                <p className="text-sm text-primary-600">Current Stage</p>
+                                            )}
+                                        </div>
+                                    </div>
+                                );
+                            })
+                        )}
+                    </div>
+                </div>
+            </div>
+        );
+    };
+
     if (isLoading) {
         return (
             <div className="flex items-center justify-center min-h-screen">
@@ -126,6 +316,8 @@ export const MeetingView: React.FC<MeetingViewProps> = ({
                 const shouldShowAction = showActionButton?.(meeting) ?? false;
                 const actionLabel = actionButtonLabel?.(meeting);
                 const canViewSlots = canViewTimeSlots?.(meeting) ?? false;
+                const showCancelButton = canCancelMeeting?.(meeting) ?? false;
+                const isShowingCancelConfirm = cancelConfirmMeetingId === meeting.id;
 
                 return (
                     <Card key={meeting.id} className="hover:shadow-md transition-shadow">
@@ -242,8 +434,56 @@ export const MeetingView: React.FC<MeetingViewProps> = ({
                                             )}
                                         </Button>
                                     )}
+
+                                    {/* Cancel Meeting Button */}
+                                    {showCancelButton && onCancelMeeting && (
+                                        <Button
+                                            variant="secondary"
+                                            onClick={() => handleCancelClick(meeting.id)}
+                                            disabled={isCancelling}
+                                            className="whitespace-nowrap bg-red-50 text-red-700 border-red-300 hover:bg-red-100 hover:border-red-400"
+                                        >
+                                            <XCircle className="h-4 w-4 mr-2" />
+                                            Cancel Meeting
+                                        </Button>
+                                    )}
                                 </div>
                             </div>
+
+                            {/* Cancel Confirmation Dialog */}
+                            {isShowingCancelConfirm && (
+                                <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+                                    <div className="flex items-start space-x-3">
+                                        <AlertCircle className="h-5 w-5 text-red-600 mt-0.5 flex-shrink-0" />
+                                        <div className="flex-1">
+                                            <h4 className="text-sm font-semibold text-red-800">
+                                                Confirm Cancellation
+                                            </h4>
+                                            <p className="text-sm text-red-700 mt-1">
+                                                Are you sure you want to cancel this meeting? This action cannot be undone.
+                                            </p>
+                                            <div className="flex space-x-3 mt-3">
+                                                <Button
+                                                    variant="primary"
+                                                    onClick={() => handleCancelConfirm(meeting)}
+                                                    disabled={isCancelling}
+                                                    className="bg-red-600 hover:bg-red-700 text-white text-sm px-4 py-1.5"
+                                                >
+                                                    {isCancelling ? 'Cancelling...' : 'Yes, Cancel Meeting'}
+                                                </Button>
+                                                <Button
+                                                    variant="secondary"
+                                                    onClick={handleCancelDismiss}
+                                                    disabled={isCancelling}
+                                                    className="text-sm px-4 py-1.5"
+                                                >
+                                                    No, Keep It
+                                                </Button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
 
                             {/* Time Slots Comparison Section */}
                             {showTimeSlots && canViewSlots && renderTimeSlotsComparison && (
@@ -384,46 +624,25 @@ export const MeetingView: React.FC<MeetingViewProps> = ({
                                         </div>
                                     )}
 
-                                    {/* Meeting Timeline */}
-                                    <div>
-                                        <h4 className="text-lg font-semibold text-gray-900 mb-3">Meeting Progress</h4>
-                                        <div className="relative">
-                                            <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-gray-200"></div>
-                                            <div className="space-y-4">
-                                                {[
-                                                    { state: MeetingState.JURIES_SELECTED, label: 'Jury Selected' },
-                                                    { state: MeetingState.JURIES_SPECIFIED_TIME, label: 'Jury Time Specified' },
-                                                    { state: MeetingState.STUDENT_SPECIFIED_TIME, label: 'Student Time Selected' },
-                                                    { state: MeetingState.SCHEDULED, label: 'Meeting Scheduled' },
-                                                    { state: MeetingState.COMPLETED, label: 'Meeting Completed' },
-                                                ].map((step, index) => {
-                                                    const isCurrent = meeting.state === step.state;
-                                                    const isPast = Object.values(MeetingState).indexOf(meeting.state) > index;
-                                                    const isActive = isCurrent || isPast;
-
-                                                    return (
-                                                        <div key={step.state} className="relative flex items-center">
-                                                            <div className={`
-                                                                w-8 h-8 rounded-full flex items-center justify-center z-10
-                                                                ${isActive ? 'bg-primary-500 text-white' : 'bg-gray-200 text-gray-500'}
-                                                                ${isCurrent ? 'ring-4 ring-primary-100' : ''}
-                                                            `}>
-                                                                {isPast ? '✓' : index + 1}
-                                                            </div>
-                                                            <div className="ml-4">
-                                                                <p className={`font-medium ${isActive ? 'text-gray-900' : 'text-gray-500'}`}>
-                                                                    {step.label}
-                                                                </p>
-                                                                {isCurrent && (
-                                                                    <p className="text-sm text-primary-600">Current Stage</p>
-                                                                )}
-                                                            </div>
-                                                        </div>
-                                                    );
-                                                })}
+                                    {/* Cancellation Notice Banner (for canceled meetings) */}
+                                    {meeting.state === MeetingState.CANCELED && (
+                                        <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                                            <div className="flex items-center space-x-3">
+                                                <Ban className="h-6 w-6 text-red-600 flex-shrink-0" />
+                                                <div>
+                                                    <h4 className="text-md font-semibold text-red-800">
+                                                        This meeting has been canceled
+                                                    </h4>
+                                                    <p className="text-sm text-red-600 mt-1">
+                                                        The defense meeting was canceled and is no longer active. No further actions can be taken.
+                                                    </p>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    )}
+
+                                    {/* Meeting Timeline — now uses the extracted function */}
+                                    {renderMeetingTimeline(meeting)}
 
                                     {/* Additional role-specific content */}
                                     {renderAdditionalContent?.(meeting, isExpanded)}
