@@ -54,16 +54,13 @@ export const professorAPI = {
     },
 
 
-    createMeeting: async (formId: number, juryIds: number[], location: string) => {
+    createMeeting: async (formId: number, juryIds: number[]) => {
         const response = await getApi().post('/meetings/create', {
             formId,
-            juryIds,
-            location
+            juryIds
         });
         return response.data;
     },
-
-
 
     cancelMeeting: async (meetingId: number) => {
         const response = await getApi().post(`/meetings/${meetingId}/cancel`);
