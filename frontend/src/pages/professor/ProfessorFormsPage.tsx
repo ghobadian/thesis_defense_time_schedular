@@ -412,7 +412,6 @@ const ProfessorFormsPage: React.FC = () => {
                     formId={formToApproveWithJury.id}
                     instructorId={formToApproveWithJury.instructorId}
                     onJuriesSelected={handleJuriesSelected}
-                    minJuryCount={1}
                 />
             )}
         </>
