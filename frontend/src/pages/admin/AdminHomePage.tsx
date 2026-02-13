@@ -15,7 +15,7 @@ import {
 import { adminAPI } from '../../api/admin.api';
 import {DepartmentDetail, DepartmentSummary} from "../../types";
 
-export const AdminHome: React.FC = () => {
+export const AdminHomePage: React.FC = () => {
     const { data: stats, isLoading: loadingStats } = useQuery({
         queryKey: ['adminStats'],
         queryFn: adminAPI.getStats,

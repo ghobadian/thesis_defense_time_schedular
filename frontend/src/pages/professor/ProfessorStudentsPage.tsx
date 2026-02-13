@@ -26,7 +26,7 @@ interface Student {
     }>;
 }
 
-export const MyStudents: React.FC = () => {
+export const ProfessorStudentsPage: React.FC = () => {
     const { data: students, isLoading, error } = useQuery<Student[]>({
         queryKey: ['myStudents'],
         queryFn: professorAPI.getMySupervisedStudents,

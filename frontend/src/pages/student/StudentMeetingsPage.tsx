@@ -6,7 +6,7 @@ import { MeetingView } from '../../components/common/MeetingView';
 import { TimeSlotSelection } from '../../components/student/TimeSlotSelection';
 import { Meeting, MeetingState } from '../../types';
 
-export const MeetingsPage: React.FC = () => {
+export const StudentMeetingsPage: React.FC = () => {
     const { data: meetings, isLoading, error } = useQuery({
         queryKey: ['studentMeetings'],
         queryFn: studentAPI.getMeetings,

@@ -228,7 +228,7 @@ const StudentDetailModal: React.FC<StudentDetailModalProps> = ({ student, isOpen
 };
 
 // --- Main Component ---
-export const StudentManagement: React.FC = () => {
+export const AdminStudentManagementPage: React.FC = () => {
     const navigate = useNavigate();
     const queryClient = useQueryClient();
 

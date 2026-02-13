@@ -160,7 +160,7 @@ const getRevisionRequester = (state: FormState): string => {
     }
 };
 
-export const StudentThesisForms: React.FC = () => {
+export const StudentFormsPage: React.FC = () => {
     const { role } = useAuthStore();
     const queryClient = useQueryClient();
     const [expandedFormId, setExpandedFormId] = useState<number | null>(null);
@@ -556,4 +556,4 @@ export const StudentThesisForms: React.FC = () => {
     );
 };
 
-export default StudentThesisForms;
+export default StudentFormsPage;

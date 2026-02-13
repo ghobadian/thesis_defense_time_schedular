@@ -17,7 +17,7 @@ import {
 import { format } from 'date-fns';
 import {DepartmentSummary} from "../../types";
 
-export const Departments: React.FC = () => {
+export const AdminDepartmentsPage: React.FC = () => {
     const queryClient = useQueryClient();
     const [searchTerm, setSearchTerm] = useState('');
 

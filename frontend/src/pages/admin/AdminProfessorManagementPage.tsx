@@ -28,7 +28,7 @@ const Card = ({ children, className = '' }: { children: React.ReactNode; classNa
     </div>
 );
 
-export const ProfessorManagement: React.FC = () => {
+export const AdminProfessorManagementPage: React.FC = () => {
     const { t } = useTranslation();
     const queryClient = useQueryClient();
 
@@ -694,4 +694,4 @@ export const ProfessorManagement: React.FC = () => {
     );
 };
 
-export default ProfessorManagement;
+export default AdminProfessorManagementPage;

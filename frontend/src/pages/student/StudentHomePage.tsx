@@ -5,7 +5,7 @@ import {Calendar, CheckCircle, Clock, FileText} from 'lucide-react';
 import {studentAPI} from '../../api/student.api';
 import {FormState, Meeting, MeetingState, ThesisForm} from "../../types";
 
-export const StudentHome: React.FC = () => {
+export const StudentHomePage: React.FC = () => {
     const { data: thesisForms } = useQuery({
         queryKey: ['myThesisForms'],
         queryFn: studentAPI.getMyThesisForms,

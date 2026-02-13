@@ -104,21 +104,21 @@ src/
 ├── pages/                        # Page components
 │   ├── admin/
 │   │   ├── AdminDashboard.tsx    # Admin main dashboard
-│   │   ├── AdminHome.tsx         # Admin home page
+│   │   ├── AdminHomePage.tsx         # Admin home page
 │   │   ├── AdminFieldsPage.tsx   # Fields management
 │   │   ├── AdminThesisFormsPage.tsx
-│   │   ├── DefenseMeetings.tsx   # Defense meetings management
-│   │   ├── Departments.tsx       # Department management
-│   │   ├── StudentManagement.tsx # User management
-│   │   └── StudentRegistration.tsx
+│   │   ├── AdminMeetingsPage.tsx   # Defense meetings management
+│   │   ├── AdminDepartmentsPage.tsx       # Department management
+│   │   ├── AdminStudentManagementPage.tsx # User management
+│   │   └── AdminStudentRegistrationPage.tsx
 │   ├── professor/
 │   │   └── ProfessorDashboard.tsx
 │   ├── student/
 │   │   ├── StudentDashboard.tsx  # Student main dashboard
-│   │   ├── StudentHome.tsx       # Student home page
-│   │   ├── ThesisFormPage.tsx    # Thesis form page
-│   │   ├── ProfessorThesisForms.tsx     # View submitted forms
-│   │   ├── MeetingsPage.tsx      # View meetings
+│   │   ├── StudentHomePage.tsx       # Student home page
+│   │   ├── StudentFormsPage.tsx    # Thesis form page
+│   │   ├── ProfessorFormsPage.tsx     # View submitted forms
+│   │   ├── StudentMeetingsPage.tsx      # View meetings
 │   │   └── ProfilePage.tsx       # Profile settings
 │   └── LoginPage.tsx             # Authentication page
 │

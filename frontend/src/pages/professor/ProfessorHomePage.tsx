@@ -7,7 +7,7 @@ import {CheckCircle, Clock, FileText} from 'lucide-react';
 import {professorAPI} from '../../api/professor.api';
 import {Meeting, MeetingState} from "../../types";
 
-export const ProfessorHome: React.FC = () => {
+export const ProfessorHomePage: React.FC = () => {
     const { data: pendingForms } = useQuery({
         queryKey: ['pendingThesisForms'],
         queryFn: professorAPI.getPendingThesisForms,

@@ -1,32 +1,32 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { Layout } from '../../components/layout/Layout';
-import { AdminHome } from './AdminHome';
-import { StudentRegistration } from './StudentRegistration';
+import { AdminHomePage } from './AdminHomePage';
+import { AdminStudentRegistrationPage } from './AdminStudentRegistrationPage';
 import AdminThesisFormsPage from "./AdminThesisFormsPage";
-import {StudentManagement} from "./StudentManagement";
-import {DefenseMeetings} from "./DefenseMeetings";
-import {Departments} from "./Departments";
+import {AdminStudentManagementPage} from "./AdminStudentManagementPage";
+import {AdminMeetingsPage} from "./AdminMeetingsPage";
+import {AdminDepartmentsPage} from "./AdminDepartmentsPage";
 import AdminFieldsPage from "./AdminFieldsPage";
-import StudentEdit from './StudentEdit';
+import AdminStudentEditPage from './AdminStudentEditPage';
 import {ProfilePage} from "../ProfilePage";
-import ProfessorManagement from "./ProfessorManagement";
+import AdminProfessorManagementPage from "./AdminProfessorManagementPage";
 
 export const AdminDashboard: React.FC = () => {
     return (
         <Layout>
             <Routes>
-                <Route path="dashboard" element={<AdminHome />} />
-                <Route path="register-student" element={<StudentRegistration />} />
-                <Route path="*" element={<AdminHome />} />
-                <Route path="students" element={<StudentManagement />} />
-                <Route path="professors" element={<ProfessorManagement />} />
-                <Route path="departments" element={<Departments />} />
+                <Route path="dashboard" element={<AdminHomePage />} />
+                <Route path="register-student" element={<AdminStudentRegistrationPage />} />
+                <Route path="*" element={<AdminHomePage />} />
+                <Route path="students" element={<AdminStudentManagementPage />} />
+                <Route path="professors" element={<AdminProfessorManagementPage />} />
+                <Route path="departments" element={<AdminDepartmentsPage />} />
                 <Route path="fields" element={<AdminFieldsPage />} />
                 <Route path="thesis-forms" element={<AdminThesisFormsPage />} />
-                <Route path="meetings" element={<DefenseMeetings />} />
+                <Route path="meetings" element={<AdminMeetingsPage />} />
                 <Route path="profile" element={<ProfilePage />} />
-                <Route path="edit-student/:id" element={<StudentEdit />} />
+                <Route path="edit-student/:id" element={<AdminStudentEditPage />} />
             </Routes>
         </Layout>
     );
