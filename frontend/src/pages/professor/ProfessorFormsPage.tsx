@@ -99,8 +99,8 @@ const ProfessorFormsPage: React.FC = () => {
 
     // Mutation for manager creating meeting with juries (ADMIN_APPROVED → JURIES_SELECTED)
     const createMeetingMutation = useMutation({
-        mutationFn: ({ formId, juryIds, location }: { formId: number; juryIds: number[]; location: string }) =>
-            professorAPI.createMeeting(formId, juryIds, location),
+        mutationFn: ({ formId, juryIds }: { formId: number; juryIds: number[] }) =>
+            professorAPI.createMeeting(formId, juryIds),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['professor-pending-forms'] });
             setJuryModalOpen(false);
@@ -200,8 +200,7 @@ const ProfessorFormsPage: React.FC = () => {
         if (formToApproveWithJury) {
             await createMeetingMutation.mutateAsync({
                 formId: formToApproveWithJury.id,
-                juryIds,
-                location: "To be determined",
+                juryIds
             });
         }
     };
