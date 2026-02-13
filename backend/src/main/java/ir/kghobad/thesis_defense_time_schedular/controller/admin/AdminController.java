@@ -50,6 +50,4 @@ public class AdminController {
         service.changePassword(input);
         return ResponseEntity.ok("Password changed successfully");
     }
-
-
 }

@@ -1,8 +1,9 @@
 package ir.kghobad.thesis_defense_time_schedular.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import ir.kghobad.thesis_defense_time_schedular.helper.AdminMockHelper;
+import ir.kghobad.thesis_defense_time_schedular.helper.apiHelper.AdminMockHelper;
 import ir.kghobad.thesis_defense_time_schedular.helper.BaseIntegrationTest;
+import ir.kghobad.thesis_defense_time_schedular.model.dto.user.student.PasswordChangeInputDTO;
 import ir.kghobad.thesis_defense_time_schedular.model.dto.user.student.StudentRegistrationInputDTO;
 import ir.kghobad.thesis_defense_time_schedular.model.entity.Department;
 import ir.kghobad.thesis_defense_time_schedular.model.entity.Field;
@@ -16,6 +17,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -23,6 +25,7 @@ import java.util.List;
 
 import static ir.kghobad.thesis_defense_time_schedular.helper.TestDataBuilder.DEFAULT_PASSWORD;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -31,6 +34,8 @@ public class AdminControllerIntegrationTest extends BaseIntegrationTest {
 
     @Autowired
     private AdminMockHelper adminMockHelper;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Test
     public void testRegisterSingleStudent_Success() throws Exception {
@@ -132,5 +137,20 @@ public class AdminControllerIntegrationTest extends BaseIntegrationTest {
         assertEquals(adminRejectedForm.getTitle(), result.get(1).get("title").asText());
         assertEquals(adminRejectedForm.getStudent().getId(), result.get(1).get("studentId").longValue());
         assertEquals(adminRejectedForm.getAbstractText(), result.get(1).get("abstractText").asText());
+    }
+
+    @Test
+    public void testChangePassword() throws Exception {
+        adminRepository.save(testDataBuilder.createAdmin("admin@test.com", "Admin", "User", "09123456789"));
+        String token = getAuthToken("admin@test.com", DEFAULT_PASSWORD);
+
+        PasswordChangeInputDTO input = new PasswordChangeInputDTO();
+        input.setCurrentPassword(DEFAULT_PASSWORD);
+        String newPassword = "password1234";
+        input.setNewPassword(newPassword);
+        adminMockHelper.changePassword(input, token);
+
+        Admin admin = adminRepository.findByEmail("admin@test.com").orElseThrow();
+        assertTrue(passwordEncoder.matches(newPassword, admin.getPassword()));
     }
 }

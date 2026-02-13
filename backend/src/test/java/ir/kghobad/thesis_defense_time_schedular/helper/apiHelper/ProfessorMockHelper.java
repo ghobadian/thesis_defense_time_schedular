@@ -1,16 +1,21 @@
-package ir.kghobad.thesis_defense_time_schedular.helper;
+package ir.kghobad.thesis_defense_time_schedular.helper.apiHelper;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import ir.kghobad.thesis_defense_time_schedular.model.dto.meeting.AvailableTimeInputDTO;
 import ir.kghobad.thesis_defense_time_schedular.model.dto.meeting.MeetingCompletionInputDTO;
 import ir.kghobad.thesis_defense_time_schedular.model.dto.meeting.MeetingCreationInputDTO;
 import ir.kghobad.thesis_defense_time_schedular.model.dto.meeting.MeetingJuriesReassignmentInputDTO;
+import ir.kghobad.thesis_defense_time_schedular.model.dto.user.SimpleUserOutputDto;
+import ir.kghobad.thesis_defense_time_schedular.model.entity.user.Professor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+
+import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -172,5 +177,11 @@ public class ProfessorMockHelper {
                         .content(objectMapper.writeValueAsString(inputDto)))
                 .andExpect(status().isOk());
 
+    }
+
+    public List<Professor> getAllCompetentJuriesForSelection(String token) throws Exception {
+        String response = mockMvc.perform(get("/professor/list-competent-juries")
+                .header("Authorization", "Bearer " + token)).andReturn().getResponse().getContentAsString();
+        return objectMapper.readValue(response, new TypeReference<>() {});
     }
 }

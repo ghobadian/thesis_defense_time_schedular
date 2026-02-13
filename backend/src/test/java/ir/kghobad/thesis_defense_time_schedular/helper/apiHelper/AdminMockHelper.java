@@ -1,6 +1,7 @@
-package ir.kghobad.thesis_defense_time_schedular.helper;
+package ir.kghobad.thesis_defense_time_schedular.helper.apiHelper;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import ir.kghobad.thesis_defense_time_schedular.model.dto.user.student.PasswordChangeInputDTO;
 import ir.kghobad.thesis_defense_time_schedular.model.dto.user.student.StudentRegistrationInputDTO;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
@@ -317,5 +318,12 @@ public class AdminMockHelper {
     public ResultActions getDepartmentStatisticsReport(Long departmentId, String token) throws Exception {
         return mockMvc.perform(get("/reports/department-statistics/" + departmentId)
                 .header("Authorization", "Bearer " + token));
+    }
+
+    public ResultActions changePassword(PasswordChangeInputDTO input, String token) throws Exception {
+        return mockMvc.perform(put("/admin/change-password")
+                .header("Authorization", "Bearer " + token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(input)));
     }
 }

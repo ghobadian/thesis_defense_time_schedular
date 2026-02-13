@@ -95,7 +95,7 @@ export const professorAPI = {
     },
 
     getAllProfessors: async () => {
-        const response = await getApi().get('/list');
+        const response = await getApi().get('/list-competent-juries');
         return response.data;
     },
 

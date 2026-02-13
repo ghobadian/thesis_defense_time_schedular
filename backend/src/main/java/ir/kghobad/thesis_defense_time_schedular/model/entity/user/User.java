@@ -9,6 +9,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity
 @Table(name = "users")
@@ -16,8 +17,7 @@ import java.time.LocalDateTime;
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @Getter
 @Setter
-@EqualsAndHashCode
-@ToString(of = {"firstName", "lastName", "email"})
+@ToString(of = {"firstName", "lastName", "email", "department"})
 @AllArgsConstructor
 public abstract class User {
     @Id
@@ -61,5 +61,16 @@ public abstract class User {
 
     public String getFullName() {
         return this.getFirstName() + " " + this.getLastName();
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (!(object instanceof User user)) return false;
+        return enabled == user.enabled && Objects.equals(id, user.id) && Objects.equals(firstName, user.firstName) && Objects.equals(lastName, user.lastName) && Objects.equals(email, user.email) && Objects.equals(phoneNumber, user.phoneNumber) && Objects.equals(password, user.password) && Objects.equals(department, user.department) && Objects.equals(field, user.field) && Objects.equals(creationDate, user.creationDate);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, firstName, lastName, email, phoneNumber, password, department, field, enabled, creationDate);
     }
 }

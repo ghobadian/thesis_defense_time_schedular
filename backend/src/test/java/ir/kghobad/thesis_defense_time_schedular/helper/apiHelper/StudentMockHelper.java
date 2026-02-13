@@ -1,4 +1,4 @@
-package ir.kghobad.thesis_defense_time_schedular.helper;
+package ir.kghobad.thesis_defense_time_schedular.helper.apiHelper;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
