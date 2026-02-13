@@ -2,13 +2,13 @@
 
 import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Card } from '../../components/common/Card';
-import { Button } from '../../components/common/Button';
-import { useAuthStore } from '../../store/authStore';
-import { studentAPI } from '../../api/student.api';
-import { professorAPI } from '../../api/professor.api';
-import { adminAPI } from '../../api/admin.api';
-import { UserRole } from '../../types';
+import { Card } from '../components/common/Card';
+import { Button } from '../components/common/Button';
+import { useAuthStore } from '../store/authStore';
+import { studentAPI } from '../api/student.api';
+import { professorAPI } from '../api/professor.api';
+import { adminAPI } from '../api/admin.api';
+import { UserRole } from '../types';
 import {
     User,
     Mail,
@@ -26,6 +26,8 @@ import {
     Edit3,
     Lock
 } from 'lucide-react';
+import {authAPI} from "../api/auth.api";
+import {useNavigate} from "react-router-dom";
 
 // ============================================================================
 // TYPE DEFINITIONS
@@ -222,7 +224,8 @@ const Badge: React.FC<BadgeProps> = ({ children, variant }) => {
 // ============================================================================
 
 export const ProfilePage: React.FC = () => {
-    const { role } = useAuthStore();
+    const { role, clearAuth } = useAuthStore();
+    const navigate = useNavigate();
     const queryClient = useQueryClient();
 
     // State
@@ -242,6 +245,7 @@ export const ProfilePage: React.FC = () => {
     const api = getAPIByRole(role!);
     const queryKey = getQueryKey(role!);
     const RoleIcon = roleConfig.icon;
+
 
     // Query: Fetch Profile
     const {
@@ -302,10 +306,12 @@ export const ProfilePage: React.FC = () => {
     const updatePasswordMutation = useMutation({
         mutationFn: (data: PasswordChangeData) => api.changePassword(data),
         onSuccess: () => {
-            setIsChangingPassword(false);
-            setPasswords({ currentPassword: '', newPassword: '', confirmPassword: '' });
-            setSuccessMessage('Password changed successfully!');
-            setErrors({});
+            setSuccessMessage('Password changed successfully! Redirecting to login...');
+            setTimeout(() => {
+                authAPI.logout();
+                clearAuth();
+                navigate('/login');
+            }, 2000);
         },
         onError: (error: any) => {
             let errorMessage = 'Failed to update password. Please check your current password.';
