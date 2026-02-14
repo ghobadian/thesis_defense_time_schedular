@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { API_BASE_URL } from './config';
-import {AvailableTime, MeetingTimeSlotsResponse, RevisionTarget} from "../types";
+import {AvailableTime, AvailableTimeRange, MeetingTimeSlotsResponse, RevisionTarget} from "../types";
 
 
 
@@ -45,6 +45,11 @@ export const professorAPI = {
 
     submitMeetingTimeSlots: async (requestBody: AvailableTime)=> {
         const response = await getApi().post('/meetings/give-time', requestBody);
+        return response.data;
+    },
+
+    submitMeetingTimeRanges: async (requestBody: AvailableTimeRange)=> {
+        const response = await getApi().post('/meetings/give-time-range', requestBody);
         return response.data;
     },
 

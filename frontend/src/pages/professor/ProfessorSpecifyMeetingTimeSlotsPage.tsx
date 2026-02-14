@@ -6,9 +6,11 @@ import { Card } from '../../components/common/Card';
 import { Button } from '../../components/common/Button';
 import { TimeSlotsComparison } from '../../components/professor/TimeSlotsComparison';
 import { professorAPI } from '../../api/professor.api';
-import { Calendar, Clock, ArrowLeft, Users } from 'lucide-react';
-import { TimePeriod, TimeSlot } from '../../types';
+import { Calendar, Clock, ArrowLeft, Users, Plus, Trash2 } from 'lucide-react';
+import { TimePeriod, TimeSlot, TimeRange } from '../../types';
 import { useAuthStore } from '../../store/authStore';
+
+type InputMode = 'slots' | 'ranges';
 
 export const ProfessorSpecifyMeetingTimeSlotsPage: React.FC = () => {
     const { meetingId } = useParams<{ meetingId: string }>();
@@ -16,10 +18,18 @@ export const ProfessorSpecifyMeetingTimeSlotsPage: React.FC = () => {
     const queryClient = useQueryClient();
     const { userId } = useAuthStore();
 
+    // Input mode toggle
+    const [inputMode, setInputMode] = useState<InputMode>('slots');
+
+    // --- Time Slots state (existing) ---
     const [selectedSlots, setSelectedSlots] = useState<TimeSlot[]>([]);
     const [currentDate, setCurrentDate] = useState('');
-    // const [currentSlots, setCurrentSlots] = useState<TimeSlot[]>([]);
     const [currentPeriods, setCurrentPeriods] = useState<TimePeriod[]>([]);
+
+    // --- Time Ranges state (new) ---
+    const [timeRanges, setTimeRanges] = useState<TimeRange[]>([]);
+    const [currentRangeFrom, setCurrentRangeFrom] = useState('');
+    const [currentRangeTo, setCurrentRangeTo] = useState('');
 
     // Fetch meeting details
     const { data: meeting, isLoading } = useQuery({
@@ -46,16 +56,12 @@ export const ProfessorSpecifyMeetingTimeSlotsPage: React.FC = () => {
         }
     }, [myExistingTimeSlots]);
 
-    // Submit time slots mutation
-    const submitMutation = useMutation({
+    // Submit time slots mutation (existing)
+    const submitSlotsMutation = useMutation({
         mutationFn: (availableTime: { meetingId: number; timeSlots: TimeSlot[] }) =>
             professorAPI.submitMeetingTimeSlots(availableTime),
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['myMeetings'] });
-            queryClient.invalidateQueries({ queryKey: ['meeting', meetingId] });
-            queryClient.invalidateQueries({ queryKey: ['myMeetingTimeSlots', meetingId, userId] });
-            queryClient.invalidateQueries({ queryKey: ['myTimeSlots'] });
-            queryClient.invalidateQueries({ queryKey: ['meetingTimeSlots', Number(meetingId)] });
+            invalidateQueries();
             alert('Time slots updated successfully!');
             navigate(`/professor/meetings/${meetingId}/specify-time`);
         },
@@ -63,6 +69,28 @@ export const ProfessorSpecifyMeetingTimeSlotsPage: React.FC = () => {
             alert(error.response?.data?.message || 'Failed to submit time slots');
         },
     });
+
+    // Submit time ranges mutation (new)
+    const submitRangesMutation = useMutation({
+        mutationFn: (availableTimeRange: { meetingId: number; timeRanges: TimeRange[] }) =>
+            professorAPI.submitMeetingTimeRanges(availableTimeRange),
+        onSuccess: () => {
+            invalidateQueries();
+            alert('Time ranges submitted successfully!');
+            navigate(`/professor/meetings/${meetingId}/specify-time`);
+        },
+        onError: (error: any) => {
+            alert(error.response?.data?.message || 'Failed to submit time ranges');
+        },
+    });
+
+    const invalidateQueries = () => {
+        queryClient.invalidateQueries({ queryKey: ['myMeetings'] });
+        queryClient.invalidateQueries({ queryKey: ['meeting', meetingId] });
+        queryClient.invalidateQueries({ queryKey: ['myMeetingTimeSlots', meetingId, userId] });
+        queryClient.invalidateQueries({ queryKey: ['myTimeSlots'] });
+        queryClient.invalidateQueries({ queryKey: ['meetingTimeSlots', Number(meetingId)] });
+    };
 
     const periodLabels: Record<TimePeriod, string> = {
         [TimePeriod.PERIOD_7_30_9_00]: '7:30 - 9:00',
@@ -72,14 +100,6 @@ export const ProfessorSpecifyMeetingTimeSlotsPage: React.FC = () => {
         [TimePeriod.PERIOD_15_30_17_00]: '15:30 - 17:00',
     };
 
-    // const togglePeriod = (slot: TimeSlot) => {
-    //     setCurrentSlots(prev =>
-    //         prev.includes(slot)
-    //             ? prev.filter(p => p !== slot)
-    //             : [...prev, slot]
-    //     );
-    // };
-
     const togglePeriod = (period: TimePeriod) => {
         setCurrentPeriods(prev =>
             prev.includes(period)
@@ -88,29 +108,6 @@ export const ProfessorSpecifyMeetingTimeSlotsPage: React.FC = () => {
         );
     };
 
-    // const addTimeSlot = () => {
-    //     if (!currentDate || currentSlots.length === 0) {
-    //         alert('Please select a date and at least one time period');
-    //         return;
-    //     }
-    //
-    //     const newTimeSlots: TimeSlot[] = currentSlots.map(slot => ({
-    //         id: slot.id,
-    //         date: currentDate,
-    //         timePeriod: slot.timePeriod,
-    //     }));
-    //
-    //     setSelectedSlots(prev => {
-    //         const existing = prev.filter(
-    //             slot => !(slot.date === currentDate && currentSlots.includes(slot))
-    //         );
-    //         return [...existing, ...newTimeSlots];
-    //     });
-    //
-    //     setCurrentDate('');
-    //     setCurrentSlots([]);
-    // };
-
     const addTimeSlot = () => {
         if (!currentDate || currentPeriods.length === 0) {
             alert('Please select a date and at least one time period');
@@ -118,7 +115,7 @@ export const ProfessorSpecifyMeetingTimeSlotsPage: React.FC = () => {
         }
 
         const newTimeSlots: TimeSlot[] = currentPeriods.map(period => ({
-            id: -1, // Temporary ID; real ID assigned by backend
+            id: -1,
             date: currentDate,
             timePeriod: period,
         }));
@@ -144,16 +141,68 @@ export const ProfessorSpecifyMeetingTimeSlotsPage: React.FC = () => {
         }
     };
 
-    const handleSubmit = () => {
-        if (selectedSlots.length === 0) {
-            alert('Please add at least one time slot');
+    // --- Time Range helpers (new) ---
+    const addTimeRange = () => {
+        if (!currentRangeFrom || !currentRangeTo) {
+            alert('Please specify both "From" and "To" date-times');
+            return;
+        }
+        if (new Date(currentRangeFrom) >= new Date(currentRangeTo)) {
+            alert('"From" must be before "To"');
             return;
         }
 
-        submitMutation.mutate({
-            meetingId: Number(meetingId),
-            timeSlots: selectedSlots,
+        // Check for duplicate ranges
+        const isDuplicate = timeRanges.some(
+            r => r.from === currentRangeFrom && r.to === currentRangeTo
+        );
+        if (isDuplicate) {
+            alert('This time range has already been added');
+            return;
+        }
+
+        setTimeRanges(prev => [...prev, { from: currentRangeFrom, to: currentRangeTo }]);
+        setCurrentRangeFrom('');
+        setCurrentRangeTo('');
+    };
+
+    const removeTimeRange = (index: number) => {
+        setTimeRanges(prev => prev.filter((_, i) => i !== index));
+    };
+
+    const formatDateTimeForDisplay = (isoString: string): string => {
+        if (!isoString) return '';
+        const date = new Date(isoString);
+        return date.toLocaleString('en-US', {
+            weekday: 'short',
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
         });
+    };
+
+    const handleSubmit = () => {
+        if (inputMode === 'slots') {
+            if (selectedSlots.length === 0) {
+                alert('Please add at least one time slot');
+                return;
+            }
+            submitSlotsMutation.mutate({
+                meetingId: Number(meetingId),
+                timeSlots: selectedSlots,
+            });
+        } else {
+            if (timeRanges.length === 0) {
+                alert('Please add at least one time range');
+                return;
+            }
+            submitRangesMutation.mutate({
+                meetingId: Number(meetingId),
+                timeRanges: timeRanges,
+            });
+        }
     };
 
     const groupedSlots = selectedSlots.reduce((acc, slot) => {
@@ -163,6 +212,9 @@ export const ProfessorSpecifyMeetingTimeSlotsPage: React.FC = () => {
         acc[slot.date].push(slot.timePeriod);
         return acc;
     }, {} as Record<string, TimePeriod[]>);
+
+    const isSubmitting = submitSlotsMutation.isPending || submitRangesMutation.isPending;
+    const hasData = inputMode === 'slots' ? selectedSlots.length > 0 : timeRanges.length > 0;
 
     if (isLoading || isLoadingTimeSlots) {
         return (
@@ -224,122 +276,263 @@ export const ProfessorSpecifyMeetingTimeSlotsPage: React.FC = () => {
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {/* Add Time Slot Form */}
-                <Card title="Add Available Time Slots">
-                    <div className="space-y-4">
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
-                                <Calendar className="inline h-4 w-4 mr-1" />
-                                Select Date
-                            </label>
-                            <input
-                                type="date"
-                                value={currentDate}
-                                onChange={(e) => setCurrentDate(e.target.value)}
-                                min={new Date().toISOString().split('T')[0]}
-                                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                            />
-                        </div>
+            {/* Input Mode Toggle */}
+            <Card>
+                <div className="flex items-center justify-center space-x-2">
+                    <span className="text-sm font-medium text-gray-700 mr-2">Input Mode:</span>
+                    <button
+                        onClick={() => setInputMode('slots')}
+                        className={`px-4 py-2 rounded-l-lg border text-sm font-medium transition-colors ${
+                            inputMode === 'slots'
+                                ? 'bg-primary-600 text-white border-primary-600'
+                                : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+                        }`}
+                    >
+                        <Clock className="h-4 w-4 inline mr-1.5" />
+                        Predefined Time Slots
+                    </button>
+                    <button
+                        onClick={() => setInputMode('ranges')}
+                        className={`px-4 py-2 rounded-r-lg border text-sm font-medium transition-colors ${
+                            inputMode === 'ranges'
+                                ? 'bg-primary-600 text-white border-primary-600'
+                                : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+                        }`}
+                    >
+                        <Calendar className="h-4 w-4 inline mr-1.5" />
+                        Custom Time Ranges
+                    </button>
+                </div>
+                <p className="text-xs text-gray-500 text-center mt-2">
+                    {inputMode === 'slots'
+                        ? 'Select from predefined time periods for specific dates.'
+                        : 'Specify custom date-time ranges for your availability.'}
+                </p>
+            </Card>
 
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
-                                <Clock className="inline h-4 w-4 mr-1" />
-                                Select Time Periods
-                            </label>
-                            <div className="grid grid-cols-1 gap-2">
-                                {Object.entries(periodLabels).map(([period, label]) => (
-                                    <button
-                                        key={period}
-                                        type="button"
-                                        onClick={() => togglePeriod(period as TimePeriod)}
-                                        className={`p-3 rounded-lg border-2 text-sm font-medium transition-colors text-left ${
-                                            currentPeriods.includes(period as TimePeriod)
-                                                ? 'border-primary-600 bg-primary-50 text-primary-700'
-                                                : 'border-gray-300 hover:border-gray-400'
-                                        }`}
-                                    >
-                                        <Clock className="h-4 w-4 inline mr-2" />
-                                        {label}
-                                    </button>
-                                ))}
+            {/* ==================== SLOTS MODE ==================== */}
+            {inputMode === 'slots' && (
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    {/* Add Time Slot Form */}
+                    <Card title="Add Available Time Slots">
+                        <div className="space-y-4">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    <Calendar className="inline h-4 w-4 mr-1" />
+                                    Select Date
+                                </label>
+                                <input
+                                    type="date"
+                                    value={currentDate}
+                                    onChange={(e) => setCurrentDate(e.target.value)}
+                                    min={new Date().toISOString().split('T')[0]}
+                                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                                />
                             </div>
-                        </div>
 
-                        <Button
-                            onClick={addTimeSlot}
-                            disabled={!currentDate || currentPeriods.length === 0}
-                            variant="secondary"
-                            className="w-full"
-                        >
-                            Add to List
-                        </Button>
-                    </div>
-                </Card>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    <Clock className="inline h-4 w-4 mr-1" />
+                                    Select Time Periods
+                                </label>
+                                <div className="grid grid-cols-1 gap-2">
+                                    {Object.entries(periodLabels).map(([period, label]) => (
+                                        <button
+                                            key={period}
+                                            type="button"
+                                            onClick={() => togglePeriod(period as TimePeriod)}
+                                            className={`p-3 rounded-lg border-2 text-sm font-medium transition-colors text-left ${
+                                                currentPeriods.includes(period as TimePeriod)
+                                                    ? 'border-primary-600 bg-primary-50 text-primary-700'
+                                                    : 'border-gray-300 hover:border-gray-400'
+                                            }`}
+                                        >
+                                            <Clock className="h-4 w-4 inline mr-2" />
+                                            {label}
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
 
-                {/* Selected Time Slots */}
-                <Card title={`Selected Time Slots (${Object.keys(groupedSlots).length} dates)`}>
-                    {Object.keys(groupedSlots).length === 0 ? (
-                        <div className="text-center py-8 text-gray-500">
-                            <Clock className="h-12 w-12 mx-auto mb-3 text-gray-400" />
-                            <p>No time slots added yet</p>
-                            <p className="text-sm mt-1">Add available dates and times from the form</p>
+                            <Button
+                                onClick={addTimeSlot}
+                                disabled={!currentDate || currentPeriods.length === 0}
+                                variant="secondary"
+                                className="w-full"
+                            >
+                                Add to List
+                            </Button>
                         </div>
-                    ) : (
-                        <div className="space-y-3 max-h-96 overflow-y-auto">
-                            {Object.entries(groupedSlots)
-                                .sort(([dateA], [dateB]) => dateA.localeCompare(dateB))
-                                .map(([date, periods]) => (
-                                    <div key={date} className="border rounded-lg p-3 bg-gray-50">
-                                        <div className="flex items-center justify-between mb-2">
-                                            <p className="font-medium text-gray-900">
-                                                {new Date(date).toLocaleDateString('en-US', {
-                                                    weekday: 'long',
-                                                    year: 'numeric',
-                                                    month: 'long',
-                                                    day: 'numeric'
-                                                })}
-                                            </p>
-                                            <button
-                                                onClick={() => removeTimeSlot(date)}
-                                                className="text-red-600 hover:text-red-800 text-sm"
-                                            >
-                                                Remove All
-                                            </button>
-                                        </div>
-                                        <div className="space-y-1">
-                                            {periods.map((period) => (
-                                                <div
-                                                    key={period}
-                                                    className="flex items-center justify-between bg-white rounded px-3 py-2"
+                    </Card>
+
+                    {/* Selected Time Slots */}
+                    <Card title={`Selected Time Slots (${Object.keys(groupedSlots).length} dates)`}>
+                        {Object.keys(groupedSlots).length === 0 ? (
+                            <div className="text-center py-8 text-gray-500">
+                                <Clock className="h-12 w-12 mx-auto mb-3 text-gray-400" />
+                                <p>No time slots added yet</p>
+                                <p className="text-sm mt-1">Add available dates and times from the form</p>
+                            </div>
+                        ) : (
+                            <div className="space-y-3 max-h-96 overflow-y-auto">
+                                {Object.entries(groupedSlots)
+                                    .sort(([dateA], [dateB]) => dateA.localeCompare(dateB))
+                                    .map(([date, periods]) => (
+                                        <div key={date} className="border rounded-lg p-3 bg-gray-50">
+                                            <div className="flex items-center justify-between mb-2">
+                                                <p className="font-medium text-gray-900">
+                                                    {new Date(date).toLocaleDateString('en-US', {
+                                                        weekday: 'long',
+                                                        year: 'numeric',
+                                                        month: 'long',
+                                                        day: 'numeric'
+                                                    })}
+                                                </p>
+                                                <button
+                                                    onClick={() => removeTimeSlot(date)}
+                                                    className="text-red-600 hover:text-red-800 text-sm"
                                                 >
-                                                    <span className="text-sm text-gray-700">
-                                                        {periodLabels[period]}
-                                                    </span>
-                                                    <button
-                                                        onClick={() => removeTimeSlot(date, period)}
-                                                        className="text-red-600 hover:text-red-800 text-xs"
+                                                    Remove All
+                                                </button>
+                                            </div>
+                                            <div className="space-y-1">
+                                                {periods.map((period) => (
+                                                    <div
+                                                        key={period}
+                                                        className="flex items-center justify-between bg-white rounded px-3 py-2"
                                                     >
-                                                        Remove
-                                                    </button>
+                                                        <span className="text-sm text-gray-700">
+                                                            {periodLabels[period]}
+                                                        </span>
+                                                        <button
+                                                            onClick={() => removeTimeSlot(date, period)}
+                                                            className="text-red-600 hover:text-red-800 text-xs"
+                                                        >
+                                                            Remove
+                                                        </button>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    ))}
+                            </div>
+                        )}
+                    </Card>
+                </div>
+            )}
+
+            {/* ==================== RANGES MODE ==================== */}
+            {inputMode === 'ranges' && (
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    {/* Add Time Range Form */}
+                    <Card title="Add Available Time Range">
+                        <div className="space-y-4">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    <Calendar className="inline h-4 w-4 mr-1" />
+                                    From (Date & Time)
+                                </label>
+                                <input
+                                    type="datetime-local"
+                                    value={currentRangeFrom}
+                                    onChange={(e) => setCurrentRangeFrom(e.target.value)}
+                                    min={new Date().toISOString().slice(0, 16)}
+                                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    <Calendar className="inline h-4 w-4 mr-1" />
+                                    To (Date & Time)
+                                </label>
+                                <input
+                                    type="datetime-local"
+                                    value={currentRangeTo}
+                                    onChange={(e) => setCurrentRangeTo(e.target.value)}
+                                    min={currentRangeFrom || new Date().toISOString().slice(0, 16)}
+                                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                                />
+                            </div>
+
+                            <Button
+                                onClick={addTimeRange}
+                                disabled={!currentRangeFrom || !currentRangeTo}
+                                variant="secondary"
+                                className="w-full"
+                            >
+                                <Plus className="h-4 w-4 inline mr-1" />
+                                Add Range to List
+                            </Button>
+                        </div>
+                    </Card>
+
+                    {/* Selected Time Ranges */}
+                    <Card title={`Selected Time Ranges (${timeRanges.length})`}>
+                        {timeRanges.length === 0 ? (
+                            <div className="text-center py-8 text-gray-500">
+                                <Calendar className="h-12 w-12 mx-auto mb-3 text-gray-400" />
+                                <p>No time ranges added yet</p>
+                                <p className="text-sm mt-1">Specify your available date-time ranges from the form</p>
+                            </div>
+                        ) : (
+                            <div className="space-y-3 max-h-96 overflow-y-auto">
+                                {timeRanges.map((range, index) => (
+                                    <div key={index} className="border rounded-lg p-3 bg-gray-50">
+                                        <div className="flex items-start justify-between">
+                                            <div className="flex-1">
+                                                <div className="flex items-center space-x-2 mb-1">
+                                                    <span className="text-xs font-semibold text-green-700 bg-green-100 px-2 py-0.5 rounded">
+                                                        FROM
+                                                    </span>
+                                                    <span className="text-sm text-gray-900">
+                                                        {formatDateTimeForDisplay(range.from)}
+                                                    </span>
                                                 </div>
-                                            ))}
+                                                <div className="flex items-center space-x-2">
+                                                    <span className="text-xs font-semibold text-red-700 bg-red-100 px-2 py-0.5 rounded">
+                                                        TO
+                                                    </span>
+                                                    <span className="text-sm text-gray-900">
+                                                        {formatDateTimeForDisplay(range.to)}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <button
+                                                onClick={() => removeTimeRange(index)}
+                                                className="text-red-600 hover:text-red-800 p-1 ml-2"
+                                                title="Remove range"
+                                            >
+                                                <Trash2 className="h-4 w-4" />
+                                            </button>
                                         </div>
                                     </div>
                                 ))}
-                        </div>
-                    )}
-                </Card>
-            </div>
+                            </div>
+                        )}
+                    </Card>
+                </div>
+            )}
 
             {/* Submit Button */}
             <Card>
                 <div className="flex items-center justify-between">
                     <div className="text-sm text-gray-600">
-                        <p>Total slots selected: <span className="font-semibold">{selectedSlots.length}</span></p>
-                        <p className="text-xs text-gray-500 mt-1">
-                            Students will be able to choose from these available time slots
-                        </p>
+                        {inputMode === 'slots' ? (
+                            <>
+                                <p>Total slots selected: <span className="font-semibold">{selectedSlots.length}</span></p>
+                                <p className="text-xs text-gray-500 mt-1">
+                                    Students will be able to choose from these available time slots
+                                </p>
+                            </>
+                        ) : (
+                            <>
+                                <p>Total ranges specified: <span className="font-semibold">{timeRanges.length}</span></p>
+                                <p className="text-xs text-gray-500 mt-1">
+                                    The system will derive available time slots from your specified ranges
+                                </p>
+                            </>
+                        )}
                     </div>
                     <div className="flex space-x-3">
                         <Button
@@ -350,10 +543,10 @@ export const ProfessorSpecifyMeetingTimeSlotsPage: React.FC = () => {
                         </Button>
                         <Button
                             onClick={handleSubmit}
-                            isLoading={submitMutation.isPending}
-                            disabled={selectedSlots.length === 0}
+                            isLoading={isSubmitting}
+                            disabled={!hasData}
                         >
-                            Submit Time Slots
+                            {inputMode === 'slots' ? 'Submit Time Slots' : 'Submit Time Ranges'}
                         </Button>
                     </div>
                 </div>
