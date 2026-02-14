@@ -15,6 +15,7 @@ import ir.kghobad.thesis_defense_time_schedular.model.enums.FormState;
 import ir.kghobad.thesis_defense_time_schedular.model.enums.StudentType;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -124,7 +125,7 @@ public class AdminControllerIntegrationTest extends BaseIntegrationTest {
         String token = getAuthToken("admin@test.com", DEFAULT_PASSWORD);
 
         MockHttpServletResponse authorization = mockMvc.perform(get("/admin/forms")
-                        .header("Authorization", "Bearer " + token)
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                 )
                 .andExpect(status().isOk())
                 .andReturn().getResponse();
