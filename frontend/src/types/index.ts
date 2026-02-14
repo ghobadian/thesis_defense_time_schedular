@@ -137,6 +137,11 @@ export interface TimeSlot {
     timePeriod: TimePeriod;
 }
 
+export interface TimeRange {
+    from: string;
+    to: string;
+}
+
 export interface Meeting {
     id: number;
     thesis: ThesisForm;
@@ -152,6 +157,11 @@ export interface Meeting {
 export interface AvailableTime {
     meetingId: number;
     timeSlots: TimeSlot[];
+}
+
+export interface AvailableTimeRange {
+    meetingId: number;
+    timeRanges: TimeRange[];
 }
 
 
