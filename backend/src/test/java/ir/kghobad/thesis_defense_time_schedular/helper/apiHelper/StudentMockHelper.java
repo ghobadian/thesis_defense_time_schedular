@@ -33,7 +33,7 @@ public class StudentMockHelper {
 
     public ResultActions createThesisForm(ThesisFormInputDTO formDTO, String token) throws Exception {
         return mockMvc.perform(post("/student/forms")
-                .header("Authorization", "Bearer " + token)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(formDTO)))
                 .andExpect(status().isOk())
@@ -43,14 +43,14 @@ public class StudentMockHelper {
 
     public List<ThesisFormOutputDTO> getMyThesisForms(String token) throws Exception {
         String response = mockMvc.perform(get("/student/forms")
-                .header("Authorization", "Bearer " + token)).andReturn().getResponse().getContentAsString();
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)).andReturn().getResponse().getContentAsString();
         return objectMapper.readValue(response, new TypeReference<>() {});
     }
 
 
     public List<ThesisDefenseMeetingOutputDTO> getMyDefenseMeeting(String token) throws Exception {
         String response = mockMvc.perform(get("/student/meetings")
-                .header("Authorization", "Bearer " + token)).andReturn().getResponse().getContentAsString();
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)).andReturn().getResponse().getContentAsString();
         return objectMapper.readValue(response, new TypeReference<>() {});
     }
 
@@ -65,7 +65,7 @@ public class StudentMockHelper {
             """, firstName, lastName, phoneNumber);
 
         return mockMvc.perform(put("/student/profile")
-                .header("Authorization", "Bearer " + token)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(profileJson));
     }
@@ -79,7 +79,7 @@ public class StudentMockHelper {
             """, currentPassword, newPassword);
 
         return mockMvc.perform(put("/student/change-password")
-                .header("Authorization", "Bearer " + token)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(passwordJson));
     }

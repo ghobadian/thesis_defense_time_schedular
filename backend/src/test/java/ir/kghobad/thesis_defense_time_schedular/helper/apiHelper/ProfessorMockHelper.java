@@ -2,10 +2,7 @@ package ir.kghobad.thesis_defense_time_schedular.helper.apiHelper;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import ir.kghobad.thesis_defense_time_schedular.model.dto.meeting.AvailableTimeInputDTO;
-import ir.kghobad.thesis_defense_time_schedular.model.dto.meeting.MeetingCompletionInputDTO;
-import ir.kghobad.thesis_defense_time_schedular.model.dto.meeting.MeetingCreationInputDTO;
-import ir.kghobad.thesis_defense_time_schedular.model.dto.meeting.MeetingJuriesReassignmentInputDTO;
+import ir.kghobad.thesis_defense_time_schedular.model.dto.meeting.*;
 import ir.kghobad.thesis_defense_time_schedular.model.dto.user.SimpleUserOutputDto;
 import ir.kghobad.thesis_defense_time_schedular.model.entity.user.Professor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,12 +32,12 @@ public class ProfessorMockHelper {
 
     public ResultActions getThesisForms(String token) throws Exception {
         return mockMvc.perform(get("/professor/forms")
-                .header("Authorization", "Bearer " + token));
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token));
     }
 
     public ResultActions acceptForm(Long formId, String token) throws Exception {
         return mockMvc.perform(post("/professor/forms/%d/approve".formatted(formId))
-                .header("Authorization", "Bearer " + token))
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token))
                 .andExpect(status().isOk())
                 .andExpect(content().string("Form approved"));
     }
@@ -49,7 +46,7 @@ public class ProfessorMockHelper {
         return mockMvc.perform(post("/professor/meetings/create")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(input))
-                        .header("Authorization", "Bearer " + token))
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + token))
                 .andExpect(status().isOk())
                 .andExpect(content().string("Meeting created"));
     }
@@ -58,14 +55,14 @@ public class ProfessorMockHelper {
         return mockMvc.perform(put("/professor/meetings/reassign-juries")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(input))
-                        .header("Authorization", "Bearer " + token))
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + token))
                 .andExpect(status().isOk())
                 .andExpect(content().string("Juries reassigned"));
     }
 
     public ResultActions rejectForm(Long professorId, Long formId, String token) throws Exception {
         return mockMvc.perform(post("/professor/" + professorId + "/reject-form/" + formId)
-                .header("Authorization", "Bearer " + token));
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token));
     }
 
     public ResultActions suggestJuries(Long formId, Long[] juryIds, String token) throws Exception {
@@ -81,7 +78,7 @@ public class ProfessorMockHelper {
         juryIdsJson.append("]");
 
         return mockMvc.perform(post("/professor/suggest-juries/" + formId)
-                .header("Authorization", "Bearer " + token)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(juryIdsJson.toString()));
     }
@@ -90,7 +87,7 @@ public class ProfessorMockHelper {
 
     public ResultActions getProfessorAvailability(Long professorId, String token) throws Exception {
         return mockMvc.perform(get("/professors/" + professorId + "/availability")
-                .header("Authorization", "Bearer " + token));
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token));
     }
 
     public ResultActions updateProfessorAvailability(Long professorId, String token) throws Exception {
@@ -110,7 +107,7 @@ public class ProfessorMockHelper {
             """;
 
         return mockMvc.perform(put("/professors/" + professorId + "/availability")
-                .header("Authorization", "Bearer " + token)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(availabilityJson));
     }
@@ -120,23 +117,32 @@ public class ProfessorMockHelper {
                         .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(input)))
+                .andExpect(status().isOk())
+                .andExpect(content().string("Time slot added"));
+    }
+
+    public ResultActions specifyAvailableTimeRange(AvailableTimeRangeInputDTO input, String token) throws Exception {
+        return mockMvc.perform(post("/professor/meetings/give-time-range")
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(input)))
                 .andExpect(status().isOk());
     }
 
 
     public ResultActions getMySupervisedStudents(String token) throws Exception {
         return mockMvc.perform(get("/professor/my-students")
-                .header("Authorization", "Bearer " + token));
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token));
     }
 
     public ResultActions getMySupervisedTheses(String token) throws Exception {
         return mockMvc.perform(get("/professor/my-theses")
-                .header("Authorization", "Bearer " + token));
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token));
     }
 
     public ResultActions getMyDefenseMeetings(String token) throws Exception {
         return mockMvc.perform(get("/professor/my-defenses")
-                .header("Authorization", "Bearer " + token));
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token));
     }
 
     // ==================== Professor Profile Management ====================
@@ -151,7 +157,7 @@ public class ProfessorMockHelper {
             """, firstName, lastName, phoneNumber);
 
         return mockMvc.perform(put("/professor/profile")
-                .header("Authorization", "Bearer " + token)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(profileJson));
     }
@@ -165,7 +171,7 @@ public class ProfessorMockHelper {
             """, currentPassword, newPassword);
 
         return mockMvc.perform(put("/professor/change-password")
-                .header("Authorization", "Bearer " + token)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(passwordJson));
     }
@@ -181,7 +187,7 @@ public class ProfessorMockHelper {
 
     public List<Professor> getAllCompetentJuriesForSelection(String token) throws Exception {
         String response = mockMvc.perform(get("/professor/list-competent-juries")
-                .header("Authorization", "Bearer " + token)).andReturn().getResponse().getContentAsString();
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)).andReturn().getResponse().getContentAsString();
         return objectMapper.readValue(response, new TypeReference<>() {});
     }
 }

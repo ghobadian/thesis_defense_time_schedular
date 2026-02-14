@@ -5,6 +5,7 @@ import ir.kghobad.thesis_defense_time_schedular.dao.ThesisDefenseMeetingReposito
 import ir.kghobad.thesis_defense_time_schedular.dao.ThesisFormRepository;
 import ir.kghobad.thesis_defense_time_schedular.dao.TimeSlotRepository;
 import ir.kghobad.thesis_defense_time_schedular.model.dto.JuryMemberAvailability;
+import ir.kghobad.thesis_defense_time_schedular.model.dto.TimeRangeDTO;
 import ir.kghobad.thesis_defense_time_schedular.model.dto.user.SimpleUserOutputDto;
 import ir.kghobad.thesis_defense_time_schedular.model.dto.TimeSlotDTO;
 import ir.kghobad.thesis_defense_time_schedular.model.dto.meeting.*;
@@ -14,6 +15,7 @@ import ir.kghobad.thesis_defense_time_schedular.model.entity.thesisform.ThesisFo
 import ir.kghobad.thesis_defense_time_schedular.model.entity.user.Professor;
 import ir.kghobad.thesis_defense_time_schedular.model.enums.FormState;
 import ir.kghobad.thesis_defense_time_schedular.model.enums.MeetingState;
+import ir.kghobad.thesis_defense_time_schedular.model.enums.TimePeriod;
 import ir.kghobad.thesis_defense_time_schedular.security.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -26,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.Clock;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -127,10 +130,6 @@ public class ProfessorMeetingService {
             meeting.setUpdateDate(LocalDateTime.now());
             meetingRepository.save(meeting);
         }
-    }
-
-    public void specifyAvailableTime(AvailableTimeRangeInputDTO dto) {
-        // TODO
     }
 
     public void addTimeSlot(ThesisDefenseMeeting meeting, TimeSlot timeSlot) {
@@ -274,7 +273,7 @@ public class ProfessorMeetingService {
         meeting.setState(MeetingState.SCHEDULED);
         meeting.setUpdateDate(LocalDateTime.now());
         meeting.setLocation(input.getLocation());
-        meetingRepository.save(meeting);//todo fix this. logic is flawed. only if student has chosen the time, manager can set location and update meeting state
+        meetingRepository.save(meeting);
     }
 
     public void reassignJuries(MeetingJuriesReassignmentInputDTO input) {
@@ -285,4 +284,88 @@ public class ProfessorMeetingService {
         ThesisDefenseMeeting meeting = meetingRepository.findById(input.getMeetingId()).orElseThrow();
         suggestJuries(meeting, input.getJuryIds());
     }
+
+    @Transactional
+    public void specifyAvailableTime(AvailableTimeRangeInputDTO dto) {
+        validateTimeRanges(dto.getTimeRanges());
+
+        Set<TimeSlotDTO> timeSlots = convertTimeRangesToTimeSlots(dto.getTimeRanges());
+
+        if (timeSlots.isEmpty()) {
+            throw new IllegalArgumentException("No valid time slots found within the specified time ranges");
+        }
+
+        log.info("Converted {} time ranges to {} time slots for meeting {}",
+                dto.getTimeRanges().size(), timeSlots.size(), dto.getMeetingId());
+
+        AvailableTimeInputDTO timeInputDTO = new AvailableTimeInputDTO(timeSlots, dto.getMeetingId());
+        specifyAvailableTime(timeInputDTO);
+    }
+
+    private Set<TimeSlotDTO> convertTimeRangesToTimeSlots(Set<TimeRangeDTO> timeRanges) {
+        Set<TimeSlotDTO> allSlots = new HashSet<>();
+
+        for (TimeRangeDTO range : timeRanges) {
+            Set<TimeSlotDTO> slotsFromRange = convertSingleRangeToTimeSlots(range);
+            allSlots.addAll(slotsFromRange);
+        }
+
+        return allSlots;
+    }
+
+    private void validateTimeRanges(Set<TimeRangeDTO> timeRanges) {
+        if (timeRanges == null || timeRanges.isEmpty()) {
+            throw new IllegalArgumentException("At least one time range must be provided");
+        }
+
+        for (TimeRangeDTO range : timeRanges) {
+            validateTimeRange(range);
+        }
+    }
+
+    private void validateTimeRange(TimeRangeDTO range) {
+        if (range.getFrom() == null || range.getTo() == null) {
+            throw new IllegalArgumentException("Time range 'from' and 'to' must not be null");
+        }
+
+        if (range.getFrom().isAfter(range.getTo())) {
+            throw new IllegalArgumentException("Time range 'from' must be before or equal to 'to'");
+        }
+
+        if (range.getFrom().isBefore(LocalDateTime.now(clock))) {
+            throw new IllegalArgumentException("Time range 'from' must be in the future");
+        }
+
+        if (range.getTo().toLocalDate().isAfter(LocalDate.now(clock).plusDays(maxFutureDays))) {
+            throw new IllegalArgumentException(
+                    "Time range 'to' date must be within %d days from now".formatted(maxFutureDays));
+        }
+    }
+
+    private Set<TimeSlotDTO> convertSingleRangeToTimeSlots(TimeRangeDTO range) {
+        Set<TimeSlotDTO> slots = new HashSet<>();
+
+        LocalDate startDate = range.getFrom().toLocalDate();
+        LocalDate endDate = range.getTo().toLocalDate();
+
+        LocalDate currentDate = startDate;
+        while (!currentDate.isAfter(endDate)) {
+            for (TimePeriod period : TimePeriod.values()) {
+                if (isPeriodFullyWithinRange(currentDate, period, range)) {
+                    slots.add(new TimeSlotDTO(null, currentDate, period));
+                }
+            }
+            currentDate = currentDate.plusDays(1);
+        }
+
+        return slots;
+    }
+
+    private boolean isPeriodFullyWithinRange(LocalDate date, TimePeriod period, TimeRangeDTO range) {
+        LocalDateTime periodStart = LocalDateTime.of(date, period.getStartTime());
+        LocalDateTime periodEnd = LocalDateTime.of(date, period.getEndTime());
+
+        return !periodStart.isBefore(range.getFrom()) && !periodEnd.isAfter(range.getTo());
+    }
+
 }

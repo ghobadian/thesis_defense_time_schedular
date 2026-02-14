@@ -3,6 +3,8 @@ package ir.kghobad.thesis_defense_time_schedular.controller;
 import com.fasterxml.jackson.core.type.TypeReference;
 import ir.kghobad.thesis_defense_time_schedular.helper.BaseIntegrationTest;
 import ir.kghobad.thesis_defense_time_schedular.helper.apiHelper.ProfessorMockHelper;
+import ir.kghobad.thesis_defense_time_schedular.model.dto.TimeRangeDTO;
+import ir.kghobad.thesis_defense_time_schedular.model.dto.meeting.AvailableTimeRangeInputDTO;
 import ir.kghobad.thesis_defense_time_schedular.model.dto.meeting.MeetingJuriesReassignmentInputDTO;
 import ir.kghobad.thesis_defense_time_schedular.model.dto.user.SimpleUserOutputDto;
 import ir.kghobad.thesis_defense_time_schedular.model.dto.TimeSlotDTO;
@@ -11,6 +13,7 @@ import ir.kghobad.thesis_defense_time_schedular.model.dto.meeting.MeetingCreatio
 import ir.kghobad.thesis_defense_time_schedular.model.entity.Department;
 import ir.kghobad.thesis_defense_time_schedular.model.entity.Field;
 import ir.kghobad.thesis_defense_time_schedular.model.entity.ThesisDefenseMeeting;
+import ir.kghobad.thesis_defense_time_schedular.model.entity.TimeSlot;
 import ir.kghobad.thesis_defense_time_schedular.model.entity.thesisform.ThesisForm;
 import ir.kghobad.thesis_defense_time_schedular.model.entity.user.Professor;
 import ir.kghobad.thesis_defense_time_schedular.model.entity.user.student.Student;
@@ -20,10 +23,13 @@ import ir.kghobad.thesis_defense_time_schedular.model.enums.StudentType;
 import ir.kghobad.thesis_defense_time_schedular.model.enums.TimePeriod;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -72,7 +78,7 @@ public class ProfessorControllerIntegrationTest extends BaseIntegrationTest {
         String token = getAuthToken("instructor@test.com", DEFAULT_PASSWORD);
         
         mockMvc.perform(get("/professor/forms")
-                .header("Authorization", "Bearer " + token))
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)))
                 .andExpect(jsonPath("$[0].title").value("Thesis 1"))
@@ -194,17 +200,69 @@ public class ProfessorControllerIntegrationTest extends BaseIntegrationTest {
         String token = getAuthToken("prof@test.com", DEFAULT_PASSWORD);
         
         AvailableTimeInputDTO availableTimeInputDTo = new AvailableTimeInputDTO();
-        availableTimeInputDTo.setTimeSlots(Set.of(new TimeSlotDTO(1L, LocalDate.now().plusDays(7), TimePeriod.PERIOD_7_30_9_00)));
-        availableTimeInputDTo.setMeetingId(professor.getId());
+        TimeSlotDTO expectedTimeSlot = new TimeSlotDTO(1L, LocalDate.now().plusDays(7), TimePeriod.PERIOD_7_30_9_00);
+        availableTimeInputDTo.setTimeSlots(Set.of(expectedTimeSlot));
         availableTimeInputDTo.setMeetingId(meeting.getId());
-        
-        mockMvc.perform(post("/professor/meetings/give-time")
-                .param("professorId", professor.getId().toString())
-                .header("Authorization", "Bearer " + token)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(availableTimeInputDTo)))
-                .andExpect(status().isOk())
-                .andExpect(content().string("Time slot added"));
+
+        professorMockHelper.specifyAvailableTime(availableTimeInputDTo, token);
+
+        List<TimeSlot> all = timeSlotRepository.findAll();
+        assertFalse(all.isEmpty());
+        TimeSlot actualTimeSlot = all.getFirst();
+        assertEquals(expectedTimeSlot.getTimePeriod(), actualTimeSlot.getTimePeriod());
+        assertEquals(expectedTimeSlot.getDate(), actualTimeSlot.getDate());
+    }
+
+    @Test
+    public void testGiveTimeRange_Success() throws Exception {
+        Department dept = departmentRepository.save(testDataBuilder.createDepartment("Computer Science"));
+        Professor professor = professorRepository.save(
+                testDataBuilder.createProfessor("prof@test.com", "mari", "rose", dept, "09123854233")
+        );
+
+        Field field = fieldRepository.save(testDataBuilder.createField("Software Engineering", dept));
+
+        Student student = studentRepository.save(
+                testDataBuilder.createStudent("student@test.com", "Student", "User",
+                        12345L, StudentType.MASTER, dept, field, professor, "09121234562")
+        );
+        ThesisForm form = thesisFormRepository.save(testDataBuilder.createThesisForm(
+                "Test Thesis", "Test Abstract", student, professor, FormState.INSTRUCTOR_APPROVED, LocalDateTime.now(), null
+        ));
+
+        ThesisDefenseMeeting meeting = thesisDefenseMeetingRepository.save(testDataBuilder.createThesisDefenseMeeting(new ArrayList<>(), List.of(professor), form));
+
+        String token = getAuthToken("prof@test.com", DEFAULT_PASSWORD);
+
+        AvailableTimeRangeInputDTO range = new AvailableTimeRangeInputDTO();
+        LocalDate feb20 = LocalDate.of(2026, Month.FEBRUARY, 20);
+
+        LocalTime time7 = LocalTime.of(7, 0);
+        LocalTime time10 = LocalTime.of(10, 0);
+        LocalDateTime from1 = LocalDateTime.of(feb20, time7);
+        LocalDateTime to1 = LocalDateTime.of(feb20, time10);
+        TimeRangeDTO tr1 = new TimeRangeDTO(from1, to1);
+
+        LocalTime time14 = LocalTime.of(14, 0);
+        LocalTime time18 = LocalTime.of(18, 0);
+        LocalDateTime from2 = LocalDateTime.of(feb20, time14);
+        LocalDateTime to2 = LocalDateTime.of(feb20, time18);
+        TimeRangeDTO tr2 = new TimeRangeDTO(from2, to2);
+
+        range.setTimeRanges(Set.of(tr1, tr2));
+        range.setMeetingId(meeting.getId());
+
+        professorMockHelper.specifyAvailableTimeRange(range, token);
+
+        List<TimeSlot> all = timeSlotRepository.findAll();
+        assertEquals(2, all.size());
+        TimeSlot actualTimeSlot1 = all.getFirst();
+        TimeSlot actualTimeSlot2 = all.getLast();
+        assertEquals(feb20, actualTimeSlot1.getDate());
+        assertEquals(feb20, actualTimeSlot2.getDate());
+
+        assertTrue(all.stream().map(TimeSlot::getTimePeriod).anyMatch(s -> s.equals(TimePeriod.PERIOD_7_30_9_00)));
+        assertTrue(all.stream().map(TimeSlot::getTimePeriod).anyMatch(s -> s.equals(TimePeriod.PERIOD_15_30_17_00)));
     }
 
     @Test
