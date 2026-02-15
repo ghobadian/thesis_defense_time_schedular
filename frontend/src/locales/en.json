@@ -23,21 +23,21 @@
     "title": "Edit Thesis Form"
   },
   "form": {
-    "thesis-forms": "Thesis Forms",
-    "description": "Track the status of your thesis form submissions",
-    "create-new-form": "Create New Form",
     "create-first-form": "Create Your First Form",
+    "create-new-form": "Create New Form",
+    "description": "Track the status of your thesis form submissions",
     "errors": {
       "no-forms": "No Thesis Forms Yet",
       "no-forms-subtitle": "You haven't submitted any thesis forms. Start by creating your first form."
-    }
+    },
+    "thesis-forms": "Thesis Forms"
   },
   "meeting": {
-    "meetings": "Defense Meetings",
     "hide-details": "Hide Details",
     "hide-timeslots": "Hide Time Slots",
     "load-failed": "Failed to load meetings.",
     "location-tbd": "Location TBD",
+    "meetings": "Defense Meetings",
     "my-defense-meetings": "My Defense Meetings",
     "no-meeting-found": "No meetings found.",
     "select-time-slot": "Select Time Slot",
@@ -48,12 +48,12 @@
     "view-forms": "View your thesis defense meetings and select available time slots",
     "view-timeslots": "View Time Slots"
   },
-  "profile": "Profile",
   "navbar": {
     "logout": "Logout",
     "switchLanguage": "Switch language",
     "title": "Thesis Defense Scheduler"
   },
+  "profile": "Profile",
   "roles": {
     "admin": "Admin",
     "manager": "Manager",
@@ -73,18 +73,38 @@
     "STUDENT_SPECIFIED_TIME": "Awaiting Manager Schedule"
   },
   "users": {
+    "admin": {
+      "departments-management": {
+        "title": "Departments Management",
+        "all-departments": "All Departments",
+        "add-department": "Add Department"
+      },
+      "fields-management": {
+        "title": "Fields Management"
+      },
+      "professors-management": {
+        "title": "Professors Management",
+        "desc": "Manage all professors and their information",
+        "add-professor": "Add Professor",
+        "regular-professors": "Regular Professors"
+      },
+      "students-management": {
+        "title": "Students Management"
+      }
+    },
     "instructor": {
       "instructor": "Instructor",
       "instructor-name": "Instructor Name",
       "my-students": "My Students"
     },
-    "admin": {
-      "students-management": "Students Management",
-      "professors-management": "Professors Management",
-      "departments-management": "Departments Management",
-      "fields-management": "Fields Management"
-    },
     "jury-members": "Jury Members",
+    "manager": {
+      "managers": "Managers",
+      "total-managers": "Total Managers"
+    },
+    "professor": {
+      "total-professors": "Total Professors"
+    },
     "student": {
       "abstract": "Abstract",
       "email": "Email",

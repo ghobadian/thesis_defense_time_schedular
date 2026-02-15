@@ -22,10 +22,10 @@ export const Sidebar: React.FC = () => {
       case UserRole.ADMIN:
         return [
           { to: '/admin/dashboard', icon: Home, label: t('dashboard') },
-          { to: '/admin/students', icon: Users, label: t('users.admin.students-management') },
-          { to: '/admin/professors', icon: Users, label: t('users.admin.professors-management') },
-          { to: '/admin/departments', icon: Building2, label: t('users.admin.departments-management') },
-          { to: '/admin/fields', icon: ClipboardList, label: t('users.admin.fields-management') },
+          { to: '/admin/students', icon: Users, label: t('users.admin.students-management.title') },
+          { to: '/admin/professors', icon: Users, label: t('users.admin.professors-management.title') },
+          { to: '/admin/departments', icon: Building2, label: t('users.admin.departments-management.title') },
+          { to: '/admin/fields', icon: ClipboardList, label: t('users.admin.fields-management.title') },
           { to: '/admin/thesis-forms', icon: FileText, label: t('form.thesis-forms') },
           { to: '/admin/meetings', icon: Calendar, label: t('meeting.meetings') },
           { to: '/admin/profile', icon: Settings, label: t('profile') },
