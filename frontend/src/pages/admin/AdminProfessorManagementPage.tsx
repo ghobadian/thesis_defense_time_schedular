@@ -249,16 +249,16 @@ export const AdminProfessorManagementPage: React.FC = () => {
                 <div>
                     <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
                         <Users className="h-7 w-7 text-purple-600" />
-                        {t('users.admin.professors-management')}
+                        {t('users.admin.professors-management.title')}
                     </h1>
-                    <p className="text-gray-500 mt-1">Manage all professors and their information</p>
+                    <p className="text-gray-500 mt-1">{t('users.admin.professors-management.desc')}</p>
                 </div>
                 <button
                     onClick={() => handleOpenModal()}
                     className="flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors shadow-sm"
                 >
                     <Plus className="h-5 w-5" />
-                    Add Professor
+                    ${t('users.admin.professors-management.add-professor')}
                 </button>
             </div>
 
@@ -267,7 +267,7 @@ export const AdminProfessorManagementPage: React.FC = () => {
                 <Card className="p-4">
                     <div className="flex items-center justify-between">
                         <div>
-                            <p className="text-sm text-gray-500">Total Professors</p>
+                            <p className="text-sm text-gray-500">{t('users.professor.total-professors')}</p>
                             <p className="text-2xl font-bold text-gray-900">{stats.total}</p>
                         </div>
                         <div className="p-3 bg-purple-100 rounded-full">
@@ -278,7 +278,7 @@ export const AdminProfessorManagementPage: React.FC = () => {
                 <Card className="p-4">
                     <div className="flex items-center justify-between">
                         <div>
-                            <p className="text-sm text-gray-500">Managers</p>
+                            <p className="text-sm text-gray-500">{t('users.manager.managers')}</p>
                             <p className="text-2xl font-bold text-blue-600">{stats.managers}</p>
                         </div>
                         <div className="p-3 bg-blue-100 rounded-full">
@@ -289,7 +289,7 @@ export const AdminProfessorManagementPage: React.FC = () => {
                 <Card className="p-4">
                     <div className="flex items-center justify-between">
                         <div>
-                            <p className="text-sm text-gray-500">Regular Professors</p>
+                            <p className="text-sm text-gray-500">{t('users.admin.professors-management.regular-professors')}</p>
                             <p className="text-2xl font-bold text-green-600">{stats.regular}</p>
                         </div>
                         <div className="p-3 bg-green-100 rounded-full">
@@ -322,7 +322,7 @@ export const AdminProfessorManagementPage: React.FC = () => {
                             onChange={(e) => setSelectedDeptFilter(e.target.value)}
                             className="pl-10 pr-8 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none appearance-none bg-white min-w-[180px]"
                         >
-                            <option value="">All Departments</option>
+                            <option value="">{t('users.admin.departments-management.all-departments')}</option>
                             {departments.map((dept: DepartmentSummary) => (
                                 <option key={dept.id} value={dept.id}>
                                     {dept.name}
