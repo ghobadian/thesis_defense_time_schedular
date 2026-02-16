@@ -9,7 +9,7 @@ import {AdminMeetingsPage} from "./AdminMeetingsPage";
 import {AdminDepartmentsPage} from "./AdminDepartmentsPage";
 import AdminFieldsPage from "./AdminFieldsPage";
 import AdminStudentEditPage from './AdminStudentEditPage';
-import {ProfilePage} from "../ProfilePage";
+import {ProfilePage} from "../common/ProfilePage";
 import AdminProfessorManagementPage from "./AdminProfessorManagementPage";
 
 export const AdminDashboard: React.FC = () => {
