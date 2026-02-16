@@ -2,13 +2,13 @@
 
 import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Card } from '../components/common/Card';
-import { Button } from '../components/common/Button';
-import { useAuthStore } from '../store/authStore';
-import { studentAPI } from '../api/student.api';
-import { professorAPI } from '../api/professor.api';
-import { adminAPI } from '../api/admin.api';
-import { UserRole } from '../types';
+import { Card } from '../../components/common/Card';
+import { Button } from '../../components/common/Button';
+import { useAuthStore } from '../../store/authStore';
+import { studentAPI } from '../../api/student.api';
+import { professorAPI } from '../../api/professor.api';
+import { adminAPI } from '../../api/admin.api';
+import { UserRole } from '../../types';
 import {
     User,
     Mail,
@@ -26,7 +26,7 @@ import {
     Edit3,
     Lock
 } from 'lucide-react';
-import {authAPI} from "../api/auth.api";
+import {authAPI} from "../../api/auth.api";
 import {useNavigate} from "react-router-dom";
 
 // ============================================================================
