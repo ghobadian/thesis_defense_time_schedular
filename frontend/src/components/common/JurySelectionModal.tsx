@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { useMutation, useQuery } from '@tanstack/react-query';
-import { X, AlertCircle, CheckCircle, Lock } from 'lucide-react';
-import { professorAPI } from '../../api/professor.api';
-import { Modal } from './Modal';
-import { Button } from './Button';
-import { Professor } from "../../types";
-import { JURY_SELECTION_CONFIG } from '../../api/config';
+import React, {useState, useEffect} from 'react';
+import {useMutation, useQuery} from '@tanstack/react-query';
+import {X, AlertCircle, CheckCircle, Lock} from 'lucide-react';
+import {professorAPI} from '../../api/professor.api';
+import {Modal} from './Modal';
+import {Button} from './Button';
+import {Professor} from "../../types";
+import {JURY_SELECTION_CONFIG} from '../../api/config';
 
 const minJuryCount = JURY_SELECTION_CONFIG.MIN_JURY_MEMBERS
 const maxJuryCount = JURY_SELECTION_CONFIG.MAX_JURY_MEMBERS
@@ -54,7 +54,7 @@ export const JurySelectionModal: React.FC<JurySelectionModalProps> = ({
     }, [isOpen, instructorId]);
 
     // Fetch all professors
-    const { data: professors = [], isLoading: isProfessorsLoading } = useQuery({
+    const {data: professors = [], isLoading: isProfessorsLoading} = useQuery({
         queryKey: ['all-professors'],
         queryFn: professorAPI.getAllProfessors,
         enabled: isOpen,
@@ -156,7 +156,7 @@ export const JurySelectionModal: React.FC<JurySelectionModalProps> = ({
                     </p>
                     {instructorId && (
                         <p className="text-sm text-blue-600 mt-2">
-                            <Lock className="inline h-4 w-4 mr-1" />
+                            <Lock className="inline h-4 w-4 mr-1"/>
                             The thesis instructor is automatically included as a jury member.
                         </p>
                     )}
@@ -165,7 +165,7 @@ export const JurySelectionModal: React.FC<JurySelectionModalProps> = ({
                 {/* Error Message */}
                 {error && (
                     <div className="flex items-start space-x-3 bg-red-50 border border-red-200 rounded-lg p-4">
-                        <AlertCircle className="h-5 w-5 text-red-600 flex-shrink-0 mt-0.5" />
+                        <AlertCircle className="h-5 w-5 text-red-600 flex-shrink-0 mt-0.5"/>
                         <p className="text-sm text-red-800">{error}</p>
                     </div>
                 )}
@@ -173,7 +173,7 @@ export const JurySelectionModal: React.FC<JurySelectionModalProps> = ({
                 {/* Success Message */}
                 {success && (
                     <div className="flex items-start space-x-3 bg-green-50 border border-green-200 rounded-lg p-4">
-                        <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
+                        <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5"/>
                         <p className="text-sm text-green-800">Juries assigned successfully!</p>
                     </div>
                 )}
@@ -223,8 +223,9 @@ export const JurySelectionModal: React.FC<JurySelectionModalProps> = ({
                                         <p className="font-medium text-gray-900">
                                             {professor.firstName} {professor.lastName}
                                             {isProfessorInstructor && (
-                                                <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-primary-100 text-primary-800">
-                                                    <Lock className="h-3 w-3 mr-1" />
+                                                <span
+                                                    className="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-primary-100 text-primary-800">
+                                                    <Lock className="h-3 w-3 mr-1"/>
                                                     Instructor
                                                 </span>
                                             )}
@@ -234,7 +235,7 @@ export const JurySelectionModal: React.FC<JurySelectionModalProps> = ({
                                     {isSelected && (
                                         <CheckCircle className={`h-5 w-5 ${
                                             isProfessorInstructor ? 'text-primary-600' : 'text-green-600'
-                                        }`} />
+                                        }`}/>
                                     )}
                                 </label>
                             );

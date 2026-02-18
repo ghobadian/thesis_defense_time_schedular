@@ -8,17 +8,17 @@ import {professorAPI} from '../../api/professor.api';
 import {Meeting, MeetingState} from "../../types";
 
 export const ProfessorHomePage: React.FC = () => {
-    const { data: pendingForms } = useQuery({
+    const {data: pendingForms} = useQuery({
         queryKey: ['pendingThesisForms'],
         queryFn: professorAPI.getPendingThesisForms,
     });
 
-    const { data: timeSlots } = useQuery({
+    const {data: timeSlots} = useQuery({
         queryKey: ['myTimeSlots'],
         queryFn: professorAPI.getMyTimeslots,
     });
 
-    const { data: meetings } = useQuery({
+    const {data: meetings} = useQuery({
         queryKey: ['professorMeetings'],
         queryFn: professorAPI.getMyMeetings,
     });
@@ -45,7 +45,7 @@ export const ProfessorHomePage: React.FC = () => {
                             <p className="text-yellow-600 text-sm font-medium">Pending Forms</p>
                             <p className="text-2xl font-bold text-gray-900">{stats.pendingForms}</p>
                         </div>
-                        <FileText className="h-8 w-8 text-yellow-600" />
+                        <FileText className="h-8 w-8 text-yellow-600"/>
                     </div>
                 </Card>
 
@@ -55,7 +55,7 @@ export const ProfessorHomePage: React.FC = () => {
                             <p className="text-blue-600 text-sm font-medium">Available Time Slots</p>
                             <p className="text-2xl font-bold text-gray-900">{stats.timeSlots}</p>
                         </div>
-                        <Clock className="h-8 w-8 text-blue-600" />
+                        <Clock className="h-8 w-8 text-blue-600"/>
                     </div>
                 </Card>
 
@@ -65,7 +65,7 @@ export const ProfessorHomePage: React.FC = () => {
                             <p className="text-green-600 text-sm font-medium">Scheduled Meetings</p>
                             <p className="text-2xl font-bold text-gray-900">{stats.scheduledMeetings}</p>
                         </div>
-                        <CheckCircle className="h-8 w-8 text-green-600" />
+                        <CheckCircle className="h-8 w-8 text-green-600"/>
                     </div>
                 </Card>
             </div>

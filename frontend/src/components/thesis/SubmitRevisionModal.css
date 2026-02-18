@@ -96,7 +96,8 @@
     font-size: 14px;
     color: var(--text-primary, #333);
     line-height: 1.5;
-    white-space: pre-wrap;word-break: break-word;
+    white-space: pre-wrap;
+    word-break: break-word;
 }
 
 /* Confirmation Notice */
@@ -113,7 +114,8 @@
 
 .confirmation-notice svg {
     color: var(--success-color, #10b981);
-    flex-shrink: 0;margin-top: 2px;
+    flex-shrink: 0;
+    margin-top: 2px;
 }
 
 .notice-content {
@@ -139,7 +141,8 @@
     display: flex;
     justify-content: flex-end;
     gap: 12px;
-    padding-top: 16px;border-top: 1px solid var(--border-color, #e0e0e0);
+    padding-top: 16px;
+    border-top: 1px solid var(--border-color, #e0e0e0);
 }
 
 .btn-cancel {
@@ -217,7 +220,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 1000;padding: 20px;
+    z-index: 1000;
+    padding: 20px;
 }
 
 .modal-content {

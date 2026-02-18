@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { ArrowLeft } from 'lucide-react';
-import { studentAPI } from '../../api/student.api';
-import { adminAPI } from '../../api/admin.api';
-import { Button } from '../common/Button';
-import { Input } from '../common/Input';
-import { Card } from '../common/Card';
-import { Professor, ThesisFormInput } from '../../types';
+import React, {useState} from 'react';
+import {useNavigate} from 'react-router-dom';
+import {useQuery, useMutation, useQueryClient} from '@tanstack/react-query';
+import {ArrowLeft} from 'lucide-react';
+import {studentAPI} from '../../api/student.api';
+import {adminAPI} from '../../api/admin.api';
+import {Button} from '../common/Button';
+import {Input} from '../common/Input';
+import {Card} from '../common/Card';
+import {Professor, ThesisFormInput} from '../../types';
 
 export const ThesisFormCreate: React.FC = () => {
     const navigate = useNavigate();
@@ -19,12 +19,12 @@ export const ThesisFormCreate: React.FC = () => {
         instructorId: undefined,
     });
 
-    const { data: fields } = useQuery({
+    const {data: fields} = useQuery({
         queryKey: ['fields'],
         queryFn: adminAPI.getAllFields,
     });
 
-    const { data: professors } = useQuery({
+    const {data: professors} = useQuery({
         queryKey: ['professors'],
         queryFn: studentAPI.getAllProfessors,
     });
@@ -32,7 +32,7 @@ export const ThesisFormCreate: React.FC = () => {
     const createMutation = useMutation({
         mutationFn: studentAPI.createThesisForm,
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['myThesisForms'] });
+            queryClient.invalidateQueries({queryKey: ['myThesisForms']});
             alert('Thesis form created successfully!');
             // Navigate back to the thesis forms list
             navigate('/student/thesis');
@@ -55,7 +55,7 @@ export const ThesisFormCreate: React.FC = () => {
                     onClick={() => navigate('/student/thesis')}
                     className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
                 >
-                    <ArrowLeft className="h-5 w-5 text-gray-600" />
+                    <ArrowLeft className="h-5 w-5 text-gray-600"/>
                 </button>
                 <div>
                     <h1 className="text-2xl font-bold text-gray-900">Create Thesis Form</h1>
@@ -71,7 +71,7 @@ export const ThesisFormCreate: React.FC = () => {
                     <Input
                         label="Thesis Title"
                         value={formData.title}
-                        onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                        onChange={(e) => setFormData({...formData, title: e.target.value})}
                         placeholder="Enter your thesis title"
                         required
                     />
@@ -84,7 +84,7 @@ export const ThesisFormCreate: React.FC = () => {
                             className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
                             rows={6}
                             value={formData.abstractText}
-                            onChange={(e) => setFormData({ ...formData, abstractText: e.target.value })}
+                            onChange={(e) => setFormData({...formData, abstractText: e.target.value})}
                             placeholder="Enter your thesis abstract"
                             required
                         />
@@ -97,7 +97,7 @@ export const ThesisFormCreate: React.FC = () => {
                         <select
                             className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
                             value={formData.instructorId || ''}
-                            onChange={(e) => setFormData({ ...formData, instructorId: Number(e.target.value) })}
+                            onChange={(e) => setFormData({...formData, instructorId: Number(e.target.value)})}
                             required
                         >
                             <option value="">Select an instructor</option>

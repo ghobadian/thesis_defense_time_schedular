@@ -1,12 +1,12 @@
 // src/components/common/meeting/meetingUtils.ts
-import { MeetingState, TimePeriod } from '../../../types';
+import {MeetingState, TimePeriod} from '../../../types';
 
 export const NORMAL_FLOW_STEPS = [
-    { state: MeetingState.JURIES_SELECTED, label: 'Jury Selected' },
-    { state: MeetingState.JURIES_SPECIFIED_TIME, label: 'Jury Time Specified' },
-    { state: MeetingState.STUDENT_SPECIFIED_TIME, label: 'Student Time Selected' },
-    { state: MeetingState.SCHEDULED, label: 'Meeting Scheduled' },
-    { state: MeetingState.COMPLETED, label: 'Meeting Completed' },
+    {state: MeetingState.JURIES_SELECTED, label: 'Jury Selected'},
+    {state: MeetingState.JURIES_SPECIFIED_TIME, label: 'Jury Time Specified'},
+    {state: MeetingState.STUDENT_SPECIFIED_TIME, label: 'Student Time Selected'},
+    {state: MeetingState.SCHEDULED, label: 'Meeting Scheduled'},
+    {state: MeetingState.COMPLETED, label: 'Meeting Completed'},
 ];
 
 export const STATE_ORDER: Record<string, number> = {};
@@ -66,7 +66,11 @@ export const formatTimePeriod = (period: TimePeriod): string => {
 /**
  * Infer how far a canceled meeting progressed before cancellation.
  */
-export const inferLastReachedIndex = (meeting: { selectedTimeSlot?: any; location?: string; juryMembers?: any[] }): number => {
+export const inferLastReachedIndex = (meeting: {
+    selectedTimeSlot?: any;
+    location?: string;
+    juryMembers?: any[]
+}): number => {
     if (meeting.selectedTimeSlot && meeting.location) {
         return 3; // SCHEDULED
     }

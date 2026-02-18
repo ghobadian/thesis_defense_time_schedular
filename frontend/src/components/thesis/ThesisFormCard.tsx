@@ -1,7 +1,7 @@
 // src/components/thesis/ThesisFormCard.tsx
 
 import React from 'react';
-import { ThesisForm } from '../../types';
+import {ThesisForm} from '../../types';
 import {
     formatDate,
     getFullName,
@@ -15,7 +15,7 @@ interface Props {
     onSelect: () => void;
 }
 
-export const ThesisFormCard: React.FC<Props> = ({ form, selected, onSelect }) => (
+export const ThesisFormCard: React.FC<Props> = ({form, selected, onSelect}) => (
     <div className={`form-card ${selected ? 'selected' : ''}`} onClick={onSelect}>
         <div className="form-card-header">
             <h3>{form.title}</h3>

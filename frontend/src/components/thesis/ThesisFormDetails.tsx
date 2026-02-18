@@ -1,7 +1,7 @@
 // src/components/thesis/ThesisFormDetails.tsx
 
 import React from 'react';
-import { ThesisForm } from '../../types';
+import {ThesisForm} from '../../types';
 import {
     formatDate,
     getStatusBadgeClass,

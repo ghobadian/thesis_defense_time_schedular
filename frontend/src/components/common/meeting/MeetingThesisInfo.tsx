@@ -1,14 +1,14 @@
 // src/components/common/meeting/MeetingThesisInfo.tsx
 import React from 'react';
-import { Mail } from 'lucide-react';
-import { Meeting } from '../../../types';
+import {Mail} from 'lucide-react';
+import {Meeting} from '../../../types';
 
 interface MeetingThesisInfoProps {
     meeting: Meeting;
     userRole: 'professor' | 'student';
 }
 
-export const MeetingThesisInfo: React.FC<MeetingThesisInfoProps> = ({ meeting, userRole }) => (
+export const MeetingThesisInfo: React.FC<MeetingThesisInfoProps> = ({meeting, userRole}) => (
     <div>
         <h4 className="text-lg font-semibold text-gray-900 mb-3">Thesis Information</h4>
         <div className="bg-gray-50 rounded-lg p-4 space-y-2">
@@ -35,7 +35,7 @@ export const MeetingThesisInfo: React.FC<MeetingThesisInfoProps> = ({ meeting, u
                     <div>
                         <p className="text-sm text-gray-500">Email</p>
                         <p className="font-medium text-gray-900 flex items-center">
-                            <Mail className="h-4 w-4 mr-2 text-gray-400" />
+                            <Mail className="h-4 w-4 mr-2 text-gray-400"/>
                             {meeting.thesis?.studentEmail || 'N/A'}
                         </p>
                     </div>

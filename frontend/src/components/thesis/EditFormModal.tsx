@@ -1,11 +1,11 @@
 // src/components/thesis/EditFormModal.tsx
 
-import React, { useEffect, useState } from 'react';
-import { ThesisForm, ThesisFormInput } from '../../types';
-import { X, AlertCircle } from 'lucide-react';
+import React, {useEffect, useState} from 'react';
+import {ThesisForm, ThesisFormInput} from '../../types';
+import {X, AlertCircle} from 'lucide-react';
 import {studentAPI} from "../../api/student.api";
 import {useQuery} from "@tanstack/react-query";
-import { useTranslation } from 'react-i18next';
+import {useTranslation} from 'react-i18next';
 
 interface EditFormModalProps {
     isOpen: boolean;
@@ -31,12 +31,12 @@ export const EditFormModal: React.FC<EditFormModalProps> = ({
         instructorId?: string;
     }>({});
 
-    const { data: professors, isLoading: professorsLoading } = useQuery({
+    const {data: professors, isLoading: professorsLoading} = useQuery({
         queryKey: ['professors'],
         queryFn: studentAPI.getAllProfessors,
         enabled: isOpen,
     });
-    const { t } = useTranslation();
+    const {t} = useTranslation();
 
     // Initialize form values when modal opens or form changes
     useEffect(() => {
@@ -60,7 +60,7 @@ export const EditFormModal: React.FC<EditFormModalProps> = ({
     }, [isOpen, isLoading, onClose]);
 
     const validateForm = (): boolean => {
-        const newErrors: { title?: string; abstractText?: string; instructorId?: string} = {};
+        const newErrors: { title?: string; abstractText?: string; instructorId?: string } = {};
 
         if (!title.trim()) {
             newErrors.title = t('editFormModal.errors.titleRequired');
@@ -116,7 +116,8 @@ export const EditFormModal: React.FC<EditFormModalProps> = ({
         >
             <div className="bg-white rounded-lg shadow-xl max-w-[600px] w-[90%] max-h-[90vh] overflow-y-auto">
                 {/* Header */}
-                <div className="flex justify-between items-center px-6 py-5 border-b border-gray-200 bg-gray-50 rounded-t-lg">
+                <div
+                    className="flex justify-between items-center px-6 py-5 border-b border-gray-200 bg-gray-50 rounded-t-lg">
                     <h2 className="m-0 text-xl font-semibold text-gray-800">
                         {t('editFormModal.title')}
                     </h2>
@@ -126,7 +127,7 @@ export const EditFormModal: React.FC<EditFormModalProps> = ({
                         disabled={isLoading}
                         aria-label="Close modal"
                     >
-                        <X size={20} />
+                        <X size={20}/>
                     </button>
                 </div>
 
@@ -134,7 +135,7 @@ export const EditFormModal: React.FC<EditFormModalProps> = ({
                 {form.revisionMessage && (
                     <div className="bg-amber-50 border border-amber-500 rounded-md p-4 mx-6 mt-4">
                         <div className="flex items-center gap-2 mb-2">
-                            <AlertCircle size={18} className="text-amber-600" />
+                            <AlertCircle size={18} className="text-amber-600"/>
                             <strong className="text-amber-800 text-[0.95rem]">
                                 {t('editFormModal.revisionRequested')}
                             </strong>
@@ -280,7 +281,8 @@ export const EditFormModal: React.FC<EditFormModalProps> = ({
                         >
                             {isLoading ? (
                                 <>
-                                    <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+                                    <span
+                                        className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
                                     Saving...
                                 </>
                             ) : (

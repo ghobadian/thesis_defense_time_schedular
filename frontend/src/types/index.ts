@@ -81,7 +81,8 @@ export interface Professor extends User {
     manager: boolean;
 }
 
-export interface Admin extends User {}
+export interface Admin extends User {
+}
 
 export interface DepartmentSummary {
     id: number;
@@ -190,7 +191,6 @@ export interface TimeSlotSelectionInput {
     meetingId: number;
     timeSlotId: number;
 }
-
 
 
 export interface ProfessorTimeSlots {

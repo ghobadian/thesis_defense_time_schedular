@@ -1,25 +1,25 @@
 // src/components/professor/ScheduleMeeting.tsx
-import React, { useState } from 'react';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { professorAPI } from '../../api/professor.api';
-import { Button } from '../common/Button';
-import { Card } from '../common/Card';
-import { Calendar, Clock, MapPin, CheckCircle, AlertCircle } from 'lucide-react';
-import { TimePeriod } from '../../types';
-import { format, parseISO } from 'date-fns';
+import React, {useState} from 'react';
+import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
+import {professorAPI} from '../../api/professor.api';
+import {Button} from '../common/Button';
+import {Card} from '../common/Card';
+import {Calendar, Clock, MapPin, CheckCircle, AlertCircle} from 'lucide-react';
+import {TimePeriod} from '../../types';
+import {format, parseISO} from 'date-fns';
 
 interface ScheduleMeetingProps {
     meetingId: number;
     onScheduled?: () => void;
 }
 
-export const ScheduleMeeting: React.FC<ScheduleMeetingProps> = ({ meetingId, onScheduled }) => {
+export const ScheduleMeeting: React.FC<ScheduleMeetingProps> = ({meetingId, onScheduled}) => {
     const queryClient = useQueryClient();
     const [location, setLocation] = useState('');
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState(false);
 
-    const { data: meeting, isLoading: loadingMeeting } = useQuery({
+    const {data: meeting, isLoading: loadingMeeting} = useQuery({
         queryKey: ['meeting', meetingId],
         queryFn: () => professorAPI.getMeetingById(meetingId),
     });
@@ -28,8 +28,8 @@ export const ScheduleMeeting: React.FC<ScheduleMeetingProps> = ({ meetingId, onS
         mutationFn: (data: { meetingId: number; location: string }) =>
             professorAPI.scheduleMeeting(data),
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['myMeetings'] });
-            queryClient.invalidateQueries({ queryKey: ['meeting', meetingId] });
+            queryClient.invalidateQueries({queryKey: ['myMeetings']});
+            queryClient.invalidateQueries({queryKey: ['meeting', meetingId]});
             setSuccess(true);
             setError(null);
             setLocation('');
@@ -101,7 +101,7 @@ export const ScheduleMeeting: React.FC<ScheduleMeetingProps> = ({ meetingId, onS
             {/* Success Message */}
             {success && (
                 <div className="flex items-start space-x-3 bg-green-50 border border-green-200 rounded-lg p-4">
-                    <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
+                    <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5"/>
                     <div>
                         <p className="text-sm font-medium text-green-800">Meeting scheduled successfully!</p>
                         <p className="text-sm text-green-700 mt-1">
@@ -114,7 +114,7 @@ export const ScheduleMeeting: React.FC<ScheduleMeetingProps> = ({ meetingId, onS
             {/* Error Message */}
             {error && (
                 <div className="flex items-start space-x-3 bg-red-50 border border-red-200 rounded-lg p-4">
-                    <AlertCircle className="h-5 w-5 text-red-600 flex-shrink-0 mt-0.5" />
+                    <AlertCircle className="h-5 w-5 text-red-600 flex-shrink-0 mt-0.5"/>
                     <p className="text-sm text-red-800">{error}</p>
                 </div>
             )}
@@ -124,11 +124,11 @@ export const ScheduleMeeting: React.FC<ScheduleMeetingProps> = ({ meetingId, onS
                 <h5 className="font-semibold text-gray-900 mb-3">Student's Selected Time Slot</h5>
                 <div className="space-y-2">
                     <div className="flex items-center text-gray-700">
-                        <Calendar className="w-5 h-5 mr-2 text-blue-600" />
+                        <Calendar className="w-5 h-5 mr-2 text-blue-600"/>
                         <span>{format(parseISO(studentSelectedSlot.date), 'EEEE, MMMM d, yyyy')}</span>
                     </div>
                     <div className="flex items-center text-gray-700">
-                        <Clock className="w-5 h-5 mr-2 text-blue-600" />
+                        <Clock className="w-5 h-5 mr-2 text-blue-600"/>
                         <span>{formatPeriod(studentSelectedSlot.timePeriod)}</span>
                     </div>
                 </div>
@@ -138,7 +138,7 @@ export const ScheduleMeeting: React.FC<ScheduleMeetingProps> = ({ meetingId, onS
             <Card>
                 <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                        <MapPin className="inline h-4 w-4 mr-1" />
+                        <MapPin className="inline h-4 w-4 mr-1"/>
                         Meeting Location *
                     </label>
                     <input

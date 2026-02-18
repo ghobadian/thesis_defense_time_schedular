@@ -160,7 +160,7 @@ export const ThesisFormsLayout: React.FC<Props> = ({
 
     // Count forms by status for badges
     const statusCounts = useMemo(() => {
-        const counts: Record<string, number> = { ALL: forms.length };
+        const counts: Record<string, number> = {ALL: forms.length};
         forms.forEach((form) => {
             counts[form.state] = (counts[form.state] || 0) + 1;
         });
@@ -235,22 +235,22 @@ export const ThesisFormsLayout: React.FC<Props> = ({
                 {/* Search Bar */}
                 <div className="search-bar">
                     <div className="search-input-wrapper">
-                        <Search className="search-icon" size={20} />
+                        <Search className="search-icon" size={20}/>
                         <input
                             type="text"
                             placeholder="Search by title, student name, or ID..."
                             value={filters.searchTerm}
                             onChange={(e) =>
-                                setFilters((prev) => ({ ...prev, searchTerm: e.target.value }))
+                                setFilters((prev) => ({...prev, searchTerm: e.target.value}))
                             }
                             className="search-input"
                         />
                         {filters.searchTerm && (
                             <button
-                                onClick={() => setFilters((prev) => ({ ...prev, searchTerm: '' }))}
+                                onClick={() => setFilters((prev) => ({...prev, searchTerm: ''}))}
                                 className="clear-search-btn"
                             >
-                                <X size={16} />
+                                <X size={16}/>
                             </button>
                         )}
                     </div>
@@ -260,16 +260,16 @@ export const ThesisFormsLayout: React.FC<Props> = ({
                         onClick={() => setShowAdvancedFilters(!showAdvancedFilters)}
                         className={`btn-advanced-filters ${showAdvancedFilters ? 'active' : ''}`}
                     >
-                        <Filter size={18} />
+                        <Filter size={18}/>
                         <span>Filters</span>
-                        {hasActiveFilters && <span className="filter-indicator" />}
+                        {hasActiveFilters && <span className="filter-indicator"/>}
                     </button>
                 </div>
 
                 {/* Status Filter Pills */}
                 <div className="status-filters">
                     <button
-                        onClick={() => setFilters((prev) => ({ ...prev, statusFilter: 'ALL' }))}
+                        onClick={() => setFilters((prev) => ({...prev, statusFilter: 'ALL'}))}
                         className={`status-pill ${filters.statusFilter === 'ALL' ? 'active' : ''}`}
                     >
                         All
@@ -278,7 +278,7 @@ export const ThesisFormsLayout: React.FC<Props> = ({
                     {availableStatuses.map((status) => (
                         <button
                             key={status}
-                            onClick={() => setFilters((prev) => ({ ...prev, statusFilter: status }))}
+                            onClick={() => setFilters((prev) => ({...prev, statusFilter: status}))}
                             className={`status-pill ${filters.statusFilter === status ? 'active' : ''} status-${status.toLowerCase()}`}
                         >
                             {formatStatusLabel(status)}
@@ -292,7 +292,7 @@ export const ThesisFormsLayout: React.FC<Props> = ({
                     <div className="advanced-filters-panel">
                         <div className="filter-group">
                             <label>
-                                <Calendar size={16} />
+                                <Calendar size={16}/>
                                 Date Range
                             </label>
                             <div className="date-range-inputs">
@@ -300,7 +300,7 @@ export const ThesisFormsLayout: React.FC<Props> = ({
                                     type="date"
                                     value={filters.dateFrom}
                                     onChange={(e) =>
-                                        setFilters((prev) => ({ ...prev, dateFrom: e.target.value }))
+                                        setFilters((prev) => ({...prev, dateFrom: e.target.value}))
                                     }
                                     className="date-input"
                                     placeholder="From"
@@ -310,7 +310,7 @@ export const ThesisFormsLayout: React.FC<Props> = ({
                                     type="date"
                                     value={filters.dateTo}
                                     onChange={(e) =>
-                                        setFilters((prev) => ({ ...prev, dateTo: e.target.value }))
+                                        setFilters((prev) => ({...prev, dateTo: e.target.value}))
                                     }
                                     className="date-input"
                                     placeholder="To"
@@ -320,7 +320,7 @@ export const ThesisFormsLayout: React.FC<Props> = ({
 
                         {hasActiveFilters && (
                             <button onClick={clearFilters} className="btn-clear-filters">
-                                <X size={16} />
+                                <X size={16}/>
                                 Clear All Filters
                             </button>
                         )}
@@ -332,11 +332,11 @@ export const ThesisFormsLayout: React.FC<Props> = ({
                     <span className="sort-label">Sort by:</span>
                     <div className="sort-buttons">
                         {[
-                            { field: 'createdAt' as SortField, label: 'Date' },
-                            { field: 'title' as SortField, label: 'Title' },
-                            { field: 'studentName' as SortField, label: 'Student' },
-                            { field: 'state' as SortField, label: 'Status' },
-                        ].map(({ field, label }) => (
+                            {field: 'createdAt' as SortField, label: 'Date'},
+                            {field: 'title' as SortField, label: 'Title'},
+                            {field: 'studentName' as SortField, label: 'Student'},
+                            {field: 'state' as SortField, label: 'Status'},
+                        ].map(({field, label}) => (
                             <button
                                 key={field}
                                 onClick={() => handleSortChange(field)}
@@ -345,9 +345,9 @@ export const ThesisFormsLayout: React.FC<Props> = ({
                                 {label}
                                 {sortOption.field === field &&
                                     (sortOption.direction === 'asc' ? (
-                                        <SortAsc size={14} />
+                                        <SortAsc size={14}/>
                                     ) : (
-                                        <SortDesc size={14} />
+                                        <SortDesc size={14}/>
                                     ))}
                             </button>
                         ))}

@@ -1,14 +1,14 @@
 // src/pages/common/ProfilePage.tsx
 
-import React, { useState, useEffect } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Card } from '../../components/common/Card';
-import { Button } from '../../components/common/Button';
-import { useAuthStore } from '../../store/authStore';
-import { studentAPI } from '../../api/student.api';
-import { professorAPI } from '../../api/professor.api';
-import { adminAPI } from '../../api/admin.api';
-import { UserRole } from '../../types';
+import React, {useState, useEffect} from 'react';
+import {useQuery, useMutation, useQueryClient} from '@tanstack/react-query';
+import {Card} from '../../components/common/Card';
+import {Button} from '../../components/common/Button';
+import {useAuthStore} from '../../store/authStore';
+import {studentAPI} from '../../api/student.api';
+import {professorAPI} from '../../api/professor.api';
+import {adminAPI} from '../../api/admin.api';
+import {UserRole} from '../../types';
 import {
     User,
     Mail,
@@ -183,10 +183,10 @@ interface InfoFieldProps {
     icon?: React.ComponentType<{ className?: string }>;
 }
 
-const InfoField: React.FC<InfoFieldProps> = ({ label, value, icon: Icon }) => (
+const InfoField: React.FC<InfoFieldProps> = ({label, value, icon: Icon}) => (
     <div>
         <label className="block text-sm font-medium text-gray-500 mb-1">
-            {Icon && <Icon className="inline h-4 w-4 mr-1" />}
+            {Icon && <Icon className="inline h-4 w-4 mr-1"/>}
             {label}
         </label>
         {typeof value === 'string' ? (
@@ -202,7 +202,7 @@ interface BadgeProps {
     variant: 'blue' | 'green' | 'purple' | 'red' | 'yellow' | 'gray';
 }
 
-const Badge: React.FC<BadgeProps> = ({ children, variant }) => {
+const Badge: React.FC<BadgeProps> = ({children, variant}) => {
     const variantClasses: Record<string, string> = {
         blue: 'bg-blue-100 text-blue-800',
         green: 'bg-green-100 text-green-800',
@@ -213,7 +213,8 @@ const Badge: React.FC<BadgeProps> = ({ children, variant }) => {
     };
 
     return (
-        <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${variantClasses[variant]}`}>
+        <span
+            className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${variantClasses[variant]}`}>
             {children}
         </span>
     );
@@ -224,7 +225,7 @@ const Badge: React.FC<BadgeProps> = ({ children, variant }) => {
 // ============================================================================
 
 export const ProfilePage: React.FC = () => {
-    const { role, clearAuth } = useAuthStore();
+    const {role, clearAuth} = useAuthStore();
     const navigate = useNavigate();
     const queryClient = useQueryClient();
 
@@ -279,7 +280,7 @@ export const ProfilePage: React.FC = () => {
     const updatePhoneMutation = useMutation({
         mutationFn: (phone: string) => api.updatePhoneNumber(phone),
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey });
+            queryClient.invalidateQueries({queryKey});
             setIsEditingPhone(false);
             setSuccessMessage('Phone number updated successfully!');
             setErrors({});
@@ -298,7 +299,7 @@ export const ProfilePage: React.FC = () => {
                     errorMessage = data.error;
                 }
             }
-            setErrors({ phone: errorMessage });
+            setErrors({phone: errorMessage});
         },
     });
 
@@ -323,7 +324,7 @@ export const ProfilePage: React.FC = () => {
                     errorMessage = data.message;
                 }
             }
-            setErrors({ password: errorMessage });
+            setErrors({password: errorMessage});
         },
     });
 
@@ -333,7 +334,7 @@ export const ProfilePage: React.FC = () => {
         setErrors({});
         const trimmedPhone = phoneNumber.trim();
         if (!trimmedPhone) {
-            setErrors({ phone: 'Phone number is required' });
+            setErrors({phone: 'Phone number is required'});
             return;
         }
         updatePhoneMutation.mutate(trimmedPhone);
@@ -342,7 +343,7 @@ export const ProfilePage: React.FC = () => {
     const handlePasswordSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         setErrors({});
-        const { currentPassword, newPassword, confirmPassword } = passwords;
+        const {currentPassword, newPassword, confirmPassword} = passwords;
         const newErrors: Record<string, string> = {};
 
         if (!currentPassword) newErrors.currentPassword = 'Current password is required';
@@ -355,7 +356,7 @@ export const ProfilePage: React.FC = () => {
             setErrors(newErrors);
             return;
         }
-        updatePasswordMutation.mutate({ currentPassword, newPassword });
+        updatePasswordMutation.mutate({currentPassword, newPassword});
     };
 
     const cancelPhoneEdit = () => {
@@ -367,7 +368,7 @@ export const ProfilePage: React.FC = () => {
     const cancelPasswordChange = () => {
         setIsChangingPassword(false);
         setErrors({});
-        setPasswords({ currentPassword: '', newPassword: '', confirmPassword: '' });
+        setPasswords({currentPassword: '', newPassword: '', confirmPassword: ''});
     };
 
     // Loading State
@@ -386,7 +387,7 @@ export const ProfilePage: React.FC = () => {
             <div className="max-w-2xl mx-auto">
                 <Card>
                     <div className="p-6 text-center">
-                        <AlertCircle className="h-12 w-12 text-red-500 mx-auto mb-4" />
+                        <AlertCircle className="h-12 w-12 text-red-500 mx-auto mb-4"/>
                         <h2 className="text-xl font-semibold text-gray-900 mb-2">Failed to Load Profile</h2>
                         <p className="text-gray-600 mb-4">We couldn't load your profile information.</p>
                         <Button onClick={() => refetch()}>Try Again</Button>
@@ -402,7 +403,7 @@ export const ProfilePage: React.FC = () => {
             {/* Header */}
             <div className="flex items-center space-x-4">
                 <div className={`p-4 rounded-full ${roleConfig.bgColor}`}>
-                    <RoleIcon className={`h-8 w-8 ${roleConfig.color}`} />
+                    <RoleIcon className={`h-8 w-8 ${roleConfig.color}`}/>
                 </div>
                 <div>
                     <h1 className="text-3xl font-bold text-gray-900">{roleConfig.title}</h1>
@@ -413,10 +414,11 @@ export const ProfilePage: React.FC = () => {
             {/* Success Message */}
             {successMessage && (
                 <div className="flex items-center p-4 bg-green-50 border border-green-200 rounded-lg">
-                    <CheckCircle className="h-5 w-5 text-green-600 mr-3" />
+                    <CheckCircle className="h-5 w-5 text-green-600 mr-3"/>
                     <p className="text-green-800 font-medium">{successMessage}</p>
-                    <button onClick={() => setSuccessMessage(null)} className="ml-auto text-green-600 hover:text-green-800">
-                        <X className="h-5 w-5" />
+                    <button onClick={() => setSuccessMessage(null)}
+                            className="ml-auto text-green-600 hover:text-green-800">
+                        <X className="h-5 w-5"/>
                     </button>
                 </div>
             )}
@@ -425,31 +427,34 @@ export const ProfilePage: React.FC = () => {
             <Card>
                 <div className="p-6">
                     <div className="flex items-center mb-6 pb-4 border-b">
-                        <User className="h-5 w-5 text-gray-600 mr-2" />
+                        <User className="h-5 w-5 text-gray-600 mr-2"/>
                         <h2 className="text-xl font-semibold text-gray-900">Personal Information</h2>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <InfoField label="First Name" value={profile.firstName} />
-                        <InfoField label="Last Name" value={profile.lastName} />
+                        <InfoField label="First Name" value={profile.firstName}/>
+                        <InfoField label="Last Name" value={profile.lastName}/>
                         <div className="md:col-span-2">
-                            <InfoField label="Email Address" value={profile.email} icon={Mail} />
+                            <InfoField label="Email Address" value={profile.email} icon={Mail}/>
                         </div>
 
                         {/* Student Fields */}
                         {isStudentProfile(profile, role!) && (
                             <>
-                                <InfoField label="Student Number" value={profile.studentNumber} />
+                                <InfoField label="Student Number" value={profile.studentNumber}/>
                                 <InfoField
                                     label="Student Type"
                                     value={
-                                        <Badge variant={profile.studentType === 'PHD' ? 'purple' : profile.studentType === 'MASTER' ? 'blue' : 'green'}>
+                                        <Badge
+                                            variant={profile.studentType === 'PHD' ? 'purple' : profile.studentType === 'MASTER' ? 'blue' : 'green'}>
                                             {profile.studentType}
                                         </Badge>
                                     }
                                 />
-                                <InfoField label="Department" value={profile.department?.name || 'Not assigned'} icon={Building2} />
-                                <InfoField label="Field of Study" value={profile.field?.name || 'Not assigned'} icon={BookOpen} />
+                                <InfoField label="Department" value={profile.department?.name || 'Not assigned'}
+                                           icon={Building2}/>
+                                <InfoField label="Field of Study" value={profile.field?.name || 'Not assigned'}
+                                           icon={BookOpen}/>
                                 <div className="md:col-span-2">
                                     <InfoField
                                         label="Thesis Instructor"
@@ -471,7 +476,8 @@ export const ProfilePage: React.FC = () => {
                         {/* Professor/Manager Fields */}
                         {isProfessorProfile(profile, role!) && (
                             <>
-                                <InfoField label="Department" value={profile.department?.name || 'Not assigned'} icon={Building2} />
+                                <InfoField label="Department" value={profile.department?.name || 'Not assigned'}
+                                           icon={Building2}/>
                                 <InfoField
                                     label="Role"
                                     value={
@@ -490,7 +496,7 @@ export const ProfilePage: React.FC = () => {
                                     label="Role"
                                     value={
                                         <Badge variant="red">
-                                            <Shield className="h-3 w-3 mr-1" />
+                                            <Shield className="h-3 w-3 mr-1"/>
                                             System Administrator
                                         </Badge>
                                     }
@@ -501,7 +507,7 @@ export const ProfilePage: React.FC = () => {
 
                     <div className="mt-6 pt-4 border-t">
                         <p className="text-sm text-gray-500 flex items-start">
-                            <AlertCircle className="h-4 w-4 mr-2 mt-0.5 flex-shrink-0" />
+                            <AlertCircle className="h-4 w-4 mr-2 mt-0.5 flex-shrink-0"/>
                             Personal information can only be modified by a system administrator.
                         </p>
                     </div>
@@ -513,12 +519,12 @@ export const ProfilePage: React.FC = () => {
                 <div className="p-6">
                     <div className="flex items-center justify-between mb-6 pb-4 border-b">
                         <div className="flex items-center">
-                            <Phone className="h-5 w-5 text-gray-600 mr-2" />
+                            <Phone className="h-5 w-5 text-gray-600 mr-2"/>
                             <h2 className="text-xl font-semibold text-gray-900">Phone Number</h2>
                         </div>
                         {!isEditingPhone && (
                             <Button variant="secondary" onClick={() => setIsEditingPhone(true)}>
-                                <Edit3 className="h-4 w-4 mr-2" />
+                                <Edit3 className="h-4 w-4 mr-2"/>
                                 Edit
                             </Button>
                         )}
@@ -527,7 +533,7 @@ export const ProfilePage: React.FC = () => {
                     {!isEditingPhone ? (
                         <div className="flex items-center py-2">
                             <div className="p-2 bg-gray-100 rounded-lg mr-3">
-                                <Phone className="h-5 w-5 text-gray-500" />
+                                <Phone className="h-5 w-5 text-gray-500"/>
                             </div>
                             <div>
                                 <p className="text-sm text-gray-500">Current Phone Number</p>
@@ -545,7 +551,7 @@ export const ProfilePage: React.FC = () => {
                                     value={phoneNumber}
                                     onChange={(e) => {
                                         setPhoneNumber(e.target.value);
-                                        if (errors.phone) setErrors({ ...errors, phone: '' });
+                                        if (errors.phone) setErrors({...errors, phone: ''});
                                     }}
                                     placeholder="e.g., +98 912 345 6789"
                                     className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent ${
@@ -556,18 +562,19 @@ export const ProfilePage: React.FC = () => {
                                 />
                                 {errors.phone && (
                                     <p className="mt-2 text-sm text-red-600 flex items-center">
-                                        <AlertCircle className="h-4 w-4 mr-1" />
+                                        <AlertCircle className="h-4 w-4 mr-1"/>
                                         {errors.phone}
                                     </p>
                                 )}
                             </div>
                             <div className="flex space-x-3">
                                 <Button type="submit" isLoading={updatePhoneMutation.isPending}>
-                                    <Save className="h-4 w-4 mr-2" />
+                                    <Save className="h-4 w-4 mr-2"/>
                                     Save Changes
                                 </Button>
-                                <Button type="button" variant="secondary" onClick={cancelPhoneEdit} disabled={updatePhoneMutation.isPending}>
-                                    <X className="h-4 w-4 mr-2" />
+                                <Button type="button" variant="secondary" onClick={cancelPhoneEdit}
+                                        disabled={updatePhoneMutation.isPending}>
+                                    <X className="h-4 w-4 mr-2"/>
                                     Cancel
                                 </Button>
                             </div>
@@ -581,12 +588,12 @@ export const ProfilePage: React.FC = () => {
                 <div className="p-6">
                     <div className="flex items-center justify-between mb-6 pb-4 border-b">
                         <div className="flex items-center">
-                            <Key className="h-5 w-5 text-gray-600 mr-2" />
+                            <Key className="h-5 w-5 text-gray-600 mr-2"/>
                             <h2 className="text-xl font-semibold text-gray-900">Password & Security</h2>
                         </div>
                         {!isChangingPassword && (
                             <Button variant="secondary" onClick={() => setIsChangingPassword(true)}>
-                                <Lock className="h-4 w-4 mr-2" />
+                                <Lock className="h-4 w-4 mr-2"/>
                                 Change Password
                             </Button>
                         )}
@@ -596,7 +603,7 @@ export const ProfilePage: React.FC = () => {
                         <div className="space-y-4">
                             <div className="flex items-center py-2">
                                 <div className="p-2 bg-gray-100 rounded-lg mr-3">
-                                    <Lock className="h-5 w-5 text-gray-500" />
+                                    <Lock className="h-5 w-5 text-gray-500"/>
                                 </div>
                                 <div>
                                     <p className="text-sm text-gray-500">Password</p>
@@ -615,8 +622,8 @@ export const ProfilePage: React.FC = () => {
                                     type="password"
                                     value={passwords.currentPassword}
                                     onChange={(e) => {
-                                        setPasswords({ ...passwords, currentPassword: e.target.value });
-                                        if (errors.currentPassword) setErrors({ ...errors, currentPassword: '' });
+                                        setPasswords({...passwords, currentPassword: e.target.value});
+                                        if (errors.currentPassword) setErrors({...errors, currentPassword: ''});
                                     }}
                                     placeholder="Enter your current password"
                                     className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent ${
@@ -627,7 +634,7 @@ export const ProfilePage: React.FC = () => {
                                 />
                                 {errors.currentPassword && (
                                     <p className="mt-2 text-sm text-red-600 flex items-center">
-                                        <AlertCircle className="h-4 w-4 mr-1" />
+                                        <AlertCircle className="h-4 w-4 mr-1"/>
                                         {errors.currentPassword}
                                     </p>
                                 )}
@@ -639,8 +646,8 @@ export const ProfilePage: React.FC = () => {
                                     type="password"
                                     value={passwords.newPassword}
                                     onChange={(e) => {
-                                        setPasswords({ ...passwords, newPassword: e.target.value });
-                                        if (errors.newPassword) setErrors({ ...errors, newPassword: '' });
+                                        setPasswords({...passwords, newPassword: e.target.value});
+                                        if (errors.newPassword) setErrors({...errors, newPassword: ''});
                                     }}
                                     placeholder="Enter your new password"
                                     className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent ${
@@ -650,7 +657,7 @@ export const ProfilePage: React.FC = () => {
                                 />
                                 {errors.newPassword && (
                                     <p className="mt-2 text-sm text-red-600 flex items-center">
-                                        <AlertCircle className="h-4 w-4 mr-1" />
+                                        <AlertCircle className="h-4 w-4 mr-1"/>
                                         {errors.newPassword}
                                     </p>
                                 )}
@@ -658,13 +665,14 @@ export const ProfilePage: React.FC = () => {
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">Confirm New Password</label>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">Confirm New
+                                    Password</label>
                                 <input
                                     type="password"
                                     value={passwords.confirmPassword}
                                     onChange={(e) => {
-                                        setPasswords({ ...passwords, confirmPassword: e.target.value });
-                                        if (errors.confirmPassword) setErrors({ ...errors, confirmPassword: '' });
+                                        setPasswords({...passwords, confirmPassword: e.target.value});
+                                        if (errors.confirmPassword) setErrors({...errors, confirmPassword: ''});
                                     }}
                                     placeholder="Confirm your new password"
                                     className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent ${
@@ -674,7 +682,7 @@ export const ProfilePage: React.FC = () => {
                                 />
                                 {errors.confirmPassword && (
                                     <p className="mt-2 text-sm text-red-600 flex items-center">
-                                        <AlertCircle className="h-4 w-4 mr-1" />
+                                        <AlertCircle className="h-4 w-4 mr-1"/>
                                         {errors.confirmPassword}
                                     </p>
                                 )}
@@ -683,7 +691,7 @@ export const ProfilePage: React.FC = () => {
                             {errors.password && (
                                 <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
                                     <p className="text-sm text-red-700 flex items-center">
-                                        <AlertCircle className="h-4 w-4 mr-2" />
+                                        <AlertCircle className="h-4 w-4 mr-2"/>
                                         {errors.password}
                                     </p>
                                 </div>
@@ -691,11 +699,12 @@ export const ProfilePage: React.FC = () => {
 
                             <div className="flex space-x-3 pt-4">
                                 <Button type="submit" isLoading={updatePasswordMutation.isPending}>
-                                    <Save className="h-4 w-4 mr-2" />
+                                    <Save className="h-4 w-4 mr-2"/>
                                     Update Password
                                 </Button>
-                                <Button type="button" variant="secondary" onClick={cancelPasswordChange} disabled={updatePasswordMutation.isPending}>
-                                    <X className="h-4 w-4 mr-2" />
+                                <Button type="button" variant="secondary" onClick={cancelPasswordChange}
+                                        disabled={updatePasswordMutation.isPending}>
+                                    <X className="h-4 w-4 mr-2"/>
                                     Cancel
                                 </Button>
                             </div>
@@ -707,7 +716,7 @@ export const ProfilePage: React.FC = () => {
             {/* Security Note */}
             <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
                 <p className="text-sm text-gray-600 flex items-start">
-                    <Shield className="h-4 w-4 mr-2 mt-0.5 text-gray-500 flex-shrink-0" />
+                    <Shield className="h-4 w-4 mr-2 mt-0.5 text-gray-500 flex-shrink-0"/>
                     For security reasons, you may be logged out after changing your password.
                 </p>
             </div>

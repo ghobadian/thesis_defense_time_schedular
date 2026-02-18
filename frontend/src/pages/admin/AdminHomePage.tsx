@@ -1,7 +1,7 @@
 // src/pages/admin/AdminHome.tsx
 import React from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { Card } from '../../components/common/Card';
+import {useQuery} from '@tanstack/react-query';
+import {Card} from '../../components/common/Card';
 import {
     Users,
     GraduationCap,
@@ -12,16 +12,16 @@ import {
     BookOpen,
     Activity
 } from 'lucide-react';
-import { adminAPI } from '../../api/admin.api';
+import {adminAPI} from '../../api/admin.api';
 import {DepartmentDetail, DepartmentSummary} from "../../types";
 
 export const AdminHomePage: React.FC = () => {
-    const { data: stats, isLoading: loadingStats } = useQuery({
+    const {data: stats, isLoading: loadingStats} = useQuery({
         queryKey: ['adminStats'],
         queryFn: adminAPI.getStats,
     });
 
-    const { data: departments, isLoading: loadingDepartments } = useQuery({
+    const {data: departments, isLoading: loadingDepartments} = useQuery({
         queryKey: ['departments'],
         queryFn: adminAPI.getDepartments,
     });
@@ -31,7 +31,7 @@ export const AdminHomePage: React.FC = () => {
             <div className="flex justify-between items-center">
                 <h1 className="text-3xl font-bold text-gray-900">Admin Dashboard</h1>
                 <div className="flex items-center space-x-2 text-sm text-gray-600">
-                    <Activity className="h-4 w-4" />
+                    <Activity className="h-4 w-4"/>
                     <span>Last updated: {new Date().toLocaleTimeString()}</span>
                 </div>
             </div>
@@ -47,7 +47,7 @@ export const AdminHomePage: React.FC = () => {
                             </p>
 
                         </div>
-                        <GraduationCap className="h-12 w-12 text-blue-600" />
+                        <GraduationCap className="h-12 w-12 text-blue-600"/>
                     </div>
                 </Card>
 
@@ -62,7 +62,7 @@ export const AdminHomePage: React.FC = () => {
                                 {stats?.activeProfessors || 0} active this month
                             </p>
                         </div>
-                        <Users className="h-12 w-12 text-purple-600" />
+                        <Users className="h-12 w-12 text-purple-600"/>
                     </div>
                 </Card>
 
@@ -77,7 +77,7 @@ export const AdminHomePage: React.FC = () => {
                                 {stats?.pendingForms || 0} pending review
                             </p>
                         </div>
-                        <FileText className="h-12 w-12 text-green-600" />
+                        <FileText className="h-12 w-12 text-green-600"/>
                     </div>
                 </Card>
 
@@ -92,7 +92,7 @@ export const AdminHomePage: React.FC = () => {
                                 {stats?.upcomingMeetings || 0} upcoming
                             </p>
                         </div>
-                        <Calendar className="h-12 w-12 text-yellow-600" />
+                        <Calendar className="h-12 w-12 text-yellow-600"/>
                     </div>
                 </Card>
             </div>
@@ -111,7 +111,7 @@ export const AdminHomePage: React.FC = () => {
                                 >
                                     <div className="flex items-center justify-between mb-3">
                                         <div className="flex items-center space-x-2">
-                                            <Building className="h-5 w-5 text-primary-600" />
+                                            <Building className="h-5 w-5 text-primary-600"/>
                                             <h3 className="font-semibold text-gray-900">{dept.name}</h3>
                                         </div>
                                     </div>
@@ -122,7 +122,8 @@ export const AdminHomePage: React.FC = () => {
                                         </div>
                                         <div className="flex justify-between">
                                             <span className="text-gray-600">Professors:</span>
-                                            <span className="font-medium text-gray-900">{dept.professorCount || 0}</span>
+                                            <span
+                                                className="font-medium text-gray-900">{dept.professorCount || 0}</span>
                                         </div>
                                         <div className="flex justify-between">
                                             <span className="text-gray-600">Fields:</span>
@@ -130,7 +131,8 @@ export const AdminHomePage: React.FC = () => {
                                         </div>
                                         <div className="flex justify-between">
                                             <span className="text-gray-600">Active Thesis:</span>
-                                            <span className="font-medium text-gray-900">{dept.activeThesisCount || 0}</span>
+                                            <span
+                                                className="font-medium text-gray-900">{dept.activeThesisCount || 0}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -144,22 +146,25 @@ export const AdminHomePage: React.FC = () => {
             <Card title="System Health">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div className="text-center">
-                        <div className="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-full mb-3">
-                            <Activity className="h-8 w-8 text-green-600" />
+                        <div
+                            className="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-full mb-3">
+                            <Activity className="h-8 w-8 text-green-600"/>
                         </div>
                         <h3 className="text-lg font-semibold text-gray-900">System Status</h3>
                         <p className="text-green-600 font-medium">Operational</p>
                     </div>
                     <div className="text-center">
-                        <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full mb-3">
-                            <BookOpen className="h-8 w-8 text-blue-600" />
+                        <div
+                            className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full mb-3">
+                            <BookOpen className="h-8 w-8 text-blue-600"/>
                         </div>
                         <h3 className="text-lg font-semibold text-gray-900">Active Sessions</h3>
                         <p className="text-2xl font-bold text-gray-900">{stats?.activeSessions || 0}</p>
                     </div>
                     <div className="text-center">
-                        <div className="inline-flex items-center justify-center w-16 h-16 bg-purple-100 rounded-full mb-3">
-                            <TrendingUp className="h-8 w-8 text-purple-600" />
+                        <div
+                            className="inline-flex items-center justify-center w-16 h-16 bg-purple-100 rounded-full mb-3">
+                            <TrendingUp className="h-8 w-8 text-purple-600"/>
                         </div>
                         <h3 className="text-lg font-semibold text-gray-900">System Load</h3>
                         <p className="text-green-600 font-medium">Normal</p>

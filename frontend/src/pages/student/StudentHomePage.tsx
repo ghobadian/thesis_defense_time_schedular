@@ -6,12 +6,12 @@ import {studentAPI} from '../../api/student.api';
 import {FormState, Meeting, MeetingState, ThesisForm} from "../../types";
 
 export const StudentHomePage: React.FC = () => {
-    const { data: thesisForms } = useQuery({
+    const {data: thesisForms} = useQuery({
         queryKey: ['myThesisForms'],
         queryFn: studentAPI.getMyThesisForms,
     });
 
-    const { data: meetings } = useQuery({
+    const {data: meetings} = useQuery({
         queryKey: ['myMeetings'],
         queryFn: studentAPI.getMeetings,
     });
@@ -34,7 +34,7 @@ export const StudentHomePage: React.FC = () => {
                             <p className="text-blue-600 text-sm font-medium">Total Forms</p>
                             <p className="text-2xl font-bold text-gray-900">{stats.totalForms}</p>
                         </div>
-                        <FileText className="h-8 w-8 text-blue-600" />
+                        <FileText className="h-8 w-8 text-blue-600"/>
                     </div>
                 </Card>
 
@@ -44,7 +44,7 @@ export const StudentHomePage: React.FC = () => {
                             <p className="text-yellow-600 text-sm font-medium">Pending</p>
                             <p className="text-2xl font-bold text-gray-900">{stats.pendingForms}</p>
                         </div>
-                        <Clock className="h-8 w-8 text-yellow-600" />
+                        <Clock className="h-8 w-8 text-yellow-600"/>
                     </div>
                 </Card>
 
@@ -54,7 +54,7 @@ export const StudentHomePage: React.FC = () => {
                             <p className="text-green-600 text-sm font-medium">Approved</p>
                             <p className="text-2xl font-bold text-gray-900">{stats.approvedForms}</p>
                         </div>
-                        <CheckCircle className="h-8 w-8 text-green-600" />
+                        <CheckCircle className="h-8 w-8 text-green-600"/>
                     </div>
                 </Card>
 
@@ -64,7 +64,7 @@ export const StudentHomePage: React.FC = () => {
                             <p className="text-purple-600 text-sm font-medium">Meetings</p>
                             <p className="text-2xl font-bold text-gray-900">{stats.scheduledMeetings}</p>
                         </div>
-                        <Calendar className="h-8 w-8 text-purple-600" />
+                        <Calendar className="h-8 w-8 text-purple-600"/>
                     </div>
                 </Card>
             </div>

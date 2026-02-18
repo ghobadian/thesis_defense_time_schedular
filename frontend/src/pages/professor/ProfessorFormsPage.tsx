@@ -1,19 +1,19 @@
 // src/pages/professor/ProfessorThesisForms.tsx
 
-import React, { useState } from 'react';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { professorAPI } from '../../api/professor.api';
-import { FormState, RevisionTarget, ThesisForm } from '../../types';
-import { useAuthStore } from '../../store/authStore';
-import { RejectionModal } from '../../components/thesis/RejectionModal';
-import { ActionButton } from '../../components/thesis/ThesisFormDetails';
-import { ThesisFormsLayout } from '../../components/thesis/ThesisFormLayout';
-import { JurySelectionModal } from '../../components/common/JurySelectionModal';
-import { RevisionRequestModal } from '../../components/thesis/RevisionRequestModal';
-import { SubmitRevisionModal } from '../../components/thesis/SubmitRevisionModal';
+import React, {useState} from 'react';
+import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
+import {professorAPI} from '../../api/professor.api';
+import {FormState, RevisionTarget, ThesisForm} from '../../types';
+import {useAuthStore} from '../../store/authStore';
+import {RejectionModal} from '../../components/thesis/RejectionModal';
+import {ActionButton} from '../../components/thesis/ThesisFormDetails';
+import {ThesisFormsLayout} from '../../components/thesis/ThesisFormLayout';
+import {JurySelectionModal} from '../../components/common/JurySelectionModal';
+import {RevisionRequestModal} from '../../components/thesis/RevisionRequestModal';
+import {SubmitRevisionModal} from '../../components/thesis/SubmitRevisionModal';
 
 const ProfessorFormsPage: React.FC = () => {
-    const { role } = useAuthStore();
+    const {role} = useAuthStore();
     const queryClient = useQueryClient();
     const [selectedForm, setSelectedForm] = useState<ThesisForm | null>(null);
 
@@ -32,10 +32,10 @@ const ProfessorFormsPage: React.FC = () => {
     // State for submit revision modal
     const [submitRevisionModalOpen, setSubmitRevisionModalOpen] = useState(false);
     const [formToSubmitRevision, setFormToSubmitRevision] = useState<ThesisForm | null>(null);
-    const { userId } = useAuthStore();
+    const {userId} = useAuthStore();
 
     // Fetch pending forms for professor/manager
-    const { data: forms = [], isLoading, error } = useQuery({
+    const {data: forms = [], isLoading, error} = useQuery({
         queryKey: ['professor-pending-forms'],
         queryFn: professorAPI.getPendingThesisForms,
         enabled: role === 'PROFESSOR' || role === 'MANAGER',
@@ -45,7 +45,7 @@ const ProfessorFormsPage: React.FC = () => {
     const approveMutation = useMutation({
         mutationFn: (formId: number) => professorAPI.approveThesisForm(formId),
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['professor-pending-forms'] });
+            queryClient.invalidateQueries({queryKey: ['professor-pending-forms']});
             setSelectedForm(null);
         },
         onError: (error: any) => {
@@ -55,10 +55,10 @@ const ProfessorFormsPage: React.FC = () => {
 
     // Mutation for rejection (works for both SUBMITTED and ADMIN_APPROVED states)
     const rejectMutation = useMutation({
-        mutationFn: ({ formId, rejectionReason }: { formId: number; rejectionReason: string }) =>
+        mutationFn: ({formId, rejectionReason}: { formId: number; rejectionReason: string }) =>
             professorAPI.rejectThesisForm(formId, rejectionReason),
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['professor-pending-forms'] });
+            queryClient.invalidateQueries({queryKey: ['professor-pending-forms']});
             setSelectedForm(null);
             setRejectionModalOpen(false);
             setFormToReject(null);
@@ -70,10 +70,10 @@ const ProfessorFormsPage: React.FC = () => {
 
     // Mutation for revision request
     const revisionMutation = useMutation({
-        mutationFn: ({ formId, target, message }: { formId: number; target: RevisionTarget; message: string }) =>
+        mutationFn: ({formId, target, message}: { formId: number; target: RevisionTarget; message: string }) =>
             professorAPI.requestRevision(formId, target, message),
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['professor-pending-forms'] });
+            queryClient.invalidateQueries({queryKey: ['professor-pending-forms']});
             setSelectedForm(null);
             setRevisionModalOpen(false);
             setFormToRequestRevision(null);
@@ -87,7 +87,7 @@ const ProfessorFormsPage: React.FC = () => {
     const submitRevisionMutation = useMutation({
         mutationFn: (formId: number) => professorAPI.submitRevision(formId),
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['professor-pending-forms'] });
+            queryClient.invalidateQueries({queryKey: ['professor-pending-forms']});
             setSelectedForm(null);
             setSubmitRevisionModalOpen(false);
             setFormToSubmitRevision(null);
@@ -99,10 +99,10 @@ const ProfessorFormsPage: React.FC = () => {
 
     // Mutation for manager creating meeting with juries (ADMIN_APPROVED → JURIES_SELECTED)
     const createMeetingMutation = useMutation({
-        mutationFn: ({ formId, juryIds }: { formId: number; juryIds: number[] }) =>
+        mutationFn: ({formId, juryIds}: { formId: number; juryIds: number[] }) =>
             professorAPI.createMeeting(formId, juryIds),
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['professor-pending-forms'] });
+            queryClient.invalidateQueries({queryKey: ['professor-pending-forms']});
             setJuryModalOpen(false);
             setFormToApproveWithJury(null);
             setSelectedForm(null);
@@ -216,7 +216,7 @@ const ProfessorFormsPage: React.FC = () => {
     // Helper to check if form is in instructor revision requested state
     const isInstructorRevisionRequested = (state: FormState): boolean => {
         return state === FormState.MANAGER_REVISION_REQUESTED_FOR_INSTRUCTOR ||
-               state === FormState.ADMIN_REVISION_REQUESTED_FOR_INSTRUCTOR;
+            state === FormState.ADMIN_REVISION_REQUESTED_FOR_INSTRUCTOR;
     };
 
     // Get the requester name for display in modal
@@ -326,7 +326,8 @@ const ProfessorFormsPage: React.FC = () => {
                         onClick: () => handleRejectClick(form),
                     },
                 ];
-            }}
+            }
+        }
 
         return [];
     };

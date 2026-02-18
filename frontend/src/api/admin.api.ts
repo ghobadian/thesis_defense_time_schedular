@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { API_BASE_URL } from './config';
+import {API_BASE_URL} from './config';
 import {Meeting, ProfessorRegistrationInput, ProfessorSearch, RevisionTarget, StudentUpdateRequest} from "../types";
 
 
@@ -38,7 +38,7 @@ export const adminAPI = {
     },
 
     getProfessors: async (params: ProfessorSearch) => {
-        const response = await getApi().get('/professors', { params });
+        const response = await getApi().get('/professors', {params});
         return response.data;
     },
 
@@ -150,17 +150,17 @@ export const adminAPI = {
         return response.data;
     },
 
-    updateField: async(fieldId: number, field: { name: string; departmentId: number })=> {
+    updateField: async (fieldId: number, field: { name: string; departmentId: number }) => {
         const response = await getApi().put(`/fields/${fieldId}`, field);
         return response.data;
     },
 
-    createField: async(field: { name: string; departmentId: number })=> {
+    createField: async (field: { name: string; departmentId: number }) => {
         const response = await getApi().post(`/fields`, field);
         return response.data;
     },
 
-    deleteField: async(fieldId: number)=> {
+    deleteField: async (fieldId: number) => {
         const response = await getApi().delete(`/fields/${fieldId}`);
         return response.data;
     },
@@ -180,12 +180,12 @@ export const adminAPI = {
         return response.data;
     },
 
-    requestRevision: async (id: number, target: RevisionTarget, message: string)=> {
+    requestRevision: async (id: number, target: RevisionTarget, message: string) => {
         const response = await getApi().post('/forms/request-revision', {id, target, message});
         return response.data;
     },
 
-    submitRevision: async (formId: number)=> {
+    submitRevision: async (formId: number) => {
         const response = await getApi().post(`/forms/${formId}/submit-revision`);
         return response.data;
     },

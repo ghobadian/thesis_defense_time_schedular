@@ -1,21 +1,21 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { UserPlus, Download, X, Mail, Phone, GraduationCap, Building, BookOpen, User } from 'lucide-react';
+import React, {useState} from 'react';
+import {useNavigate} from 'react-router-dom';
+import {useQuery, useMutation, useQueryClient} from '@tanstack/react-query';
+import {UserPlus, Download, X, Mail, Phone, GraduationCap, Building, BookOpen, User} from 'lucide-react';
 
 // Components
-import { Button } from '../../components/common/Button';
-import { Card } from '../../components/common/Card';
-import { StudentSearchBar } from '../../components/admin/StudentSearchBar';
-import { DepartmentFilter } from '../../components/admin/DepartmentFilter';
-import { StudentTypeFilter } from '../../components/admin/StudentTypeFilter';
-import { StudentTable } from '../../components/admin/StudentTable';
+import {Button} from '../../components/common/Button';
+import {Card} from '../../components/common/Card';
+import {StudentSearchBar} from '../../components/admin/StudentSearchBar';
+import {DepartmentFilter} from '../../components/admin/DepartmentFilter';
+import {StudentTypeFilter} from '../../components/admin/StudentTypeFilter';
+import {StudentTable} from '../../components/admin/StudentTable';
 
 // API
-import { adminAPI } from '../../api/admin.api';
+import {adminAPI} from '../../api/admin.api';
 
 // Types
-import { Student, DepartmentSummary, StudentType } from '../../types';
+import {Student, DepartmentSummary, StudentType} from '../../types';
 
 // --- Student Detail Modal Component ---
 interface StudentDetailModalProps {
@@ -24,24 +24,32 @@ interface StudentDetailModalProps {
     onClose: () => void;
 }
 
-const StudentDetailModal: React.FC<StudentDetailModalProps> = ({ student, isOpen, onClose }) => {
+const StudentDetailModal: React.FC<StudentDetailModalProps> = ({student, isOpen, onClose}) => {
     if (!isOpen || !student) return null;
 
     const getStudentTypeLabel = (type: StudentType) => {
         switch (type) {
-            case StudentType.BACHELOR: return 'Bachelor';
-            case StudentType.MASTER: return 'Master';
-            case StudentType.PHD: return 'PhD';
-            default: return 'Unknown';
+            case StudentType.BACHELOR:
+                return 'Bachelor';
+            case StudentType.MASTER:
+                return 'Master';
+            case StudentType.PHD:
+                return 'PhD';
+            default:
+                return 'Unknown';
         }
     };
 
     const getStudentTypeColor = (type: StudentType) => {
         switch (type) {
-            case StudentType.BACHELOR: return 'bg-indigo-100 text-indigo-800';
-            case StudentType.MASTER: return 'bg-purple-100 text-purple-800';
-            case StudentType.PHD: return 'bg-amber-100 text-amber-800';
-            default: return 'bg-gray-100 text-gray-800';
+            case StudentType.BACHELOR:
+                return 'bg-indigo-100 text-indigo-800';
+            case StudentType.MASTER:
+                return 'bg-purple-100 text-purple-800';
+            case StudentType.PHD:
+                return 'bg-amber-100 text-amber-800';
+            default:
+                return 'bg-gray-100 text-gray-800';
         }
     };
 
@@ -57,13 +65,14 @@ const StudentDetailModal: React.FC<StudentDetailModalProps> = ({ student, isOpen
             <div className="flex min-h-full items-center justify-center p-4">
                 <div className="relative bg-white rounded-xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
                     {/* Header */}
-                    <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between rounded-t-xl">
+                    <div
+                        className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between rounded-t-xl">
                         <h2 className="text-xl font-semibold text-gray-900">Student Details</h2>
                         <button
                             onClick={onClose}
                             className="p-2 hover:bg-gray-100 rounded-full transition-colors"
                         >
-                            <X className="h-5 w-5 text-gray-500" />
+                            <X className="h-5 w-5 text-gray-500"/>
                         </button>
                     </div>
 
@@ -72,7 +81,7 @@ const StudentDetailModal: React.FC<StudentDetailModalProps> = ({ student, isOpen
                         {/* Profile Section */}
                         <div className="flex items-center space-x-4">
                             <div className="h-20 w-20 bg-primary-100 rounded-full flex items-center justify-center">
-                                <GraduationCap className="h-10 w-10 text-primary-600" />
+                                <GraduationCap className="h-10 w-10 text-primary-600"/>
                             </div>
                             <div>
                                 <h3 className="text-2xl font-bold text-gray-900">
@@ -80,7 +89,8 @@ const StudentDetailModal: React.FC<StudentDetailModalProps> = ({ student, isOpen
                                 </h3>
                                 <p className="text-gray-500">Student ID: {student.studentNumber}</p>
                                 <div className="flex items-center gap-2 mt-2">
-                                    <span className={`px-3 py-1 rounded-full text-sm font-medium ${getStudentTypeColor(student.studentType)}`}>
+                                    <span
+                                        className={`px-3 py-1 rounded-full text-sm font-medium ${getStudentTypeColor(student.studentType)}`}>
                                         {getStudentTypeLabel(student.studentType)}
                                     </span>
                                     <span className={`px-3 py-1 rounded-full text-sm font-medium ${
@@ -102,7 +112,7 @@ const StudentDetailModal: React.FC<StudentDetailModalProps> = ({ student, isOpen
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div className="flex items-center space-x-3">
                                     <div className="p-2 bg-white rounded-lg shadow-sm">
-                                        <Mail className="h-5 w-5 text-gray-500" />
+                                        <Mail className="h-5 w-5 text-gray-500"/>
                                     </div>
                                     <div>
                                         <p className="text-xs text-gray-500">Email</p>
@@ -117,7 +127,7 @@ const StudentDetailModal: React.FC<StudentDetailModalProps> = ({ student, isOpen
                                 {student.phoneNumber && (
                                     <div className="flex items-center space-x-3">
                                         <div className="p-2 bg-white rounded-lg shadow-sm">
-                                            <Phone className="h-5 w-5 text-gray-500" />
+                                            <Phone className="h-5 w-5 text-gray-500"/>
                                         </div>
                                         <div>
                                             <p className="text-xs text-gray-500">Phone</p>
@@ -141,7 +151,7 @@ const StudentDetailModal: React.FC<StudentDetailModalProps> = ({ student, isOpen
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div className="flex items-center space-x-3">
                                     <div className="p-2 bg-white rounded-lg shadow-sm">
-                                        <Building className="h-5 w-5 text-gray-500" />
+                                        <Building className="h-5 w-5 text-gray-500"/>
                                     </div>
                                     <div>
                                         <p className="text-xs text-gray-500">Department</p>
@@ -152,7 +162,7 @@ const StudentDetailModal: React.FC<StudentDetailModalProps> = ({ student, isOpen
                                 </div>
                                 <div className="flex items-center space-x-3">
                                     <div className="p-2 bg-white rounded-lg shadow-sm">
-                                        <BookOpen className="h-5 w-5 text-gray-500" />
+                                        <BookOpen className="h-5 w-5 text-gray-500"/>
                                     </div>
                                     <div>
                                         <p className="text-xs text-gray-500">Field of Study</p>
@@ -163,7 +173,7 @@ const StudentDetailModal: React.FC<StudentDetailModalProps> = ({ student, isOpen
                                 </div>
                                 <div className="flex items-center space-x-3">
                                     <div className="p-2 bg-white rounded-lg shadow-sm">
-                                        <User className="h-5 w-5 text-gray-500" />
+                                        <User className="h-5 w-5 text-gray-500"/>
                                     </div>
                                     <div>
                                         <p className="text-xs text-gray-500">Instructor</p>
@@ -177,7 +187,7 @@ const StudentDetailModal: React.FC<StudentDetailModalProps> = ({ student, isOpen
                                 </div>
                                 <div className="flex items-center space-x-3">
                                     <div className="p-2 bg-white rounded-lg shadow-sm">
-                                        <GraduationCap className="h-5 w-5 text-gray-500" />
+                                        <GraduationCap className="h-5 w-5 text-gray-500"/>
                                     </div>
                                     <div>
                                         <p className="text-xs text-gray-500">Degree Program</p>
@@ -216,7 +226,8 @@ const StudentDetailModal: React.FC<StudentDetailModalProps> = ({ student, isOpen
                     </div>
 
                     {/* Footer */}
-                    <div className="sticky bottom-0 bg-gray-50 border-t border-gray-200 px-6 py-4 flex justify-end rounded-b-xl">
+                    <div
+                        className="sticky bottom-0 bg-gray-50 border-t border-gray-200 px-6 py-4 flex justify-end rounded-b-xl">
                         <Button variant="secondary" onClick={onClose}>
                             Close
                         </Button>
@@ -279,7 +290,7 @@ export const AdminStudentManagementPage: React.FC = () => {
     const deleteMutation = useMutation({
         mutationFn: (id: number) => adminAPI.deleteStudent(id),
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['students'] });
+            queryClient.invalidateQueries({queryKey: ['students']});
             console.log('Student deleted successfully');
         },
         onError: (error) => {
@@ -341,7 +352,7 @@ export const AdminStudentManagementPage: React.FC = () => {
             ...rows.map(row => row.join(','))
         ].join('\n');
 
-        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const blob = new Blob([csvContent], {type: 'text/csv;charset=utf-8;'});
         const url = URL.createObjectURL(blob);
         const link = document.createElement('a');
         link.href = url;
@@ -378,14 +389,14 @@ export const AdminStudentManagementPage: React.FC = () => {
                         onClick={handleExport}
                         disabled={students.length === 0 || isLoadingStudents}
                     >
-                        <Download className="h-4 w-4 mr-2" />
+                        <Download className="h-4 w-4 mr-2"/>
                         Export CSV
                     </Button>
                     <Button
                         variant="primary"
                         onClick={() => navigate('/admin/register-student')}
                     >
-                        <UserPlus className="h-4 w-4 mr-2" />
+                        <UserPlus className="h-4 w-4 mr-2"/>
                         Register Student
                     </Button>
                 </div>
@@ -435,23 +446,29 @@ export const AdminStudentManagementPage: React.FC = () => {
                             <span className="text-sm text-gray-500">Active filters:</span>
 
                             {search && (
-                                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                <span
+                                    className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
                                     Search: "{search}"
-                                    <button onClick={() => setSearch('')} className="ml-1 hover:text-blue-600">×</button>
+                                    <button onClick={() => setSearch('')}
+                                            className="ml-1 hover:text-blue-600">×</button>
                                 </span>
                             )}
 
                             {selectedDeptId && (
-                                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                <span
+                                    className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
                                     Dept: {departments.find(d => d.id.toString() === selectedDeptId)?.name || selectedDeptId}
-                                    <button onClick={() => setSelectedDeptId('')} className="ml-1 hover:text-green-600">×</button>
+                                    <button onClick={() => setSelectedDeptId('')}
+                                            className="ml-1 hover:text-green-600">×</button>
                                 </span>
                             )}
 
                             {selectedStudentType && (
-                                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
+                                <span
+                                    className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
                                     Type: {selectedStudentType}
-                                    <button onClick={() => setSelectedStudentType('')} className="ml-1 hover:text-purple-600">×</button>
+                                    <button onClick={() => setSelectedStudentType('')}
+                                            className="ml-1 hover:text-purple-600">×</button>
                                 </span>
                             )}
                         </div>
@@ -466,7 +483,8 @@ export const AdminStudentManagementPage: React.FC = () => {
                         'Loading...'
                     ) : (
                         <>
-                            Showing <span className="font-medium">{students.length}</span> student{students.length !== 1 ? 's' : ''}
+                            Showing <span
+                            className="font-medium">{students.length}</span> student{students.length !== 1 ? 's' : ''}
                             {hasActiveFilters && ' (filtered)'}
                         </>
                     )}

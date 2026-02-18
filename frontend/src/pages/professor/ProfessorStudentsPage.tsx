@@ -1,8 +1,8 @@
 import React from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { professorAPI } from '../../api/professor.api';
-import { Card } from '../../components/common/Card';
-import { User, Mail, Phone, GraduationCap, FileText } from 'lucide-react';
+import {useQuery} from '@tanstack/react-query';
+import {professorAPI} from '../../api/professor.api';
+import {Card} from '../../components/common/Card';
+import {User, Mail, Phone, GraduationCap, FileText} from 'lucide-react';
 
 interface Student {
     id: number;
@@ -27,7 +27,7 @@ interface Student {
 }
 
 export const ProfessorStudentsPage: React.FC = () => {
-    const { data: students, isLoading, error } = useQuery<Student[]>({
+    const {data: students, isLoading, error} = useQuery<Student[]>({
         queryKey: ['myStudents'],
         queryFn: professorAPI.getMySupervisedStudents,
     });
@@ -62,7 +62,7 @@ export const ProfessorStudentsPage: React.FC = () => {
             {!students || students.length === 0 ? (
                 <Card>
                     <div className="text-center py-12">
-                        <GraduationCap className="h-16 w-16 text-gray-400 mx-auto mb-4" />
+                        <GraduationCap className="h-16 w-16 text-gray-400 mx-auto mb-4"/>
                         <p className="text-gray-600 text-lg">No students assigned yet</p>
                         <p className="text-gray-500 text-sm mt-2">
                             Students will appear here when they are assigned to you as supervisor
@@ -78,7 +78,7 @@ export const ProfessorStudentsPage: React.FC = () => {
                                 <div className="flex items-start justify-between">
                                     <div className="flex items-center space-x-3">
                                         <div className="bg-primary-100 rounded-full p-3">
-                                            <User className="h-6 w-6 text-primary-600" />
+                                            <User className="h-6 w-6 text-primary-600"/>
                                         </div>
                                         <div>
                                             <h3 className="text-xl font-semibold text-gray-900">
@@ -94,19 +94,19 @@ export const ProfessorStudentsPage: React.FC = () => {
                                 {/* Student Info */}
                                 <div className="space-y-2 pt-4 border-t border-gray-200">
                                     <div className="flex items-center space-x-2 text-sm">
-                                        <Mail className="h-4 w-4 text-gray-400" />
+                                        <Mail className="h-4 w-4 text-gray-400"/>
                                         <span className="text-gray-600">{student.email}</span>
                                     </div>
 
                                     {student.phoneNumber && (
                                         <div className="flex items-center space-x-2 text-sm">
-                                            <Phone className="h-4 w-4 text-gray-400" />
+                                            <Phone className="h-4 w-4 text-gray-400"/>
                                             <span className="text-gray-600">{student.phoneNumber}</span>
                                         </div>
                                     )}
 
                                     <div className="flex items-center space-x-2 text-sm">
-                                        <GraduationCap className="h-4 w-4 text-gray-400" />
+                                        <GraduationCap className="h-4 w-4 text-gray-400"/>
                                         <span className="text-gray-600">
                                             {student.field.name} - {student.department.name}
                                         </span>
@@ -117,7 +117,7 @@ export const ProfessorStudentsPage: React.FC = () => {
                                 {student.thesisForms && student.thesisForms.length > 0 && (
                                     <div className="pt-4 border-t border-gray-200">
                                         <div className="flex items-center space-x-2 mb-2">
-                                            <FileText className="h-4 w-4 text-gray-400" />
+                                            <FileText className="h-4 w-4 text-gray-400"/>
                                             <span className="text-sm font-medium text-gray-700">
                                                 Thesis Forms ({student.thesisForms.length})
                                             </span>
@@ -129,11 +129,12 @@ export const ProfessorStudentsPage: React.FC = () => {
                                                     className="text-xs bg-gray-50 rounded px-2 py-1 flex items-center justify-between"
                                                 >
                                                     <span className="text-gray-700 truncate">{form.title}</span>
-                                                    <span className={`ml-2 px-2 py-0.5 rounded-full text-xs font-medium ${
-                                                        form.state === 'SUBMITTED' ? 'bg-yellow-100 text-yellow-800' :
-                                                            form.state.includes('APPROVED') ? 'bg-green-100 text-green-800' :
-                                                                'bg-red-100 text-red-800'
-                                                    }`}>
+                                                    <span
+                                                        className={`ml-2 px-2 py-0.5 rounded-full text-xs font-medium ${
+                                                            form.state === 'SUBMITTED' ? 'bg-yellow-100 text-yellow-800' :
+                                                                form.state.includes('APPROVED') ? 'bg-green-100 text-green-800' :
+                                                                    'bg-red-100 text-red-800'
+                                                        }`}>
                                                         {form.state.replace(/_/g, ' ')}
                                                     </span>
                                                 </div>

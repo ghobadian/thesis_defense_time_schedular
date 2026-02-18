@@ -1,8 +1,8 @@
 // src/pages/admin/DefenseMeetings.tsx
-import React, { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { adminAPI } from '../../api/admin.api';
-import { Card } from '../../components/common/Card';
+import React, {useState} from 'react';
+import {useQuery} from '@tanstack/react-query';
+import {adminAPI} from '../../api/admin.api';
+import {Card} from '../../components/common/Card';
 import {
     Calendar,
     Search,
@@ -17,7 +17,7 @@ import {
     User
 } from 'lucide-react';
 import {Meeting, MeetingState} from '../../types';
-import { format, parseISO } from 'date-fns';
+import {format, parseISO} from 'date-fns';
 
 export const AdminMeetingsPage: React.FC = () => {
     const [searchTerm, setSearchTerm] = useState('');
@@ -25,7 +25,7 @@ export const AdminMeetingsPage: React.FC = () => {
     const [selectedMeeting, setSelectedMeeting] = useState<Meeting | null>(null);
 
     // Fetch all meetings
-    const { data: meetings, isLoading, error } = useQuery({
+    const {data: meetings, isLoading, error} = useQuery({
         queryKey: ['adminMeetings'],
         queryFn: adminAPI.getAllMeetings,
     });
@@ -52,7 +52,8 @@ export const AdminMeetingsPage: React.FC = () => {
             CANCELLED: 'bg-red-100 text-red-800',
         };
         return (
-            <span className={`px-2.5 py-0.5 rounded-full text-xs font-medium ${styles[state] || 'bg-gray-100 text-gray-800'}`}>
+            <span
+                className={`px-2.5 py-0.5 rounded-full text-xs font-medium ${styles[state] || 'bg-gray-100 text-gray-800'}`}>
                 {state.replace(/_/g, ' ')}
             </span>
         );
@@ -74,7 +75,9 @@ export const AdminMeetingsPage: React.FC = () => {
         }
     };
 
-    if (isLoading) return <div className="flex justify-center p-12"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div></div>;
+    if (isLoading) return <div className="flex justify-center p-12">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
+    </div>;
     if (error) return <div className="p-8 text-center text-red-600">Failed to load data.</div>;
 
     return (
@@ -85,7 +88,8 @@ export const AdminMeetingsPage: React.FC = () => {
                     <h1 className="text-2xl font-bold text-gray-900">Defense Meetings</h1>
                     <p className="text-sm text-gray-600 mt-1">Overview of all thesis defenses</p>
                 </div>
-                <div className="bg-white px-4 py-2 rounded-lg border border-gray-200 text-sm font-medium text-gray-700 shadow-sm">
+                <div
+                    className="bg-white px-4 py-2 rounded-lg border border-gray-200 text-sm font-medium text-gray-700 shadow-sm">
                     Total: {meetings?.length || 0}
                 </div>
             </div>
@@ -94,7 +98,7 @@ export const AdminMeetingsPage: React.FC = () => {
             <Card className="!p-4">
                 <div className="flex flex-col md:flex-row gap-4 justify-between">
                     <div className="relative flex-1 max-w-md">
-                        <Search className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
+                        <Search className="absolute left-3 top-2.5 h-5 w-5 text-gray-400"/>
                         <input
                             type="text"
                             placeholder="Search student or thesis..."
@@ -144,19 +148,20 @@ export const AdminMeetingsPage: React.FC = () => {
                                             <span className="text-sm font-medium text-gray-900">
                                                 {meeting.thesis.studentFirstName} {meeting.thesis.studentLastName}
                                             </span>
-                                        <span className="text-sm text-gray-500 truncate max-w-xs">{meeting.thesis.title}</span>
+                                        <span
+                                            className="text-sm text-gray-500 truncate max-w-xs">{meeting.thesis.title}</span>
                                     </div>
                                 </td>
                                 <td className="px-6 py-4 whitespace-nowrap">{getStatusBadge(meeting.state)}</td>
                                 <td className="px-6 py-4 whitespace-nowrap">
                                     <div className="flex items-center text-sm text-gray-500">
-                                        <Calendar className="mr-1.5 h-4 w-4 text-gray-400" />
+                                        <Calendar className="mr-1.5 h-4 w-4 text-gray-400"/>
                                         {getFormattedDate(meeting.selectedTimeSlot?.date, meeting.selectedTimeSlot?.timePeriod)}
                                     </div>
                                 </td>
                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                     <div className="flex items-center">
-                                        <Users className="mr-1.5 h-4 w-4 text-gray-400" />
+                                        <Users className="mr-1.5 h-4 w-4 text-gray-400"/>
                                         {meeting.juryMembers.length} Members
                                     </div>
                                 </td>
@@ -165,7 +170,7 @@ export const AdminMeetingsPage: React.FC = () => {
                                         onClick={() => setSelectedMeeting(meeting)}
                                         className="text-primary-600 hover:text-primary-900 p-2 rounded-full hover:bg-primary-50"
                                     >
-                                        <ChevronRight className="h-5 w-5" />
+                                        <ChevronRight className="h-5 w-5"/>
                                     </button>
                                 </td>
                             </tr>
@@ -177,18 +182,23 @@ export const AdminMeetingsPage: React.FC = () => {
 
             {/* Details Modal */}
             {selectedMeeting && (
-                <div className="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-                    <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-                        <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" onClick={() => setSelectedMeeting(null)}></div>
+                <div className="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog"
+                     aria-modal="true">
+                    <div
+                        className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+                        <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
+                             onClick={() => setSelectedMeeting(null)}></div>
 
-                        <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full">
+                        <div
+                            className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full">
                             <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                                 <div className="flex justify-between items-start mb-4 border-b border-gray-200 pb-4">
                                     <h3 className="text-lg leading-6 font-medium text-gray-900" id="modal-title">
                                         Meeting Details
                                     </h3>
-                                    <button onClick={() => setSelectedMeeting(null)} className="text-gray-400 hover:text-gray-500">
-                                        <X className="h-6 w-6" />
+                                    <button onClick={() => setSelectedMeeting(null)}
+                                            className="text-gray-400 hover:text-gray-500">
+                                        <X className="h-6 w-6"/>
                                     </button>
                                 </div>
 
@@ -196,20 +206,23 @@ export const AdminMeetingsPage: React.FC = () => {
                                     {/* Student & Thesis Info */}
                                     <div className="bg-gray-50 p-4 rounded-lg">
                                         <h4 className="text-sm font-semibold text-gray-900 mb-2 flex items-center">
-                                            <User className="h-4 w-4 mr-2" /> Student Information
+                                            <User className="h-4 w-4 mr-2"/> Student Information
                                         </h4>
                                         <div className="grid grid-cols-2 gap-4 text-sm">
                                             <div>
                                                 <span className="text-gray-500 block">Name</span>
-                                                <span className="font-medium">{selectedMeeting.thesis.studentFirstName} {selectedMeeting.thesis.studentLastName}</span>
+                                                <span
+                                                    className="font-medium">{selectedMeeting.thesis.studentFirstName} {selectedMeeting.thesis.studentLastName}</span>
                                             </div>
                                             <div>
                                                 <span className="text-gray-500 block">Field</span>
-                                                <span className="font-medium">{selectedMeeting.thesis.fieldName || 'N/A'}</span>
+                                                <span
+                                                    className="font-medium">{selectedMeeting.thesis.fieldName || 'N/A'}</span>
                                             </div>
                                             <div>
                                                 <span className="text-gray-500 block">Instructor</span>
-                                                <span className="font-medium">{selectedMeeting.thesis.instructorFirstName} {selectedMeeting.thesis.instructorLastName}</span>
+                                                <span
+                                                    className="font-medium">{selectedMeeting.thesis.instructorFirstName} {selectedMeeting.thesis.instructorLastName}</span>
                                             </div>
                                             <div>
                                                 <span className="text-gray-500 block">Score</span>
@@ -222,7 +235,7 @@ export const AdminMeetingsPage: React.FC = () => {
                                         </div>
                                         <div className="mt-4 pt-4 border-t border-gray-200">
                                             <h4 className="text-sm font-semibold text-gray-900 mb-1 flex items-center">
-                                                <FileText className="h-4 w-4 mr-2" /> Thesis Title
+                                                <FileText className="h-4 w-4 mr-2"/> Thesis Title
                                             </h4>
                                             <p className="text-sm text-gray-700">{selectedMeeting.thesis.title}</p>
                                         </div>
@@ -232,7 +245,7 @@ export const AdminMeetingsPage: React.FC = () => {
                                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                         <div className="border rounded-lg p-4">
                                             <h4 className="text-sm font-semibold text-gray-900 mb-2 flex items-center">
-                                                <Clock className="h-4 w-4 mr-2" /> Timing
+                                                <Clock className="h-4 w-4 mr-2"/> Timing
                                             </h4>
                                             {selectedMeeting.selectedTimeSlot ? (
                                                 <div className="text-sm">
@@ -247,10 +260,11 @@ export const AdminMeetingsPage: React.FC = () => {
 
                                         <div className="border rounded-lg p-4">
                                             <h4 className="text-sm font-semibold text-gray-900 mb-2 flex items-center">
-                                                <MapPin className="h-4 w-4 mr-2" /> Location
+                                                <MapPin className="h-4 w-4 mr-2"/> Location
                                             </h4>
                                             <p className="text-sm">
-                                                {selectedMeeting.location || <span className="text-gray-400 italic">Pending assignment</span>}
+                                                {selectedMeeting.location ||
+                                                    <span className="text-gray-400 italic">Pending assignment</span>}
                                             </p>
                                         </div>
                                     </div>
@@ -258,12 +272,15 @@ export const AdminMeetingsPage: React.FC = () => {
                                     {/* Jury List */}
                                     <div>
                                         <h4 className="text-sm font-semibold text-gray-900 mb-2 flex items-center">
-                                            <Users className="h-4 w-4 mr-2" /> Jury Members
+                                            <Users className="h-4 w-4 mr-2"/> Jury Members
                                         </h4>
-                                        <div className="bg-white border border-gray-200 rounded-lg divide-y divide-gray-200">
+                                        <div
+                                            className="bg-white border border-gray-200 rounded-lg divide-y divide-gray-200">
                                             {selectedMeeting.juryMembers.map((jury) => (
-                                                <div key={jury.id} className="p-3 flex justify-between items-center text-sm">
-                                                    <span className="font-medium text-gray-900">{jury.firstName} {jury.lastName}</span>
+                                                <div key={jury.id}
+                                                     className="p-3 flex justify-between items-center text-sm">
+                                                    <span
+                                                        className="font-medium text-gray-900">{jury.firstName} {jury.lastName}</span>
                                                 </div>
                                             ))}
                                         </div>

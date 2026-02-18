@@ -1,7 +1,6 @@
 import axios from 'axios';
-import { API_BASE_URL } from './config';
+import {API_BASE_URL} from './config';
 import {AvailableTime, AvailableTimeRange, MeetingTimeSlotsResponse, RevisionTarget} from "../types";
-
 
 
 const getApi = () => {
@@ -28,7 +27,7 @@ export const professorAPI = {
     },
 
     rejectThesisForm: async (formId: number, rejectionReason: string) => {
-        const response = await getApi().post(`/forms/reject`, { formId: formId, rejectionReason: rejectionReason });
+        const response = await getApi().post(`/forms/reject`, {formId: formId, rejectionReason: rejectionReason});
         return response.data;
     },
 
@@ -43,17 +42,17 @@ export const professorAPI = {
     },
 
 
-    submitMeetingTimeSlots: async (requestBody: AvailableTime)=> {
+    submitMeetingTimeSlots: async (requestBody: AvailableTime) => {
         const response = await getApi().post('/meetings/give-time', requestBody);
         return response.data;
     },
 
-    submitMeetingTimeRanges: async (requestBody: AvailableTimeRange)=> {
+    submitMeetingTimeRanges: async (requestBody: AvailableTimeRange) => {
         const response = await getApi().post('/meetings/give-time-range', requestBody);
         return response.data;
     },
 
-    getMyTimeslots: async() => {
+    getMyTimeslots: async () => {
         const response = await getApi().get(`/timeslots`);
         return response.data;
     },
@@ -118,12 +117,12 @@ export const professorAPI = {
         return response.data;
     },
 
-    requestRevision: async (id: number, target: RevisionTarget, message: string)=> {
+    requestRevision: async (id: number, target: RevisionTarget, message: string) => {
         const response = await getApi().post('/forms/request-revision', {id, target, message});
         return response.data;
     },
 
-    submitRevision: async (formId: number)=> {
+    submitRevision: async (formId: number) => {
         const response = await getApi().post(`/forms/${formId}/submit-revision`);
         return response.data;
     },

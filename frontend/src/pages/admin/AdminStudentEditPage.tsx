@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { ArrowLeft, Save, Loader2 } from "lucide-react";
-import { adminAPI } from "../../api/admin.api";
+import React, {useEffect, useState} from "react";
+import {useNavigate, useParams} from "react-router-dom";
+import {useQuery, useMutation, useQueryClient} from "@tanstack/react-query";
+import {ArrowLeft, Save, Loader2} from "lucide-react";
+import {adminAPI} from "../../api/admin.api";
 import {Student, StudentType, Field, Professor, StudentUpdateRequest} from "../../types";
-import { Button } from "../../components/common/Button";
-import { Input } from "../../components/common/Input";
-import { Card } from "../../components/common/Card";
+import {Button} from "../../components/common/Button";
+import {Input} from "../../components/common/Input";
+import {Card} from "../../components/common/Card";
 
 interface ValidationErrors {
     email?: string;
@@ -74,7 +74,7 @@ const validators = {
 };
 
 export default function AdminStudentEditPage() {
-    const { id } = useParams<{ id: string }>();
+    const {id} = useParams<{ id: string }>();
     const navigate = useNavigate();
     const queryClient = useQueryClient();
 
@@ -95,26 +95,26 @@ export default function AdminStudentEditPage() {
     const [isFormInitialized, setIsFormInitialized] = useState(false);
 
     // Fetch student data
-    const { data: student, isLoading: isLoadingStudent } = useQuery({
+    const {data: student, isLoading: isLoadingStudent} = useQuery({
         queryKey: ["student", id],
         queryFn: () => adminAPI.getStudentById(Number(id)),
         enabled: !!id,
     });
 
     // Fetch departments
-    const { data: departments } = useQuery({
+    const {data: departments} = useQuery({
         queryKey: ['departments'],
         queryFn: adminAPI.getAllDepartments,
     });
 
     // Fetch fields
-    const { data: fields } = useQuery({
+    const {data: fields} = useQuery({
         queryKey: ['fields'],
         queryFn: adminAPI.getAllFields,
     });
 
     // Fetch professors
-    const { data: professors } = useQuery({
+    const {data: professors} = useQuery({
         queryKey: ['professors'],
         queryFn: adminAPI.getAllProfessors,
     });
@@ -143,8 +143,8 @@ export default function AdminStudentEditPage() {
         mutationFn: (data: StudentUpdateRequest) => adminAPI.updateStudent(Number(id), data),
         onSuccess: () => {
             alert("Student updated successfully!");
-            queryClient.invalidateQueries({ queryKey: ["students"] });
-            queryClient.invalidateQueries({ queryKey: ["student", id] });
+            queryClient.invalidateQueries({queryKey: ["students"]});
+            queryClient.invalidateQueries({queryKey: ["student", id]});
             navigate("/admin/students");
         },
         onError: (error: any) => {
@@ -171,16 +171,16 @@ export default function AdminStudentEditPage() {
     };
 
     const handleBlur = (name: keyof ValidationErrors) => {
-        setTouched(prev => ({ ...prev, [name]: true }));
+        setTouched(prev => ({...prev, [name]: true}));
         const error = validateField(name, formData[name]);
-        setErrors(prev => ({ ...prev, [name]: error }));
+        setErrors(prev => ({...prev, [name]: error}));
     };
 
     const handleChange = (name: keyof typeof formData, value: string) => {
-        setFormData(prev => ({ ...prev, [name]: value }));
+        setFormData(prev => ({...prev, [name]: value}));
         if (touched[name]) {
             const error = validateField(name as keyof ValidationErrors, value);
-            setErrors(prev => ({ ...prev, [name]: error }));
+            setErrors(prev => ({...prev, [name]: error}));
         }
     };
 
@@ -218,7 +218,7 @@ export default function AdminStudentEditPage() {
         updateMutation.mutate(updateData);
     };
 
-    const ErrorMessage = ({ error }: { error?: string }) => (
+    const ErrorMessage = ({error}: { error?: string }) => (
         error ? <p className="mt-1 text-sm text-red-600">{error}</p> : null
     );
 
@@ -227,7 +227,7 @@ export default function AdminStudentEditPage() {
         return (
             <div className="flex items-center justify-center min-h-[400px]">
                 <div className="flex flex-col items-center space-y-4">
-                    <Loader2 className="h-8 w-8 animate-spin text-primary-600" />
+                    <Loader2 className="h-8 w-8 animate-spin text-primary-600"/>
                     <p className="text-gray-600">Loading student data...</p>
                 </div>
             </div>
@@ -256,7 +256,7 @@ export default function AdminStudentEditPage() {
                     onClick={() => navigate('/admin/students')}
                     className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
                 >
-                    <ArrowLeft className="h-5 w-5 text-gray-600" />
+                    <ArrowLeft className="h-5 w-5 text-gray-600"/>
                 </button>
                 <div>
                     <h1 className="text-2xl font-bold text-gray-900">Edit Student</h1>
@@ -279,7 +279,7 @@ export default function AdminStudentEditPage() {
                                 onBlur={() => handleBlur('firstName')}
                                 required
                             />
-                            {touched.firstName && <ErrorMessage error={errors.firstName} />}
+                            {touched.firstName && <ErrorMessage error={errors.firstName}/>}
                         </div>
                         <div>
                             <Input
@@ -289,7 +289,7 @@ export default function AdminStudentEditPage() {
                                 onBlur={() => handleBlur('lastName')}
                                 required
                             />
-                            {touched.lastName && <ErrorMessage error={errors.lastName} />}
+                            {touched.lastName && <ErrorMessage error={errors.lastName}/>}
                         </div>
                     </div>
 
@@ -303,7 +303,7 @@ export default function AdminStudentEditPage() {
                             onBlur={() => handleBlur('email')}
                             required
                         />
-                        {touched.email && <ErrorMessage error={errors.email} />}
+                        {touched.email && <ErrorMessage error={errors.email}/>}
                     </div>
 
                     {/* Phone */}
@@ -315,7 +315,7 @@ export default function AdminStudentEditPage() {
                             onBlur={() => handleBlur('phoneNumber')}
                             required
                         />
-                        {touched.phoneNumber && <ErrorMessage error={errors.phoneNumber} />}
+                        {touched.phoneNumber && <ErrorMessage error={errors.phoneNumber}/>}
                     </div>
 
                     {/* Password - Optional for edit */}
@@ -328,7 +328,7 @@ export default function AdminStudentEditPage() {
                             onBlur={() => handleBlur('password')}
                             placeholder="Enter new password only if you want to change it"
                         />
-                        {touched.password && <ErrorMessage error={errors.password} />}
+                        {touched.password && <ErrorMessage error={errors.password}/>}
                     </div>
 
                     {/* Student Number */}
@@ -341,7 +341,7 @@ export default function AdminStudentEditPage() {
                             onBlur={() => handleBlur('studentNumber')}
                             required
                         />
-                        {touched.studentNumber && <ErrorMessage error={errors.studentNumber} />}
+                        {touched.studentNumber && <ErrorMessage error={errors.studentNumber}/>}
                     </div>
 
                     {/* Department */}
@@ -363,7 +363,7 @@ export default function AdminStudentEditPage() {
                                 </option>
                             ))}
                         </select>
-                        {touched.departmentId && <ErrorMessage error={errors.departmentId} />}
+                        {touched.departmentId && <ErrorMessage error={errors.departmentId}/>}
                     </div>
 
                     {/* Field */}
@@ -385,7 +385,7 @@ export default function AdminStudentEditPage() {
                                 </option>
                             ))}
                         </select>
-                        {touched.fieldId && <ErrorMessage error={errors.fieldId} />}
+                        {touched.fieldId && <ErrorMessage error={errors.fieldId}/>}
                     </div>
 
                     {/* Instructor */}
@@ -407,7 +407,7 @@ export default function AdminStudentEditPage() {
                                 </option>
                             ))}
                         </select>
-                        {touched.instructorId && <ErrorMessage error={errors.instructorId} />}
+                        {touched.instructorId && <ErrorMessage error={errors.instructorId}/>}
                     </div>
 
                     {/* Action Buttons */}
@@ -423,7 +423,7 @@ export default function AdminStudentEditPage() {
                             type="submit"
                             isLoading={updateMutation.isPending}
                         >
-                            <Save className="h-4 w-4 mr-2" />
+                            <Save className="h-4 w-4 mr-2"/>
                             Save Changes
                         </Button>
                     </div>

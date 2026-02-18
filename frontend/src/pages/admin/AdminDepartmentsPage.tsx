@@ -1,11 +1,11 @@
 // src/pages/admin/Departments.tsx
-import React, { useState } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { adminAPI } from '../../api/admin.api';
-import { Card } from '../../components/common/Card';
-import { Button } from '../../components/common/Button';
-import { Input } from '../../components/common/Input';
-import { Modal } from '../../components/common/Modal';
+import React, {useState} from 'react';
+import {useQuery, useMutation, useQueryClient} from '@tanstack/react-query';
+import {adminAPI} from '../../api/admin.api';
+import {Card} from '../../components/common/Card';
+import {Button} from '../../components/common/Button';
+import {Input} from '../../components/common/Input';
+import {Modal} from '../../components/common/Modal';
 import {
     Building2,
     Search,
@@ -14,7 +14,7 @@ import {
     Trash2,
     AlertTriangle
 } from 'lucide-react';
-import { format } from 'date-fns';
+import {format} from 'date-fns';
 import {DepartmentSummary} from "../../types";
 
 export const AdminDepartmentsPage: React.FC = () => {
@@ -25,11 +25,11 @@ export const AdminDepartmentsPage: React.FC = () => {
     const [isFormModalOpen, setIsFormModalOpen] = useState(false);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [selectedDepartment, setSelectedDepartment] = useState<DepartmentSummary | null>(null);
-    const [formData, setFormData] = useState({ name: '' });
+    const [formData, setFormData] = useState({name: ''});
 
     // --- Queries & Mutations ---
 
-    const { data: departments, isLoading } = useQuery({
+    const {data: departments, isLoading} = useQuery({
         queryKey: ['departments'],
         queryFn: adminAPI.getAllDepartments,
     });
@@ -37,16 +37,16 @@ export const AdminDepartmentsPage: React.FC = () => {
     const createMutation = useMutation({
         mutationFn: adminAPI.createDepartment,
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['departments'] });
+            queryClient.invalidateQueries({queryKey: ['departments']});
             closeFormModal();
         },
     });
 
     const updateMutation = useMutation({
         mutationFn: (data: { id: number; name: string }) =>
-            adminAPI.updateDepartment(data.id, { name: data.name }),
+            adminAPI.updateDepartment(data.id, {name: data.name}),
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['departments'] });
+            queryClient.invalidateQueries({queryKey: ['departments']});
             closeFormModal();
         },
     });
@@ -54,7 +54,7 @@ export const AdminDepartmentsPage: React.FC = () => {
     const deleteMutation = useMutation({
         mutationFn: adminAPI.deleteDepartment,
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['departments'] });
+            queryClient.invalidateQueries({queryKey: ['departments']});
             closeDeleteModal();
         },
     });
@@ -63,13 +63,13 @@ export const AdminDepartmentsPage: React.FC = () => {
 
     const handleOpenCreate = () => {
         setSelectedDepartment(null);
-        setFormData({ name: '' });
+        setFormData({name: ''});
         setIsFormModalOpen(true);
     };
 
     const handleOpenEdit = (dept: DepartmentSummary) => {
         setSelectedDepartment(dept);
-        setFormData({ name: dept.name });
+        setFormData({name: dept.name});
         setIsFormModalOpen(true);
     };
 
@@ -81,7 +81,7 @@ export const AdminDepartmentsPage: React.FC = () => {
     const closeFormModal = () => {
         setIsFormModalOpen(false);
         setSelectedDepartment(null);
-        setFormData({ name: '' });
+        setFormData({name: ''});
     };
 
     const closeDeleteModal = () => {
@@ -94,7 +94,7 @@ export const AdminDepartmentsPage: React.FC = () => {
         if (!formData.name.trim()) return;
 
         if (selectedDepartment) {
-            updateMutation.mutate({ id: selectedDepartment.id, name: formData.name });
+            updateMutation.mutate({id: selectedDepartment.id, name: formData.name});
         } else {
             createMutation.mutate(formData);
         }
@@ -123,7 +123,7 @@ export const AdminDepartmentsPage: React.FC = () => {
                     <p className="text-sm text-gray-600 mt-1">Manage university departments and faculties.</p>
                 </div>
                 <Button onClick={handleOpenCreate} className="flex items-center gap-2">
-                    <Plus className="h-4 w-4" />
+                    <Plus className="h-4 w-4"/>
                     Add Department
                 </Button>
             </div>
@@ -132,7 +132,7 @@ export const AdminDepartmentsPage: React.FC = () => {
             <Card className="!p-0 overflow-hidden">
                 <div className="p-4 border-b border-gray-200 bg-gray-50">
                     <div className="relative max-w-md">
-                        <Search className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
+                        <Search className="absolute left-3 top-2.5 h-5 w-5 text-gray-400"/>
                         <input
                             type="text"
                             placeholder="Search departments..."
@@ -145,7 +145,7 @@ export const AdminDepartmentsPage: React.FC = () => {
 
                 {filteredDepartments.length === 0 ? (
                     <div className="p-12 text-center">
-                        <Building2 className="mx-auto h-12 w-12 text-gray-300" />
+                        <Building2 className="mx-auto h-12 w-12 text-gray-300"/>
                         <h3 className="mt-2 text-sm font-medium text-gray-900">No departments found</h3>
                         <p className="mt-1 text-sm text-gray-500">
                             {searchTerm ? 'Try adjusting your search terms.' : 'Get started by adding a new department.'}
@@ -165,8 +165,9 @@ export const AdminDepartmentsPage: React.FC = () => {
                                 <tr key={dept.id} className="hover:bg-gray-50 transition-colors">
                                     <td className="px-6 py-4 whitespace-nowrap">
                                         <div className="flex items-center">
-                                            <div className="flex-shrink-0 h-10 w-10 bg-primary-100 rounded-lg flex items-center justify-center text-primary-600">
-                                                <Building2 className="h-5 w-5" />
+                                            <div
+                                                className="flex-shrink-0 h-10 w-10 bg-primary-100 rounded-lg flex items-center justify-center text-primary-600">
+                                                <Building2 className="h-5 w-5"/>
                                             </div>
                                             <div className="ml-4">
                                                 <div className="text-sm font-medium text-gray-900">{dept.name}</div>
@@ -180,14 +181,14 @@ export const AdminDepartmentsPage: React.FC = () => {
                                                 className="p-2 text-blue-600 hover:bg-blue-50 rounded-full transition-colors"
                                                 title="Edit Department"
                                             >
-                                                <Edit2 className="h-4 w-4" />
+                                                <Edit2 className="h-4 w-4"/>
                                             </button>
                                             <button
                                                 onClick={() => handleOpenDelete(dept)}
                                                 className="p-2 text-red-600 hover:bg-red-50 rounded-full transition-colors"
                                                 title="Delete Department"
                                             >
-                                                <Trash2 className="h-4 w-4" />
+                                                <Trash2 className="h-4 w-4"/>
                                             </button>
                                         </div>
                                     </td>
@@ -210,7 +211,7 @@ export const AdminDepartmentsPage: React.FC = () => {
                         label="Department Name"
                         placeholder="e.g. Computer Science"
                         value={formData.name}
-                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                        onChange={(e) => setFormData({...formData, name: e.target.value})}
                         required
                         autoFocus
                     />
@@ -236,7 +237,7 @@ export const AdminDepartmentsPage: React.FC = () => {
             >
                 <div className="space-y-4">
                     <div className="bg-red-50 p-4 rounded-md flex items-start gap-3">
-                        <AlertTriangle className="h-5 w-5 text-red-600 mt-0.5" />
+                        <AlertTriangle className="h-5 w-5 text-red-600 mt-0.5"/>
                         <div>
                             <h4 className="text-sm font-medium text-red-800">Warning</h4>
                             <p className="text-sm text-red-700 mt-1">
