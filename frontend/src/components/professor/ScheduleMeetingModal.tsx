@@ -8,6 +8,7 @@ import {Card} from '../common/Card';
 import {Calendar, Clock, MapPin, CheckCircle, AlertCircle, User, BookOpen} from 'lucide-react';
 import {Meeting, TimePeriod} from '../../types';
 import {format, parseISO} from 'date-fns';
+import {useTranslation} from "react-i18next";
 
 interface ScheduleMeetingModalProps {
     isOpen: boolean;
@@ -18,8 +19,9 @@ interface ScheduleMeetingModalProps {
 export const ScheduleMeetingModal: React.FC<ScheduleMeetingModalProps> = ({
                                                                               isOpen,
                                                                               onClose,
-                                                                              meeting,
+                                                                              meeting
                                                                           }) => {
+    const {t} = useTranslation("professor");
     const queryClient = useQueryClient();
     const [location, setLocation] = useState('');
     const [error, setError] = useState<string | null>(null);
@@ -35,7 +37,7 @@ export const ScheduleMeetingModal: React.FC<ScheduleMeetingModalProps> = ({
     }, [isOpen]);
 
     const scheduleMutation = useMutation({
-        mutationFn: (data: { meetingId: number; location: string }) =>
+        mutationFn: (data: { meetingId: number; location: string; }) =>
             professorAPI.scheduleMeeting(data),
         onSuccess: () => {
             queryClient.invalidateQueries({queryKey: ['myMeetings']});
@@ -51,7 +53,7 @@ export const ScheduleMeetingModal: React.FC<ScheduleMeetingModalProps> = ({
         onError: (error: any) => {
             setError(error.response?.data?.message || 'Failed to schedule meeting');
             setSuccess(false);
-        },
+        }
     });
 
     const handleSchedule = () => {
@@ -63,7 +65,7 @@ export const ScheduleMeetingModal: React.FC<ScheduleMeetingModalProps> = ({
         setError(null);
         scheduleMutation.mutate({
             meetingId: meeting.id,
-            location: location.trim(),
+            location: location.trim()
         });
     };
 
@@ -73,7 +75,7 @@ export const ScheduleMeetingModal: React.FC<ScheduleMeetingModalProps> = ({
             [TimePeriod.PERIOD_9_00_10_30]: '9:00 AM - 10:30 AM',
             [TimePeriod.PERIOD_10_30_12_00]: '10:30 AM - 12:00 PM',
             [TimePeriod.PERIOD_13_30_15_00]: '1:30 PM - 3:00 PM',
-            [TimePeriod.PERIOD_15_30_17_00]: '3:30 PM - 5:00 PM',
+            [TimePeriod.PERIOD_15_30_17_00]: '3:30 PM - 5:00 PM'
         };
         return periodMap[period] || period;
     };
@@ -83,42 +85,42 @@ export const ScheduleMeetingModal: React.FC<ScheduleMeetingModalProps> = ({
     if (!isOpen) return null;
 
     return (
-        <Modal isOpen={isOpen} onClose={onClose} title="Schedule Defense Meeting">
+        <Modal isOpen={isOpen} onClose={onClose} title={t("schedule_defense_meeting")}>
             <div className="space-y-5">
                 {/* Success Message */}
-                {success && (
+                {success &&
                     <div className="flex items-start space-x-3 bg-green-50 border border-green-200 rounded-lg p-4">
                         <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5"/>
                         <div>
-                            <p className="text-sm font-medium text-green-800">
-                                Meeting scheduled successfully!
+                            <p className="text-sm font-medium text-green-800">{t("meeting_scheduled_successfully")}
+
                             </p>
-                            <p className="text-sm text-green-700 mt-1">
-                                All participants will be notified.
+                            <p className="text-sm text-green-700 mt-1">{t("all_participants_will_be_notified")}
+
                             </p>
                         </div>
                     </div>
-                )}
+                }
 
                 {/* Error Message */}
-                {error && (
+                {error &&
                     <div className="flex items-start space-x-3 bg-red-50 border border-red-200 rounded-lg p-4">
                         <AlertCircle className="h-5 w-5 text-red-600 flex-shrink-0 mt-0.5"/>
                         <p className="text-sm text-red-800">{error}</p>
                     </div>
-                )}
+                }
 
                 {/* Meeting Info Summary */}
                 <div className="bg-gray-50 rounded-lg p-4 space-y-3">
-                    <h5 className="font-semibold text-gray-900 text-sm uppercase tracking-wide">
-                        Meeting Details
+                    <h5 className="font-semibold text-gray-900 text-sm uppercase tracking-wide">{t("meeting_details")}
+
                     </h5>
 
                     {/* Thesis Title */}
                     <div className="flex items-start">
                         <BookOpen className="w-4 h-4 mr-2 text-gray-500 mt-0.5"/>
                         <div>
-                            <p className="text-xs text-gray-500">Thesis</p>
+                            <p className="text-xs text-gray-500">{t("thesis")}</p>
                             <p className="text-sm font-medium text-gray-900">{meeting.thesis.title}</p>
                         </div>
                     </div>
@@ -127,7 +129,7 @@ export const ScheduleMeetingModal: React.FC<ScheduleMeetingModalProps> = ({
                     <div className="flex items-start">
                         <User className="w-4 h-4 mr-2 text-gray-500 mt-0.5"/>
                         <div>
-                            <p className="text-xs text-gray-500">Student</p>
+                            <p className="text-xs text-gray-500">{t("student")}</p>
                             <p className="text-sm font-medium text-gray-900">
                                 {meeting.thesis.studentFirstName} {meeting.thesis.studentLastName}
                             </p>
@@ -136,17 +138,17 @@ export const ScheduleMeetingModal: React.FC<ScheduleMeetingModalProps> = ({
                 </div>
 
                 {/* Student's Selected Time Slot */}
-                {studentSelectedSlot ? (
+                {studentSelectedSlot ?
                     <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                         <h5 className="font-semibold text-gray-900 mb-3 flex items-center">
-                            <CheckCircle className="w-4 h-4 mr-2 text-blue-600"/>
-                            Student's Selected Time
+                            <CheckCircle className="w-4 h-4 mr-2 text-blue-600"/>{t("students_selected_time")}
+
                         </h5>
                         <div className="grid grid-cols-2 gap-4">
                             <div className="flex items-center text-gray-700">
                                 <Calendar className="w-5 h-5 mr-2 text-blue-600"/>
                                 <div>
-                                    <p className="text-xs text-gray-500">Date</p>
+                                    <p className="text-xs text-gray-500">{t("date")}</p>
                                     <p className="text-sm font-medium">
                                         {format(parseISO(studentSelectedSlot.date), 'EEE, MMM d, yyyy')}
                                     </p>
@@ -155,27 +157,27 @@ export const ScheduleMeetingModal: React.FC<ScheduleMeetingModalProps> = ({
                             <div className="flex items-center text-gray-700">
                                 <Clock className="w-5 h-5 mr-2 text-blue-600"/>
                                 <div>
-                                    <p className="text-xs text-gray-500">Time</p>
+                                    <p className="text-xs text-gray-500">{t("time")}</p>
                                     <p className="text-sm font-medium">
                                         {formatPeriod(studentSelectedSlot.timePeriod)}
                                     </p>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                ) : (
+                    </div> :
+
                     <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-                        <p className="text-yellow-800 text-center">
-                            Student has not selected a time slot yet.
+                        <p className="text-yellow-800 text-center">{t("student_has_not_selected_a_time_slot_yet")}
+
                         </p>
                     </div>
-                )}
+                }
 
                 {/* Location Input */}
                 <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                        <MapPin className="inline h-4 w-4 mr-1"/>
-                        Meeting Location <span className="text-red-500">*</span>
+                        <MapPin className="inline h-4 w-4 mr-1"/>{t("meeting_location_1")}
+                        <span className="text-red-500">*</span>
                     </label>
                     <input
                         type="text"
@@ -184,13 +186,13 @@ export const ScheduleMeetingModal: React.FC<ScheduleMeetingModalProps> = ({
                             setLocation(e.target.value);
                             if (error) setError(null);
                         }}
-                        placeholder="e.g., Room 305, Building A, Main Campus"
+                        placeholder={t("eg_room_305_building_a_main_campus")}
                         className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
                         disabled={scheduleMutation.isPending || success}
-                        autoFocus
-                    />
-                    <p className="text-xs text-gray-500 mt-1">
-                        Enter the physical location or virtual meeting link where the defense will take place
+                        autoFocus/>
+
+                    <p className="text-xs text-gray-500 mt-1">{t("enter_the_physical_location_or_virtual_meeting_lin")}
+
                     </p>
                 </div>
 
@@ -200,21 +202,21 @@ export const ScheduleMeetingModal: React.FC<ScheduleMeetingModalProps> = ({
                         variant="secondary"
                         onClick={onClose}
                         disabled={scheduleMutation.isPending}
-                        className="flex-1"
-                    >
-                        Cancel
+                        className="flex-1">{t("cancel")}
+
+
                     </Button>
                     <Button
                         variant="primary"
                         onClick={handleSchedule}
                         isLoading={scheduleMutation.isPending}
                         disabled={!location.trim() || scheduleMutation.isPending || success || !studentSelectedSlot}
-                        className="flex-1"
-                    >
+                        className="flex-1">
+
                         {success ? 'Scheduled!' : 'Schedule Meeting'}
                     </Button>
                 </div>
             </div>
-        </Modal>
-    );
+        </Modal>);
+
 };

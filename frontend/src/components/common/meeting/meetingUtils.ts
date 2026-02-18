@@ -1,13 +1,16 @@
 // src/components/common/meeting/meetingUtils.ts
 import {MeetingState, TimePeriod} from '../../../types';
+import i18n from "i18next";
+
+const t = i18n.t.bind(i18n);
 
 export const NORMAL_FLOW_STEPS = [
-    {state: MeetingState.JURIES_SELECTED, label: 'Jury Selected'},
-    {state: MeetingState.JURIES_SPECIFIED_TIME, label: 'Jury Time Specified'},
-    {state: MeetingState.STUDENT_SPECIFIED_TIME, label: 'Student Time Selected'},
-    {state: MeetingState.SCHEDULED, label: 'Meeting Scheduled'},
-    {state: MeetingState.COMPLETED, label: 'Meeting Completed'},
-];
+    {state: MeetingState.JURIES_SELECTED, label: t("jury_selected")},
+    {state: MeetingState.JURIES_SPECIFIED_TIME, label: t("jury_time_specified")},
+    {state: MeetingState.STUDENT_SPECIFIED_TIME, label: t("student_time_selected")},
+    {state: MeetingState.SCHEDULED, label: t("meeting_scheduled")},
+    {state: MeetingState.COMPLETED, label: t("meeting_completed")}];
+
 
 export const STATE_ORDER: Record<string, number> = {};
 NORMAL_FLOW_STEPS.forEach((step, idx) => {
@@ -58,7 +61,7 @@ export const formatTimePeriod = (period: TimePeriod): string => {
         [TimePeriod.PERIOD_9_00_10_30]: '9:00 AM - 10:30 AM',
         [TimePeriod.PERIOD_10_30_12_00]: '10:30 AM - 12:00 PM',
         [TimePeriod.PERIOD_13_30_15_00]: '1:30 PM - 3:00 PM',
-        [TimePeriod.PERIOD_15_30_17_00]: '3:30 PM - 5:00 PM',
+        [TimePeriod.PERIOD_15_30_17_00]: '3:30 PM - 5:00 PM'
     };
     return periodMap[period] || period;
 };
@@ -69,7 +72,7 @@ export const formatTimePeriod = (period: TimePeriod): string => {
 export const inferLastReachedIndex = (meeting: {
     selectedTimeSlot?: any;
     location?: string;
-    juryMembers?: any[]
+    juryMembers?: any[];
 }): number => {
     if (meeting.selectedTimeSlot && meeting.location) {
         return 3; // SCHEDULED

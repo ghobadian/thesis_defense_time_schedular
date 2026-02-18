@@ -4,6 +4,7 @@ import {AlertCircle} from 'lucide-react';
 import {Card} from '../Card';
 import {Meeting} from '../../../types';
 import {MeetingCard} from './MeetingCard';
+import {useTranslation} from "react-i18next";
 
 export interface MeetingViewProps {
     meetings: Meeting[];
@@ -37,17 +38,18 @@ export const MeetingView: React.FC<MeetingViewProps> = ({
                                                             canCancelMeeting,
                                                             isCancelling,
                                                             onReassignJuries,
-                                                            canReassignJuries,
+                                                            canReassignJuries
                                                         }) => {
+    const {t} = useTranslation("common");
     const [expandedMeetingId, setExpandedMeetingId] = useState<number | null>(null);
     const [showTimeSlotsForMeeting, setShowTimeSlotsForMeeting] = useState<number | null>(null);
 
     if (isLoading) {
         return (
             <div className="flex items-center justify-center min-h-screen">
-                <div className="text-gray-500">Loading meetings...</div>
-            </div>
-        );
+                <div className="text-gray-500">{t("loading_meetings")}</div>
+            </div>);
+
     }
 
     if (!meetings || meetings.length === 0) {
@@ -55,15 +57,15 @@ export const MeetingView: React.FC<MeetingViewProps> = ({
             <Card>
                 <div className="text-center py-12">
                     <AlertCircle className="w-12 h-12 text-gray-400 mx-auto mb-4"/>
-                    <p className="text-gray-600">No meetings found.</p>
+                    <p className="text-gray-600">{t("no_meetings_found")}</p>
                 </div>
-            </Card>
-        );
+            </Card>);
+
     }
 
     return (
         <div className="grid gap-6">
-            {meetings.map((meeting) => (
+            {meetings.map((meeting) =>
                 <MeetingCard
                     key={meeting.id}
                     meeting={meeting}
@@ -88,9 +90,8 @@ export const MeetingView: React.FC<MeetingViewProps> = ({
                     isCancelling={isCancelling}
                     renderAdditionalContent={renderAdditionalContent}
                     showReassignJuriesButton={canReassignJuries?.(meeting) ?? false}
-                    onReassignJuries={onReassignJuries}
-                />
-            ))}
-        </div>
-    );
+                    onReassignJuries={onReassignJuries}/>
+            )}
+        </div>);
+
 };

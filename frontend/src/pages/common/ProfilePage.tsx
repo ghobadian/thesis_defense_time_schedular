@@ -25,13 +25,18 @@ import {
     UserCog,
     Edit3,
     Lock
-} from 'lucide-react';
+} from
+        'lucide-react';
 import {authAPI} from "../../api/auth.api";
 import {useNavigate} from "react-router-dom";
 
 // ============================================================================
 // TYPE DEFINITIONS
 // ============================================================================
+import i18n from "i18next";
+import {useTranslation} from "react-i18next";
+
+const t = i18n.t.bind(i18n);
 
 interface BaseProfile {
     id: number;
@@ -44,14 +49,14 @@ interface BaseProfile {
 interface StudentProfile extends BaseProfile {
     studentNumber: string;
     studentType: 'PHD' | 'MASTER' | 'BACHELOR';
-    department?: { id: number; name: string };
-    field?: { id: number; name: string };
-    instructor?: { id: number; firstName: string; lastName: string };
+    department?: { id: number; name: string; };
+    field?: { id: number; name: string; };
+    instructor?: { id: number; firstName: string; lastName: string; };
     isGraduated: boolean;
 }
 
 interface ProfessorProfile extends BaseProfile {
-    department?: { id: number; name: string };
+    department?: { id: number; name: string; };
     isManager: boolean;
 }
 
@@ -76,23 +81,23 @@ const getAPIByRole = (role: UserRole) => {
             return {
                 getProfile: studentAPI.getProfile,
                 updatePhoneNumber: studentAPI.updatePhoneNumber,
-                changePassword: studentAPI.changePassword,
+                changePassword: studentAPI.changePassword
             };
         case UserRole.PROFESSOR:
         case UserRole.MANAGER:
             return {
                 getProfile: professorAPI.getProfile,
                 updatePhoneNumber: professorAPI.updatePhoneNumber,
-                changePassword: professorAPI.changePassword,
+                changePassword: professorAPI.changePassword
             };
         case UserRole.ADMIN:
             return {
                 getProfile: adminAPI.getProfile,
                 updatePhoneNumber: adminAPI.updatePhoneNumber,
-                changePassword: adminAPI.changePassword,
+                changePassword: adminAPI.changePassword
             };
         default:
-            throw new Error(`Unknown role: ${role}`);
+            throw new Error(t("unknown_role", {role: role}));
     }
 };
 
@@ -116,7 +121,7 @@ const getQueryKey = (role: UserRole): string[] => {
 
 interface RoleConfig {
     title: string;
-    icon: React.ComponentType<{ className?: string }>;
+    icon: React.ComponentType<{ className?: string; }>;
     color: string;
     bgColor: string;
 }
@@ -125,38 +130,38 @@ const getRoleConfig = (role: UserRole): RoleConfig => {
     switch (role) {
         case UserRole.STUDENT:
             return {
-                title: 'Student Profile',
+                title: t("student_profile"),
                 icon: GraduationCap,
                 color: 'text-blue-600',
-                bgColor: 'bg-blue-100',
+                bgColor: 'bg-blue-100'
             };
         case UserRole.PROFESSOR:
             return {
-                title: 'Professor Profile',
+                title: t("professor_profile"),
                 icon: BookOpen,
                 color: 'text-green-600',
-                bgColor: 'bg-green-100',
+                bgColor: 'bg-green-100'
             };
         case UserRole.MANAGER:
             return {
-                title: 'Department Manager Profile',
+                title: t("department_manager_profile"),
                 icon: Building2,
                 color: 'text-purple-600',
-                bgColor: 'bg-purple-100',
+                bgColor: 'bg-purple-100'
             };
         case UserRole.ADMIN:
             return {
-                title: 'Administrator Profile',
+                title: t("administrator_profile"),
                 icon: Shield,
                 color: 'text-red-600',
-                bgColor: 'bg-red-100',
+                bgColor: 'bg-red-100'
             };
         default:
             return {
-                title: 'Profile',
+                title: t("profile"),
                 icon: User,
                 color: 'text-gray-600',
-                bgColor: 'bg-gray-100',
+                bgColor: 'bg-gray-100'
             };
     }
 };
@@ -180,22 +185,22 @@ const isProfessorProfile = (profile: UserProfile, role: UserRole): profile is Pr
 interface InfoFieldProps {
     label: string;
     value: string | React.ReactNode;
-    icon?: React.ComponentType<{ className?: string }>;
+    icon?: React.ComponentType<{ className?: string; }>;
 }
 
-const InfoField: React.FC<InfoFieldProps> = ({label, value, icon: Icon}) => (
+const InfoField: React.FC<InfoFieldProps> = ({label, value, icon: Icon}) =>
     <div>
         <label className="block text-sm font-medium text-gray-500 mb-1">
             {Icon && <Icon className="inline h-4 w-4 mr-1"/>}
             {label}
         </label>
-        {typeof value === 'string' ? (
-            <p className="text-gray-900 font-medium">{value || '-'}</p>
-        ) : (
+        {typeof value === 'string' ?
+            <p className="text-gray-900 font-medium">{value || '-'}</p> :
+
             value
-        )}
-    </div>
-);
+        }
+    </div>;
+
 
 interface BadgeProps {
     children: React.ReactNode;
@@ -203,21 +208,22 @@ interface BadgeProps {
 }
 
 const Badge: React.FC<BadgeProps> = ({children, variant}) => {
+    const {t} = useTranslation("common");
     const variantClasses: Record<string, string> = {
         blue: 'bg-blue-100 text-blue-800',
         green: 'bg-green-100 text-green-800',
         purple: 'bg-purple-100 text-purple-800',
         red: 'bg-red-100 text-red-800',
         yellow: 'bg-yellow-100 text-yellow-800',
-        gray: 'bg-gray-100 text-gray-800',
+        gray: 'bg-gray-100 text-gray-800'
     };
 
     return (
         <span
             className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${variantClasses[variant]}`}>
             {children}
-        </span>
-    );
+        </span>);
+
 };
 
 // ============================================================================
@@ -236,7 +242,7 @@ export const ProfilePage: React.FC = () => {
     const [passwords, setPasswords] = useState({
         currentPassword: '',
         newPassword: '',
-        confirmPassword: '',
+        confirmPassword: ''
     });
     const [errors, setErrors] = useState<Record<string, string>>({});
     const [successMessage, setSuccessMessage] = useState<string | null>(null);
@@ -258,7 +264,7 @@ export const ProfilePage: React.FC = () => {
         queryKey,
         queryFn: api.getProfile,
         enabled: !!role,
-        staleTime: 5 * 60 * 1000,
+        staleTime: 5 * 60 * 1000
     });
 
     // Sync phone number when profile loads
@@ -286,7 +292,7 @@ export const ProfilePage: React.FC = () => {
             setErrors({});
         },
         onError: (error: any) => {
-            let errorMessage = 'Failed to update phone number';
+            let errorMessage = t("failed_to_update_phone_number");
             if (error?.response?.data) {
                 const data = error.response.data;
                 if (typeof data === 'string') {
@@ -300,7 +306,7 @@ export const ProfilePage: React.FC = () => {
                 }
             }
             setErrors({phone: errorMessage});
-        },
+        }
     });
 
     // Mutation: Password Change
@@ -315,7 +321,7 @@ export const ProfilePage: React.FC = () => {
             }, 2000);
         },
         onError: (error: any) => {
-            let errorMessage = 'Failed to update password. Please check your current password.';
+            let errorMessage = t("failed_to_update_password_please_check_your_curren");
             if (error?.response?.data) {
                 const data = error.response.data;
                 if (typeof data === 'string') {
@@ -325,7 +331,7 @@ export const ProfilePage: React.FC = () => {
                 }
             }
             setErrors({password: errorMessage});
-        },
+        }
     });
 
     // Form Handlers
@@ -334,7 +340,7 @@ export const ProfilePage: React.FC = () => {
         setErrors({});
         const trimmedPhone = phoneNumber.trim();
         if (!trimmedPhone) {
-            setErrors({phone: 'Phone number is required'});
+            setErrors({phone: t("phone_number_is_required")});
             return;
         }
         updatePhoneMutation.mutate(trimmedPhone);
@@ -347,10 +353,8 @@ export const ProfilePage: React.FC = () => {
         const newErrors: Record<string, string> = {};
 
         if (!currentPassword) newErrors.currentPassword = 'Current password is required';
-        if (!newPassword) newErrors.newPassword = 'New password is required';
-        else if (newPassword.length < 8) newErrors.newPassword = 'Password must be at least 8 characters';
-        if (!confirmPassword) newErrors.confirmPassword = 'Please confirm your new password';
-        else if (newPassword !== confirmPassword) newErrors.confirmPassword = 'Passwords do not match';
+        if (!newPassword) newErrors.newPassword = 'New password is required'; else if (newPassword.length < 8) newErrors.newPassword = 'Password must be at least 8 characters';
+        if (!confirmPassword) newErrors.confirmPassword = 'Please confirm your new password'; else if (newPassword !== confirmPassword) newErrors.confirmPassword = 'Passwords do not match';
 
         if (Object.keys(newErrors).length > 0) {
             setErrors(newErrors);
@@ -376,9 +380,9 @@ export const ProfilePage: React.FC = () => {
         return (
             <div className="flex flex-col items-center justify-center h-64 space-y-4">
                 <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
-                <p className="text-gray-500">Loading profile...</p>
-            </div>
-        );
+                <p className="text-gray-500">{t("loading_profile")}</p>
+            </div>);
+
     }
 
     // Error State
@@ -388,13 +392,13 @@ export const ProfilePage: React.FC = () => {
                 <Card>
                     <div className="p-6 text-center">
                         <AlertCircle className="h-12 w-12 text-red-500 mx-auto mb-4"/>
-                        <h2 className="text-xl font-semibold text-gray-900 mb-2">Failed to Load Profile</h2>
-                        <p className="text-gray-600 mb-4">We couldn't load your profile information.</p>
-                        <Button onClick={() => refetch()}>Try Again</Button>
+                        <h2 className="text-xl font-semibold text-gray-900 mb-2">{t("failed_to_load_profile")}</h2>
+                        <p className="text-gray-600 mb-4">{t("we_couldnt_load_your_profile_information")}</p>
+                        <Button onClick={() => refetch()}>{t("try_again")}</Button>
                     </div>
                 </Card>
-            </div>
-        );
+            </div>);
+
     }
 
     // Main Render
@@ -407,12 +411,12 @@ export const ProfilePage: React.FC = () => {
                 </div>
                 <div>
                     <h1 className="text-3xl font-bold text-gray-900">{roleConfig.title}</h1>
-                    <p className="text-gray-500 mt-1">Manage your account settings</p>
+                    <p className="text-gray-500 mt-1">{t("manage_your_account_settings")}</p>
                 </div>
             </div>
 
             {/* Success Message */}
-            {successMessage && (
+            {successMessage &&
                 <div className="flex items-center p-4 bg-green-50 border border-green-200 rounded-lg">
                     <CheckCircle className="h-5 w-5 text-green-600 mr-3"/>
                     <p className="text-green-800 font-medium">{successMessage}</p>
@@ -421,94 +425,95 @@ export const ProfilePage: React.FC = () => {
                         <X className="h-5 w-5"/>
                     </button>
                 </div>
-            )}
+            }
 
             {/* Personal Information Card */}
             <Card>
                 <div className="p-6">
                     <div className="flex items-center mb-6 pb-4 border-b">
                         <User className="h-5 w-5 text-gray-600 mr-2"/>
-                        <h2 className="text-xl font-semibold text-gray-900">Personal Information</h2>
+                        <h2 className="text-xl font-semibold text-gray-900">{t("personal_information")}</h2>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <InfoField label="First Name" value={profile.firstName}/>
-                        <InfoField label="Last Name" value={profile.lastName}/>
+                        <InfoField label={t("first_name")} value={profile.firstName}/>
+                        <InfoField label={t("last_name")} value={profile.lastName}/>
                         <div className="md:col-span-2">
-                            <InfoField label="Email Address" value={profile.email} icon={Mail}/>
+                            <InfoField label={t("email_address")} value={profile.email} icon={Mail}/>
                         </div>
 
                         {/* Student Fields */}
-                        {isStudentProfile(profile, role!) && (
+                        {isStudentProfile(profile, role!) &&
                             <>
-                                <InfoField label="Student Number" value={profile.studentNumber}/>
+                                <InfoField label={t("student_number")} value={profile.studentNumber}/>
                                 <InfoField
-                                    label="Student Type"
+                                    label={t("student_type")}
                                     value={
                                         <Badge
                                             variant={profile.studentType === 'PHD' ? 'purple' : profile.studentType === 'MASTER' ? 'blue' : 'green'}>
                                             {profile.studentType}
                                         </Badge>
-                                    }
-                                />
-                                <InfoField label="Department" value={profile.department?.name || 'Not assigned'}
+                                    }/>
+
+                                <InfoField label={t("department")} value={profile.department?.name || 'Not assigned'}
                                            icon={Building2}/>
-                                <InfoField label="Field of Study" value={profile.field?.name || 'Not assigned'}
+                                <InfoField label={t("field_of_study")} value={profile.field?.name || 'Not assigned'}
                                            icon={BookOpen}/>
                                 <div className="md:col-span-2">
                                     <InfoField
-                                        label="Thesis Instructor"
+                                        label={t("thesis_instructor")}
                                         value={profile.instructor ? `${profile.instructor.firstName} ${profile.instructor.lastName}` : 'Not assigned'}
-                                        icon={UserCog}
-                                    />
+                                        icon={UserCog}/>
+
                                 </div>
                                 <InfoField
-                                    label="Graduation Status"
+                                    label={t("graduation_status")}
                                     value={
                                         <Badge variant={profile.isGraduated ? 'green' : 'yellow'}>
                                             {profile.isGraduated ? '✓ Graduated' : '◷ Active Student'}
                                         </Badge>
-                                    }
-                                />
+                                    }/>
+
                             </>
-                        )}
+                        }
 
                         {/* Professor/Manager Fields */}
-                        {isProfessorProfile(profile, role!) && (
+                        {isProfessorProfile(profile, role!) &&
                             <>
-                                <InfoField label="Department" value={profile.department?.name || 'Not assigned'}
+                                <InfoField label={t("department")} value={profile.department?.name || 'Not assigned'}
                                            icon={Building2}/>
                                 <InfoField
-                                    label="Role"
+                                    label={t("role")}
                                     value={
                                         <Badge variant={profile.isManager ? 'purple' : 'green'}>
                                             {profile.isManager ? 'Department Manager' : 'Professor'}
                                         </Badge>
-                                    }
-                                />
+                                    }/>
+
                             </>
-                        )}
+                        }
 
                         {/* Admin Fields */}
-                        {role === UserRole.ADMIN && (
+                        {role === UserRole.ADMIN &&
                             <div className="md:col-span-2">
                                 <InfoField
-                                    label="Role"
+                                    label={t("role")}
                                     value={
                                         <Badge variant="red">
-                                            <Shield className="h-3 w-3 mr-1"/>
-                                            System Administrator
+                                            <Shield className="h-3 w-3 mr-1"/>{t("system_administrator")}
+
                                         </Badge>
-                                    }
-                                />
+                                    }/>
+
                             </div>
-                        )}
+                        }
                     </div>
 
                     <div className="mt-6 pt-4 border-t">
                         <p className="text-sm text-gray-500 flex items-start">
-                            <AlertCircle className="h-4 w-4 mr-2 mt-0.5 flex-shrink-0"/>
-                            Personal information can only be modified by a system administrator.
+                            <AlertCircle
+                                className="h-4 w-4 mr-2 mt-0.5 flex-shrink-0"/>{t("personal_information_can_only_be_modified_by_a_sys")}
+
                         </p>
                     </div>
                 </div>
@@ -520,32 +525,34 @@ export const ProfilePage: React.FC = () => {
                     <div className="flex items-center justify-between mb-6 pb-4 border-b">
                         <div className="flex items-center">
                             <Phone className="h-5 w-5 text-gray-600 mr-2"/>
-                            <h2 className="text-xl font-semibold text-gray-900">Phone Number</h2>
+                            <h2 className="text-xl font-semibold text-gray-900">{t("phone_number")}</h2>
                         </div>
-                        {!isEditingPhone && (
+                        {!isEditingPhone &&
                             <Button variant="secondary" onClick={() => setIsEditingPhone(true)}>
-                                <Edit3 className="h-4 w-4 mr-2"/>
-                                Edit
+                                <Edit3 className="h-4 w-4 mr-2"/>{t("edit")}
+
                             </Button>
-                        )}
+                        }
                     </div>
 
-                    {!isEditingPhone ? (
+                    {!isEditingPhone ?
                         <div className="flex items-center py-2">
                             <div className="p-2 bg-gray-100 rounded-lg mr-3">
                                 <Phone className="h-5 w-5 text-gray-500"/>
                             </div>
                             <div>
-                                <p className="text-sm text-gray-500">Current Phone Number</p>
+                                <p className="text-sm text-gray-500">{t("current_phone_number")}</p>
                                 <p className="text-lg font-medium text-gray-900">
-                                    {profile.phoneNumber || <span className="text-gray-400 italic">Not set</span>}
+                                    {profile.phoneNumber ||
+                                        <span className="text-gray-400 italic">{t("not_set")}</span>}
                                 </p>
                             </div>
-                        </div>
-                    ) : (
+                        </div> :
+
                         <form onSubmit={handlePhoneSubmit} className="space-y-4">
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
+                                <label
+                                    className="block text-sm font-medium text-gray-700 mb-2">{t("phone_number")}</label>
                                 <input
                                     type="tel"
                                     value={phoneNumber}
@@ -553,33 +560,33 @@ export const ProfilePage: React.FC = () => {
                                         setPhoneNumber(e.target.value);
                                         if (errors.phone) setErrors({...errors, phone: ''});
                                     }}
-                                    placeholder="e.g., +98 912 345 6789"
+                                    placeholder={t("eg_98_912_345_6789")}
                                     className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent ${
-                                        errors.phone ? 'border-red-300 bg-red-50' : 'border-gray-300'
-                                    }`}
+                                        errors.phone ? 'border-red-300 bg-red-50' : 'border-gray-300'}`
+                                    }
                                     disabled={updatePhoneMutation.isPending}
-                                    autoFocus
-                                />
-                                {errors.phone && (
+                                    autoFocus/>
+
+                                {errors.phone &&
                                     <p className="mt-2 text-sm text-red-600 flex items-center">
                                         <AlertCircle className="h-4 w-4 mr-1"/>
                                         {errors.phone}
                                     </p>
-                                )}
+                                }
                             </div>
                             <div className="flex space-x-3">
                                 <Button type="submit" isLoading={updatePhoneMutation.isPending}>
-                                    <Save className="h-4 w-4 mr-2"/>
-                                    Save Changes
+                                    <Save className="h-4 w-4 mr-2"/>{t("save_changes")}
+
                                 </Button>
                                 <Button type="button" variant="secondary" onClick={cancelPhoneEdit}
                                         disabled={updatePhoneMutation.isPending}>
-                                    <X className="h-4 w-4 mr-2"/>
-                                    Cancel
+                                    <X className="h-4 w-4 mr-2"/>{t("cancel")}
+
                                 </Button>
                             </div>
                         </form>
-                    )}
+                    }
                 </div>
             </Card>
 
@@ -589,35 +596,36 @@ export const ProfilePage: React.FC = () => {
                     <div className="flex items-center justify-between mb-6 pb-4 border-b">
                         <div className="flex items-center">
                             <Key className="h-5 w-5 text-gray-600 mr-2"/>
-                            <h2 className="text-xl font-semibold text-gray-900">Password & Security</h2>
+                            <h2 className="text-xl font-semibold text-gray-900">{t("password_security")}</h2>
                         </div>
-                        {!isChangingPassword && (
+                        {!isChangingPassword &&
                             <Button variant="secondary" onClick={() => setIsChangingPassword(true)}>
-                                <Lock className="h-4 w-4 mr-2"/>
-                                Change Password
+                                <Lock className="h-4 w-4 mr-2"/>{t("change_password")}
+
                             </Button>
-                        )}
+                        }
                     </div>
 
-                    {!isChangingPassword ? (
+                    {!isChangingPassword ?
                         <div className="space-y-4">
                             <div className="flex items-center py-2">
                                 <div className="p-2 bg-gray-100 rounded-lg mr-3">
                                     <Lock className="h-5 w-5 text-gray-500"/>
                                 </div>
                                 <div>
-                                    <p className="text-sm text-gray-500">Password</p>
+                                    <p className="text-sm text-gray-500">{t("password")}</p>
                                     <p className="text-lg font-medium text-gray-900">••••••••••••</p>
                                 </div>
                             </div>
-                            <p className="text-sm text-gray-500">
-                                We recommend changing your password periodically for security.
+                            <p className="text-sm text-gray-500">{t("we_recommend_changing_your_password_periodically_f")}
+
                             </p>
-                        </div>
-                    ) : (
+                        </div> :
+
                         <form onSubmit={handlePasswordSubmit} className="space-y-4">
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">Current Password</label>
+                                <label
+                                    className="block text-sm font-medium text-gray-700 mb-2">{t("current_password")}</label>
                                 <input
                                     type="password"
                                     value={passwords.currentPassword}
@@ -625,23 +633,24 @@ export const ProfilePage: React.FC = () => {
                                         setPasswords({...passwords, currentPassword: e.target.value});
                                         if (errors.currentPassword) setErrors({...errors, currentPassword: ''});
                                     }}
-                                    placeholder="Enter your current password"
+                                    placeholder={t("enter_your_current_password")}
                                     className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent ${
-                                        errors.currentPassword ? 'border-red-300 bg-red-50' : 'border-gray-300'
-                                    }`}
+                                        errors.currentPassword ? 'border-red-300 bg-red-50' : 'border-gray-300'}`
+                                    }
                                     disabled={updatePasswordMutation.isPending}
-                                    autoFocus
-                                />
-                                {errors.currentPassword && (
+                                    autoFocus/>
+
+                                {errors.currentPassword &&
                                     <p className="mt-2 text-sm text-red-600 flex items-center">
                                         <AlertCircle className="h-4 w-4 mr-1"/>
                                         {errors.currentPassword}
                                     </p>
-                                )}
+                                }
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">New Password</label>
+                                <label
+                                    className="block text-sm font-medium text-gray-700 mb-2">{t("new_password")}</label>
                                 <input
                                     type="password"
                                     value={passwords.newPassword}
@@ -649,24 +658,25 @@ export const ProfilePage: React.FC = () => {
                                         setPasswords({...passwords, newPassword: e.target.value});
                                         if (errors.newPassword) setErrors({...errors, newPassword: ''});
                                     }}
-                                    placeholder="Enter your new password"
+                                    placeholder={t("enter_your_new_password")}
                                     className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent ${
-                                        errors.newPassword ? 'border-red-300 bg-red-50' : 'border-gray-300'
-                                    }`}
-                                    disabled={updatePasswordMutation.isPending}
-                                />
-                                {errors.newPassword && (
+                                        errors.newPassword ? 'border-red-300 bg-red-50' : 'border-gray-300'}`
+                                    }
+                                    disabled={updatePasswordMutation.isPending}/>
+
+                                {errors.newPassword &&
                                     <p className="mt-2 text-sm text-red-600 flex items-center">
                                         <AlertCircle className="h-4 w-4 mr-1"/>
                                         {errors.newPassword}
                                     </p>
-                                )}
-                                <p className="mt-1 text-xs text-gray-500">Must be at least 8 characters</p>
+                                }
+                                <p className="mt-1 text-xs text-gray-500">{t("must_be_at_least_8_characters")}</p>
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">Confirm New
-                                    Password</label>
+                                <label
+                                    className="block text-sm font-medium text-gray-700 mb-2">{t("confirm_new_password")}
+                                </label>
                                 <input
                                     type="password"
                                     value={passwords.confirmPassword}
@@ -674,52 +684,53 @@ export const ProfilePage: React.FC = () => {
                                         setPasswords({...passwords, confirmPassword: e.target.value});
                                         if (errors.confirmPassword) setErrors({...errors, confirmPassword: ''});
                                     }}
-                                    placeholder="Confirm your new password"
+                                    placeholder={t("confirm_your_new_password")}
                                     className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent ${
-                                        errors.confirmPassword ? 'border-red-300 bg-red-50' : 'border-gray-300'
-                                    }`}
-                                    disabled={updatePasswordMutation.isPending}
-                                />
-                                {errors.confirmPassword && (
+                                        errors.confirmPassword ? 'border-red-300 bg-red-50' : 'border-gray-300'}`
+                                    }
+                                    disabled={updatePasswordMutation.isPending}/>
+
+                                {errors.confirmPassword &&
                                     <p className="mt-2 text-sm text-red-600 flex items-center">
                                         <AlertCircle className="h-4 w-4 mr-1"/>
                                         {errors.confirmPassword}
                                     </p>
-                                )}
+                                }
                             </div>
 
-                            {errors.password && (
+                            {errors.password &&
                                 <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
                                     <p className="text-sm text-red-700 flex items-center">
                                         <AlertCircle className="h-4 w-4 mr-2"/>
                                         {errors.password}
                                     </p>
                                 </div>
-                            )}
+                            }
 
                             <div className="flex space-x-3 pt-4">
                                 <Button type="submit" isLoading={updatePasswordMutation.isPending}>
-                                    <Save className="h-4 w-4 mr-2"/>
-                                    Update Password
+                                    <Save className="h-4 w-4 mr-2"/>{t("update_password")}
+
                                 </Button>
                                 <Button type="button" variant="secondary" onClick={cancelPasswordChange}
                                         disabled={updatePasswordMutation.isPending}>
-                                    <X className="h-4 w-4 mr-2"/>
-                                    Cancel
+                                    <X className="h-4 w-4 mr-2"/>{t("cancel")}
+
                                 </Button>
                             </div>
                         </form>
-                    )}
+                    }
                 </div>
             </Card>
 
             {/* Security Note */}
             <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
                 <p className="text-sm text-gray-600 flex items-start">
-                    <Shield className="h-4 w-4 mr-2 mt-0.5 text-gray-500 flex-shrink-0"/>
-                    For security reasons, you may be logged out after changing your password.
+                    <Shield
+                        className="h-4 w-4 mr-2 mt-0.5 text-gray-500 flex-shrink-0"/>{t("for_security_reasons_you_may_be_logged_out_after_c")}
+
                 </p>
             </div>
-        </div>
-    );
+        </div>);
+
 };

@@ -16,20 +16,21 @@ import {
     ChevronDown,
     Shield,
     UserCheck, ClipboardList
-} from 'lucide-react';
+} from
+        'lucide-react';
 import {adminAPI} from '../../api/admin.api';
 import {useTranslation} from 'react-i18next';
 import {Professor, DepartmentSummary, Field, ProfessorRegistrationInput} from '../../types';
 
 // Card component
-const Card = ({children, className = ''}: { children: React.ReactNode; className?: string }) => (
+const Card = ({children, className = ''}: { children: React.ReactNode; className?: string; }) =>
     <div className={`bg-white rounded-xl border border-gray-200 shadow-sm ${className}`}>
         {children}
-    </div>
-);
+    </div>;
+
 
 export const AdminProfessorManagementPage: React.FC = () => {
-    const {t} = useTranslation();
+    const {t} = useTranslation("admin");
     const queryClient = useQueryClient();
 
     // State
@@ -96,7 +97,7 @@ export const AdminProfessorManagementPage: React.FC = () => {
     });
 
     const updateProfessorMutation = useMutation({
-        mutationFn: async (data: { id: number; professor: any }) => {
+        mutationFn: async (data: { id: number; professor: any; }) => {
             return await adminAPI.updateProfessor(data.id, data.professor);
         },
         onSuccess: () => {
@@ -177,19 +178,16 @@ export const AdminProfessorManagementPage: React.FC = () => {
 
         if (!formData.firstName.trim()) errors.firstName = 'First name is required';
         if (!formData.lastName.trim()) errors.lastName = 'Last name is required';
-        if (!formData.email.trim()) errors.email = 'Email is required';
-        else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+        if (!formData.email.trim()) errors.email = 'Email is required'; else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
             errors.email = 'Invalid email format';
         }
-        if (!formData.phoneNumber.trim()) errors.phoneNumber = 'Phone number is required';
-        else if (!/^\+?[0-9]{10,15}$/.test(formData.phoneNumber)) {
+        if (!formData.phoneNumber.trim()) errors.phoneNumber = 'Phone number is required'; else if (!/^\+?[0-9]{10,15}$/.test(formData.phoneNumber)) {
             errors.phoneNumber = 'Invalid phone number format';
         }
         if (!formData.departmentId) errors.departmentId = 'Department is required';
 
         if (!editingProfessor) {
-            if (!formData.password) errors.password = 'Password is required';
-            else if (formData.password.length < 6) {
+            if (!formData.password) errors.password = 'Password is required'; else if (formData.password.length < 6) {
                 errors.password = 'Password must be at least 6 characters';
             }
             if (formData.password !== formData.confirmPassword) {
@@ -228,7 +226,10 @@ export const AdminProfessorManagementPage: React.FC = () => {
     };
 
     const handleDelete = (professor: Professor) => {
-        if (window.confirm(`Are you sure you want to delete ${professor.firstName} ${professor.lastName}? This action cannot be undone.`)) {
+        if (window.confirm(t("are_you_sure_you_want_to_delete_this_action_cannot", {
+            firstName: professor.firstName,
+            lastName: professor.lastName
+        }))) {
             deleteProfessorMutation.mutate(professor.id);
         }
     };
@@ -249,16 +250,16 @@ export const AdminProfessorManagementPage: React.FC = () => {
                 <div>
                     <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
                         <Users className="h-7 w-7 text-purple-600"/>
-                        {t('users.admin.professors-management.title')}
+                        {t('professors-management')}
                     </h1>
-                    <p className="text-gray-500 mt-1">{t('users.admin.professors-management.desc')}</p>
+                    <p className="text-gray-500 mt-1">{t('professors-management-desc')}</p>
                 </div>
                 <button
                     onClick={() => handleOpenModal()}
-                    className="flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors shadow-sm"
-                >
+                    className="flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors shadow-sm">
+
                     <Plus className="h-5 w-5"/>
-                    ${t('users.admin.professors-management.add-professor')}
+                    {t('add-professor')}
                 </button>
             </div>
 
@@ -267,7 +268,7 @@ export const AdminProfessorManagementPage: React.FC = () => {
                 <Card className="p-4">
                     <div className="flex items-center justify-between">
                         <div>
-                            <p className="text-sm text-gray-500">{t('users.professor.total-professors')}</p>
+                            <p className="text-sm text-gray-500">{t('total-professors')}</p>
                             <p className="text-2xl font-bold text-gray-900">{stats.total}</p>
                         </div>
                         <div className="p-3 bg-purple-100 rounded-full">
@@ -278,7 +279,7 @@ export const AdminProfessorManagementPage: React.FC = () => {
                 <Card className="p-4">
                     <div className="flex items-center justify-between">
                         <div>
-                            <p className="text-sm text-gray-500">{t('users.manager.managers')}</p>
+                            <p className="text-sm text-gray-500">{t('managers')}</p>
                             <p className="text-2xl font-bold text-blue-600">{stats.managers}</p>
                         </div>
                         <div className="p-3 bg-blue-100 rounded-full">
@@ -289,7 +290,7 @@ export const AdminProfessorManagementPage: React.FC = () => {
                 <Card className="p-4">
                     <div className="flex items-center justify-between">
                         <div>
-                            <p className="text-sm text-gray-500">{t('users.admin.professors-management.regular-professors')}</p>
+                            <p className="text-sm text-gray-500">{t('regular-professors')}</p>
                             <p className="text-2xl font-bold text-green-600">{stats.regular}</p>
                         </div>
                         <div className="p-3 bg-green-100 rounded-full">
@@ -307,11 +308,11 @@ export const AdminProfessorManagementPage: React.FC = () => {
                         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400"/>
                         <input
                             type="text"
-                            placeholder="Search by name or email..."
+                            placeholder={t("search_by_name_or_email")}
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
-                            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none"
-                        />
+                            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none"/>
+
                     </div>
 
                     {/* Department Filter */}
@@ -321,14 +322,14 @@ export const AdminProfessorManagementPage: React.FC = () => {
                         <select
                             value={selectedDeptFilter}
                             onChange={(e) => setSelectedDeptFilter(e.target.value)}
-                            className="pl-10 pr-8 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none appearance-none bg-white min-w-[180px]"
-                        >
-                            <option value="">{t('users.admin.departments-management.all-departments')}</option>
-                            {departments.map((dept: DepartmentSummary) => (
+                            className="pl-10 pr-8 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none appearance-none bg-white min-w-[180px]">
+
+                            <option value="">{t('all-departments')}</option>
+                            {departments.map((dept: DepartmentSummary) =>
                                 <option key={dept.id} value={dept.id}>
                                     {dept.name}
                                 </option>
-                            ))}
+                            )}
                         </select>
                         <ChevronDown
                             className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none"/>
@@ -338,138 +339,138 @@ export const AdminProfessorManagementPage: React.FC = () => {
 
             {/* Professors Table */}
             <Card className="overflow-hidden">
-                {isLoadingProfessors ? (
+                {isLoadingProfessors ?
                     <div className="flex items-center justify-center py-12">
                         <Loader2 className="h-8 w-8 animate-spin text-purple-600"/>
-                        <span className="ml-2 text-gray-600">Loading professors...</span>
-                    </div>
-                ) : professors.length === 0 ? (
-                    <div className="text-center py-12">
-                        <Users className="h-12 w-12 text-gray-300 mx-auto mb-4"/>
-                        <p className="text-gray-500">No professors found</p>
-                        {searchTerm && (
-                            <button
-                                onClick={() => setSearchTerm('')}
-                                className="mt-2 text-purple-600 hover:text-purple-700"
-                            >
-                                Clear search
-                            </button>
-                        )}
-                    </div>
-                ) : (
-                    <div className="overflow-x-auto">
-                        <table className="min-w-full divide-y divide-gray-200">
-                            <thead className="bg-gray-50">
-                            <tr>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Professor
-                                </th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Field
-                                </th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Department
-                                </th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Contact
-                                </th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Role
-                                </th>
-                                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Actions
-                                </th>
-                            </tr>
-                            </thead>
-                            <tbody className="bg-white divide-y divide-gray-200">
-                            {professors.map((professor: Professor) => (
-                                <tr key={professor.id} className="hover:bg-gray-50 transition-colors">
-                                    <td className="px-6 py-4 whitespace-nowrap">
-                                        <div className="flex items-center">
-                                            <div
-                                                className="flex-shrink-0 h-10 w-10 bg-purple-100 rounded-full flex items-center justify-center">
+                        <span className="ml-2 text-gray-600">{t("loading_professors")}</span>
+                    </div> :
+                    professors.length === 0 ?
+                        <div className="text-center py-12">
+                            <Users className="h-12 w-12 text-gray-300 mx-auto mb-4"/>
+                            <p className="text-gray-500">{t("no_professors_found")}</p>
+                            {searchTerm &&
+                                <button
+                                    onClick={() => setSearchTerm('')}
+                                    className="mt-2 text-purple-600 hover:text-purple-700">{t("clear_search")}
+
+
+                                </button>
+                            }
+                        </div> :
+
+                        <div className="overflow-x-auto">
+                            <table className="min-w-full divide-y divide-gray-200">
+                                <thead className="bg-gray-50">
+                                <tr>
+                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{t("professor")}
+
+                                    </th>
+                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{t("field")}
+
+                                    </th>
+                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{t("department")}
+
+                                    </th>
+                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{t("contact")}
+
+                                    </th>
+                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{t("role")}
+
+                                    </th>
+                                    <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">{t("actions")}
+
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody className="bg-white divide-y divide-gray-200">
+                                {professors.map((professor: Professor) =>
+                                    <tr key={professor.id} className="hover:bg-gray-50 transition-colors">
+                                        <td className="px-6 py-4 whitespace-nowrap">
+                                            <div className="flex items-center">
+                                                <div
+                                                    className="flex-shrink-0 h-10 w-10 bg-purple-100 rounded-full flex items-center justify-center">
                                                     <span className="text-purple-600 font-medium">
                                                         {professor.firstName[0]}{professor.lastName[0]}
                                                     </span>
-                                            </div>
-                                            <div className="ml-4">
-                                                <div className="text-sm font-medium text-gray-900">
-                                                    {professor.firstName} {professor.lastName}
                                                 </div>
-                                                <div className="text-sm text-gray-500">
-                                                    ID: {professor.id}
+                                                <div className="ml-4">
+                                                    <div className="text-sm font-medium text-gray-900">
+                                                        {professor.firstName} {professor.lastName}
+                                                    </div>
+                                                    <div className="text-sm text-gray-500">{t("id")}
+                                                        {professor.id}
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </td>
-                                    <td className="px-6 py-4 whitespace-nowrap">
-                                        <div className="flex items-center text-sm text-gray-800">
-                                            <ClipboardList className="h-4 w-4 mr-2 text-gray-400"/>
-                                            {professor.field?.name ?? '—'}
-                                        </div>
-                                    </td>
-                                    <td className="px-6 py-4 whitespace-nowrap">
-                                        <div className="flex items-center text-sm text-gray-900">
-                                            <Building2 className="h-4 w-4 mr-2 text-gray-400"/>
-                                            {professor.department.name}
-                                        </div>
-                                    </td>
-                                    <td className="px-6 py-4 whitespace-nowrap">
-                                        <div className="flex items-center text-sm text-gray-500">
-                                            <Mail className="h-4 w-4 mr-2 text-gray-400"/>
-                                            {professor.email}
-                                        </div>
-                                        {professor.phoneNumber && (
-                                            <div className="flex items-center text-sm text-gray-500 mt-1">
-                                                <Phone className="h-4 w-4 mr-2 text-gray-400"/>
-                                                {professor.phoneNumber}
+                                        </td>
+                                        <td className="px-6 py-4 whitespace-nowrap">
+                                            <div className="flex items-center text-sm text-gray-800">
+                                                <ClipboardList className="h-4 w-4 mr-2 text-gray-400"/>
+                                                {professor.field?.name ?? '—'}
                                             </div>
-                                        )}
-                                    </td>
-                                    <td className="px-6 py-4 whitespace-nowrap">
+                                        </td>
+                                        <td className="px-6 py-4 whitespace-nowrap">
+                                            <div className="flex items-center text-sm text-gray-900">
+                                                <Building2 className="h-4 w-4 mr-2 text-gray-400"/>
+                                                {professor.department.name}
+                                            </div>
+                                        </td>
+                                        <td className="px-6 py-4 whitespace-nowrap">
+                                            <div className="flex items-center text-sm text-gray-500">
+                                                <Mail className="h-4 w-4 mr-2 text-gray-400"/>
+                                                {professor.email}
+                                            </div>
+                                            {professor.phoneNumber &&
+                                                <div className="flex items-center text-sm text-gray-500 mt-1">
+                                                    <Phone className="h-4 w-4 mr-2 text-gray-400"/>
+                                                    {professor.phoneNumber}
+                                                </div>
+                                            }
+                                        </td>
+                                        <td className="px-6 py-4 whitespace-nowrap">
                                             <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-                                                professor.manager
-                                                    ? 'bg-blue-100 text-blue-700'
-                                                    : 'bg-gray-100 text-gray-700'
-                                            }`}>
+                                                professor.manager ?
+                                                    'bg-blue-100 text-blue-700' :
+                                                    'bg-gray-100 text-gray-700'}`
+                                            }>
                                                 {professor.manager ? 'Manager' : 'Professor'}
                                             </span>
-                                    </td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                        <div className="flex items-center justify-end gap-2">
-                                            <button
-                                                onClick={() => handleOpenModal(professor)}
-                                                className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
-                                                title="Edit"
-                                            >
-                                                <Edit2 className="h-4 w-4"/>
-                                            </button>
-                                            <button
-                                                onClick={() => handleDelete(professor)}
-                                                className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                                                title="Delete"
-                                            >
-                                                <Trash2 className="h-4 w-4"/>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            ))}
-                            </tbody>
-                        </table>
-                    </div>
-                )}
+                                        </td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                            <div className="flex items-center justify-end gap-2">
+                                                <button
+                                                    onClick={() => handleOpenModal(professor)}
+                                                    className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                                                    title={t("edit")}>
+
+                                                    <Edit2 className="h-4 w-4"/>
+                                                </button>
+                                                <button
+                                                    onClick={() => handleDelete(professor)}
+                                                    className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                                                    title={t("delete")}>
+
+                                                    <Trash2 className="h-4 w-4"/>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                )}
+                                </tbody>
+                            </table>
+                        </div>
+                }
             </Card>
 
             {/* Create/Edit Modal */}
-            {isModalOpen && (
+            {isModalOpen &&
                 <div className="fixed inset-0 z-50 overflow-y-auto">
                     <div
                         className="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
                         <div
                             className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
-                            onClick={closeModal}
-                        />
+                            onClick={closeModal}/>
+
 
                         <div
                             className="inline-block align-bottom bg-white rounded-xl text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
@@ -481,8 +482,8 @@ export const AdminProfessorManagementPage: React.FC = () => {
                                     </h3>
                                     <button
                                         onClick={closeModal}
-                                        className="text-gray-400 hover:text-gray-500 p-1"
-                                    >
+                                        className="text-gray-400 hover:text-gray-500 p-1">
+
                                         <X className="h-5 w-5"/>
                                     </button>
                                 </div>
@@ -491,61 +492,64 @@ export const AdminProfessorManagementPage: React.FC = () => {
                                     {/* Name Fields */}
                                     <div className="grid grid-cols-2 gap-4">
                                         <div>
-                                            <label className="block text-sm font-medium text-gray-700 mb-1">
-                                                First Name *
+                                            <label
+                                                className="block text-sm font-medium text-gray-700 mb-1">{t("first_name")}
+
                                             </label>
                                             <input
                                                 type="text"
                                                 value={formData.firstName}
                                                 onChange={(e) => setFormData({...formData, firstName: e.target.value})}
                                                 className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none ${
-                                                    formErrors.firstName ? 'border-red-500' : 'border-gray-300'
-                                                }`}
-                                            />
-                                            {formErrors.firstName && (
+                                                    formErrors.firstName ? 'border-red-500' : 'border-gray-300'}`
+                                                }/>
+
+                                            {formErrors.firstName &&
                                                 <p className="text-red-500 text-xs mt-1">{formErrors.firstName}</p>
-                                            )}
+                                            }
                                         </div>
                                         <div>
-                                            <label className="block text-sm font-medium text-gray-700 mb-1">
-                                                Last Name *
+                                            <label
+                                                className="block text-sm font-medium text-gray-700 mb-1">{t("last_name")}
+
                                             </label>
                                             <input
                                                 type="text"
                                                 value={formData.lastName}
                                                 onChange={(e) => setFormData({...formData, lastName: e.target.value})}
                                                 className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none ${
-                                                    formErrors.lastName ? 'border-red-500' : 'border-gray-300'
-                                                }`}
-                                            />
-                                            {formErrors.lastName && (
+                                                    formErrors.lastName ? 'border-red-500' : 'border-gray-300'}`
+                                                }/>
+
+                                            {formErrors.lastName &&
                                                 <p className="text-red-500 text-xs mt-1">{formErrors.lastName}</p>
-                                            )}
+                                            }
                                         </div>
                                     </div>
 
                                     {/* Email */}
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                                            Email *
+                                        <label className="block text-sm font-medium text-gray-700 mb-1">{t("email")}
+
                                         </label>
                                         <input
                                             type="email"
                                             value={formData.email}
                                             onChange={(e) => setFormData({...formData, email: e.target.value})}
                                             className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none ${
-                                                formErrors.email ? 'border-red-500' : 'border-gray-300'
-                                            }`}
-                                        />
-                                        {formErrors.email && (
+                                                formErrors.email ? 'border-red-500' : 'border-gray-300'}`
+                                            }/>
+
+                                        {formErrors.email &&
                                             <p className="text-red-500 text-xs mt-1">{formErrors.email}</p>
-                                        )}
+                                        }
                                     </div>
 
                                     {/* Phone */}
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                                            Phone Number *
+                                        <label
+                                            className="block text-sm font-medium text-gray-700 mb-1">{t("phone_number")}
+
                                         </label>
                                         <input
                                             type="tel"
@@ -553,18 +557,19 @@ export const AdminProfessorManagementPage: React.FC = () => {
                                             onChange={(e) => setFormData({...formData, phoneNumber: e.target.value})}
                                             placeholder="+989123456789"
                                             className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none ${
-                                                formErrors.phoneNumber ? 'border-red-500' : 'border-gray-300'
-                                            }`}
-                                        />
-                                        {formErrors.phoneNumber && (
+                                                formErrors.phoneNumber ? 'border-red-500' : 'border-gray-300'}`
+                                            }/>
+
+                                        {formErrors.phoneNumber &&
                                             <p className="text-red-500 text-xs mt-1">{formErrors.phoneNumber}</p>
-                                        )}
+                                        }
                                     </div>
 
                                     {/* Department */}
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                                            Department *
+                                        <label
+                                            className="block text-sm font-medium text-gray-700 mb-1">{t("department_1")}
+
                                         </label>
                                         <select
                                             value={formData.departmentId}
@@ -574,44 +579,44 @@ export const AdminProfessorManagementPage: React.FC = () => {
                                                 fieldId: '' // Reset field when department changes
                                             })}
                                             className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none bg-white ${
-                                                formErrors.departmentId ? 'border-red-500' : 'border-gray-300'
-                                            }`}
-                                        >
-                                            <option value="">Select Department</option>
-                                            {departments.map((dept: DepartmentSummary) => (
+                                                formErrors.departmentId ? 'border-red-500' : 'border-gray-300'}`
+                                            }>
+
+                                            <option value="">{t("select_department")}</option>
+                                            {departments.map((dept: DepartmentSummary) =>
                                                 <option key={dept.id} value={dept.id}>
                                                     {dept.name}
                                                 </option>
-                                            ))}
+                                            )}
                                         </select>
-                                        {formErrors.departmentId && (
+                                        {formErrors.departmentId &&
                                             <p className="text-red-500 text-xs mt-1">{formErrors.departmentId}</p>
-                                        )}
+                                        }
                                     </div>
 
                                     {/* Field */}
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                                            Field
+                                        <label className="block text-sm font-medium text-gray-700 mb-1">{t("field")}
+
                                         </label>
                                         <select
                                             value={formData.fieldId}
                                             onChange={(e) => setFormData({...formData, fieldId: e.target.value})}
                                             className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none bg-white ${
-                                                formErrors.fieldId ? 'border-red-500' : 'border-gray-300'
-                                            }`}
-                                            disabled={!formData.departmentId}
-                                        >
-                                            <option value="">Select Field</option>
-                                            {filteredFields.map((field: Field) => (
+                                                formErrors.fieldId ? 'border-red-500' : 'border-gray-300'}`
+                                            }
+                                            disabled={!formData.departmentId}>
+
+                                            <option value="">{t("select_field")}</option>
+                                            {filteredFields.map((field: Field) =>
                                                 <option key={field.id} value={field.id}>
                                                     {field.name}
                                                 </option>
-                                            ))}
+                                            )}
                                         </select>
-                                        {formErrors.fieldId && (
+                                        {formErrors.fieldId &&
                                             <p className="text-red-500 text-xs mt-1">{formErrors.fieldId}</p>
-                                        )}
+                                        }
                                     </div>
 
                                     {/* Manager Toggle */}
@@ -621,21 +626,23 @@ export const AdminProfessorManagementPage: React.FC = () => {
                                             id="isManager"
                                             checked={formData.manager}
                                             onChange={(e) => setFormData({...formData, manager: e.target.checked})}
-                                            className="w-4 h-4 text-purple-600 border-gray-300 rounded focus:ring-purple-500"
-                                        />
+                                            className="w-4 h-4 text-purple-600 border-gray-300 rounded focus:ring-purple-500"/>
+
                                         <label htmlFor="isManager"
                                                className="flex items-center gap-2 text-sm font-medium text-gray-700 cursor-pointer">
-                                            <Shield className="h-4 w-4 text-blue-600"/>
-                                            Assign as Department Manager
+                                            <Shield
+                                                className="h-4 w-4 text-blue-600"/>{t("assign_as_department_manager")}
+
                                         </label>
                                     </div>
 
                                     {/* Password Fields (Only for new professors) */}
-                                    {!editingProfessor && (
+                                    {!editingProfessor &&
                                         <div className="grid grid-cols-2 gap-4">
                                             <div>
-                                                <label className="block text-sm font-medium text-gray-700 mb-1">
-                                                    Password *
+                                                <label
+                                                    className="block text-sm font-medium text-gray-700 mb-1">{t("password")}
+
                                                 </label>
                                                 <input
                                                     type="password"
@@ -645,16 +652,17 @@ export const AdminProfessorManagementPage: React.FC = () => {
                                                         password: e.target.value
                                                     })}
                                                     className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none ${
-                                                        formErrors.password ? 'border-red-500' : 'border-gray-300'
-                                                    }`}
-                                                />
-                                                {formErrors.password && (
+                                                        formErrors.password ? 'border-red-500' : 'border-gray-300'}`
+                                                    }/>
+
+                                                {formErrors.password &&
                                                     <p className="text-red-500 text-xs mt-1">{formErrors.password}</p>
-                                                )}
+                                                }
                                             </div>
                                             <div>
-                                                <label className="block text-sm font-medium text-gray-700 mb-1">
-                                                    Confirm Password *
+                                                <label
+                                                    className="block text-sm font-medium text-gray-700 mb-1">{t("confirm_password")}
+
                                                 </label>
                                                 <input
                                                     type="password"
@@ -664,35 +672,35 @@ export const AdminProfessorManagementPage: React.FC = () => {
                                                         confirmPassword: e.target.value
                                                     })}
                                                     className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none ${
-                                                        formErrors.confirmPassword ? 'border-red-500' : 'border-gray-300'
-                                                    }`}
-                                                />
-                                                {formErrors.confirmPassword && (
+                                                        formErrors.confirmPassword ? 'border-red-500' : 'border-gray-300'}`
+                                                    }/>
+
+                                                {formErrors.confirmPassword &&
                                                     <p className="text-red-500 text-xs mt-1">{formErrors.confirmPassword}</p>
-                                                )}
+                                                }
                                             </div>
                                         </div>
-                                    )}
+                                    }
 
                                     {/* Actions */}
                                     <div className="pt-4 flex gap-3">
                                         <button
                                             type="button"
                                             onClick={closeModal}
-                                            className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-medium transition-colors"
-                                        >
-                                            Cancel
+                                            className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-medium transition-colors">{t("cancel")}
+
+
                                         </button>
                                         <button
                                             type="submit"
                                             disabled={isLoadingAction}
-                                            className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                                        >
-                                            {isLoadingAction ? (
-                                                <Loader2 className="h-4 w-4 animate-spin"/>
-                                            ) : (
+                                            className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+
+                                            {isLoadingAction ?
+                                                <Loader2 className="h-4 w-4 animate-spin"/> :
+
                                                 <Save className="h-4 w-4"/>
-                                            )}
+                                            }
                                             {editingProfessor ? 'Save Changes' : 'Create Professor'}
                                         </button>
                                     </div>
@@ -701,9 +709,9 @@ export const AdminProfessorManagementPage: React.FC = () => {
                         </div>
                     </div>
                 </div>
-            )}
-        </div>
-    );
+            }
+        </div>);
+
 };
 
 export default AdminProfessorManagementPage;

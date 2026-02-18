@@ -6,35 +6,37 @@ import {Card} from '../../components/common/Card';
 import {CheckCircle, Clock, FileText} from 'lucide-react';
 import {professorAPI} from '../../api/professor.api';
 import {Meeting, MeetingState} from "../../types";
+import {useTranslation} from "react-i18next";
 
 export const ProfessorHomePage: React.FC = () => {
+    const {t} = useTranslation("professor");
     const {data: pendingForms} = useQuery({
         queryKey: ['pendingThesisForms'],
-        queryFn: professorAPI.getPendingThesisForms,
+        queryFn: professorAPI.getPendingThesisForms
     });
 
     const {data: timeSlots} = useQuery({
         queryKey: ['myTimeSlots'],
-        queryFn: professorAPI.getMyTimeslots,
+        queryFn: professorAPI.getMyTimeslots
     });
 
     const {data: meetings} = useQuery({
         queryKey: ['professorMeetings'],
-        queryFn: professorAPI.getMyMeetings,
+        queryFn: professorAPI.getMyMeetings
     });
 
     // Added safe navigation (optional chaining) to prevent crashes if data is undefined
     const stats = {
         pendingForms: pendingForms?.length || 0,
         // Assuming timeSlots is an array. If it returns { timeslots: [] }, adjust accordingly.
-        timeSlots: Array.isArray(timeSlots) ? timeSlots.length : (timeSlots?.timeslots?.length || 0),
-        scheduledMeetings: meetings?.filter((m: Meeting) => m.state === MeetingState.SCHEDULED).length || 0,
+        timeSlots: Array.isArray(timeSlots) ? timeSlots.length : timeSlots?.timeslots?.length || 0,
+        scheduledMeetings: meetings?.filter((m: Meeting) => m.state === MeetingState.SCHEDULED).length || 0
     };
 
     return (
         <div className="space-y-6">
-            <h1 className="text-3xl font-bold text-gray-900">
-                Professor Dashboard
+            <h1 className="text-3xl font-bold text-gray-900">{t("professor_dashboard")}
+
             </h1>
 
             {/* Stats Cards */}
@@ -42,7 +44,7 @@ export const ProfessorHomePage: React.FC = () => {
                 <Card className="bg-yellow-50">
                     <div className="flex items-center justify-between">
                         <div>
-                            <p className="text-yellow-600 text-sm font-medium">Pending Forms</p>
+                            <p className="text-yellow-600 text-sm font-medium">{t("pending_forms")}</p>
                             <p className="text-2xl font-bold text-gray-900">{stats.pendingForms}</p>
                         </div>
                         <FileText className="h-8 w-8 text-yellow-600"/>
@@ -52,7 +54,7 @@ export const ProfessorHomePage: React.FC = () => {
                 <Card className="bg-blue-50">
                     <div className="flex items-center justify-between">
                         <div>
-                            <p className="text-blue-600 text-sm font-medium">Available Time Slots</p>
+                            <p className="text-blue-600 text-sm font-medium">{t("available_time_slots")}</p>
                             <p className="text-2xl font-bold text-gray-900">{stats.timeSlots}</p>
                         </div>
                         <Clock className="h-8 w-8 text-blue-600"/>
@@ -62,13 +64,13 @@ export const ProfessorHomePage: React.FC = () => {
                 <Card className="bg-green-50">
                     <div className="flex items-center justify-between">
                         <div>
-                            <p className="text-green-600 text-sm font-medium">Scheduled Meetings</p>
+                            <p className="text-green-600 text-sm font-medium">{t("scheduled_meetings")}</p>
                             <p className="text-2xl font-bold text-gray-900">{stats.scheduledMeetings}</p>
                         </div>
                         <CheckCircle className="h-8 w-8 text-green-600"/>
                     </div>
                 </Card>
             </div>
-        </div>
-    );
+        </div>);
+
 };

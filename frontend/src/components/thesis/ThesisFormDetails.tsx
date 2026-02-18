@@ -6,7 +6,9 @@ import {
     formatDate,
     getStatusBadgeClass,
     getStatusLabel
-} from '../utils/ThesisFormUtils';
+} from
+        '../utils/ThesisFormUtils';
+import {useTranslation} from "react-i18next";
 
 export interface ActionButton {
     label: string;
@@ -28,102 +30,104 @@ export const ThesisFormDetails: React.FC<Props> = ({
                                                        actions,
                                                        actionLoading,
                                                        onClose
-                                                   }) => (
-    <div className="form-details">
+                                                   }) =>
+{
+    const {t} = useTranslation("thesis");
+    return (<div className="form-details">
         <div className="details-header">
-            <h2>Form Details</h2>
+            <h2>{t("form_details")}</h2>
             <button className="btn-close" onClick={onClose}>×</button>
         </div>
 
         <div className="details-content">
             <div className="detail-section">
-                <h3>Title</h3>
+                <h3>{t("title")}</h3>
                 <p>{form.title}</p>
             </div>
 
             <div className="detail-section">
-                <h3>Abstract</h3>
+                <h3>{t("abstract")}</h3>
                 <p className="abstract-full">{form.abstractText}</p>
             </div>
 
             <div className="detail-section">
-                <h3>Student Information</h3>
+                <h3>{t("student_information")}</h3>
                 <div className="info-grid">
                     <div>
-                        <label>Student ID:</label>
+                        <label>{t("student_id")}</label>
                         <span>{form.studentId}</span>
                     </div>
                     <div>
-                        <label>First Name:</label>
+                        <label>{t("first_name")}</label>
                         <span>{form.studentFirstName || 'N/A'}</span>
                     </div>
                     <div>
-                        <label>Last Name:</label>
+                        <label>{t("last_name")}</label>
                         <span>{form.studentLastName || 'N/A'}</span>
                     </div>
-                    {form.fieldName && (
+                    {form.fieldName &&
                         <div>
-                            <label>Field:</label>
+                            <label>{t("field")}</label>
                             <span>{form.fieldName}</span>
                         </div>
-                    )}
+                    }
                 </div>
             </div>
 
             <div className="detail-section">
-                <h3>Instructor Information</h3>
+                <h3>{t("instructor_information")}</h3>
                 <div className="info-grid">
                     <div>
-                        <label>First Name:</label>
+                        <label>{t("first_name")}</label>
                         <span>{form.instructorFirstName || 'N/A'}</span>
                     </div>
                     <div>
-                        <label>Last Name:</label>
+                        <label>{t("last_name")}</label>
                         <span>{form.instructorLastName || 'N/A'}</span>
                     </div>
                 </div>
             </div>
 
             <div className="detail-section">
-                <h3>Status</h3>
+                <h3>{t("status")}</h3>
                 <span className={`form-badge ${getStatusBadgeClass(form.state)}`}>
                     {getStatusLabel(form.state)}
                 </span>
             </div>
 
             <div className="detail-section">
-                <h3>Submission Date</h3>
+                <h3>{t("submission_date")}</h3>
                 <p>{formatDate(form.createdAt)}</p>
             </div>
 
-            {form.rejectionReason && (
+            {form.rejectionReason &&
                 <div className="detail-section">
-                    <h3>Rejection Reason</h3>
+                    <h3>{t("rejection_reason")}</h3>
                     <p className="rejection-reason">{form.rejectionReason}</p>
                 </div>
-            )}
+            }
 
-            {form.revisionMessage && (
+            {form.revisionMessage &&
                 <div className="detail-section">
-                    <h3>Revision Message</h3>
+                    <h3>{t("revision_message")}</h3>
                     <p className="rejection-reason">{form.revisionMessage}</p>
                 </div>
-            )}
+            }
         </div>
 
-        {actions.length > 0 && (
+        {actions.length > 0 &&
             <div className="details-actions">
-                {actions.map((action, i) => (
+                {actions.map((action, i) =>
                     <button
                         key={i}
                         className={`btn ${action.className}`}
                         onClick={action.onClick}
-                        disabled={action.disabled || actionLoading}
-                    >
+                        disabled={action.disabled || actionLoading}>
+
                         {actionLoading ? action.loadingLabel : action.label}
                     </button>
-                ))}
+                )}
             </div>
-        )}
-    </div>
-);
+        }
+    </div>)
+};

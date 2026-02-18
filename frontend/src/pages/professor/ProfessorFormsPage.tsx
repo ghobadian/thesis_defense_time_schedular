@@ -11,8 +11,10 @@ import {ThesisFormsLayout} from '../../components/thesis/ThesisFormLayout';
 import {JurySelectionModal} from '../../components/common/JurySelectionModal';
 import {RevisionRequestModal} from '../../components/thesis/RevisionRequestModal';
 import {SubmitRevisionModal} from '../../components/thesis/SubmitRevisionModal';
+import {useTranslation} from "react-i18next";
 
 const ProfessorFormsPage: React.FC = () => {
+    const {t} = useTranslation("professor");
     const {role} = useAuthStore();
     const queryClient = useQueryClient();
     const [selectedForm, setSelectedForm] = useState<ThesisForm | null>(null);
@@ -38,7 +40,7 @@ const ProfessorFormsPage: React.FC = () => {
     const {data: forms = [], isLoading, error} = useQuery({
         queryKey: ['professor-pending-forms'],
         queryFn: professorAPI.getPendingThesisForms,
-        enabled: role === 'PROFESSOR' || role === 'MANAGER',
+        enabled: role === 'PROFESSOR' || role === 'MANAGER'
     });
 
     // Mutation for instructor approval (SUBMITTED → INSTRUCTOR_APPROVED)
@@ -50,12 +52,12 @@ const ProfessorFormsPage: React.FC = () => {
         },
         onError: (error: any) => {
             alert(error.response?.data?.message || 'Failed to approve form');
-        },
+        }
     });
 
     // Mutation for rejection (works for both SUBMITTED and ADMIN_APPROVED states)
     const rejectMutation = useMutation({
-        mutationFn: ({formId, rejectionReason}: { formId: number; rejectionReason: string }) =>
+        mutationFn: ({formId, rejectionReason}: { formId: number; rejectionReason: string; }) =>
             professorAPI.rejectThesisForm(formId, rejectionReason),
         onSuccess: () => {
             queryClient.invalidateQueries({queryKey: ['professor-pending-forms']});
@@ -65,12 +67,12 @@ const ProfessorFormsPage: React.FC = () => {
         },
         onError: (error: any) => {
             alert(error.response?.data?.message || 'Failed to reject form');
-        },
+        }
     });
 
     // Mutation for revision request
     const revisionMutation = useMutation({
-        mutationFn: ({formId, target, message}: { formId: number; target: RevisionTarget; message: string }) =>
+        mutationFn: ({formId, target, message}: { formId: number; target: RevisionTarget; message: string; }) =>
             professorAPI.requestRevision(formId, target, message),
         onSuccess: () => {
             queryClient.invalidateQueries({queryKey: ['professor-pending-forms']});
@@ -80,7 +82,7 @@ const ProfessorFormsPage: React.FC = () => {
         },
         onError: (error: any) => {
             alert(error.response?.data?.message || 'Failed to request revision');
-        },
+        }
     });
 
     // Mutation for submitting revision (instructor submits their revision)
@@ -94,12 +96,12 @@ const ProfessorFormsPage: React.FC = () => {
         },
         onError: (error: any) => {
             alert(error.response?.data?.message || 'Failed to submit revision');
-        },
+        }
     });
 
     // Mutation for manager creating meeting with juries (ADMIN_APPROVED → JURIES_SELECTED)
     const createMeetingMutation = useMutation({
-        mutationFn: ({formId, juryIds}: { formId: number; juryIds: number[] }) =>
+        mutationFn: ({formId, juryIds}: { formId: number; juryIds: number[]; }) =>
             professorAPI.createMeeting(formId, juryIds),
         onSuccess: () => {
             queryClient.invalidateQueries({queryKey: ['professor-pending-forms']});
@@ -109,7 +111,7 @@ const ProfessorFormsPage: React.FC = () => {
         },
         onError: (error: any) => {
             alert(error.response?.data?.message || 'Failed to create meeting');
-        },
+        }
     });
 
     const actionLoading =
@@ -130,7 +132,7 @@ const ProfessorFormsPage: React.FC = () => {
         if (formToReject) {
             rejectMutation.mutate({
                 formId: formToReject.id,
-                rejectionReason: reason,
+                rejectionReason: reason
             });
         }
     };
@@ -155,7 +157,7 @@ const ProfessorFormsPage: React.FC = () => {
             revisionMutation.mutate({
                 formId: formToRequestRevision.id,
                 target,
-                message,
+                message
             });
         }
     };
@@ -259,48 +261,48 @@ const ProfessorFormsPage: React.FC = () => {
         if (form.state === FormState.SUBMITTED && form.instructorId === userId) {
             return [
                 {
-                    label: 'Approve Form',
-                    loadingLabel: 'Approving...',
+                    label: t("approve_form"),
+                    loadingLabel: t("approving"),
                     className: 'btn-approve',
-                    onClick: () => approveMutation.mutate(form.id),
+                    onClick: () => approveMutation.mutate(form.id)
                 },
                 {
-                    label: 'Request Student Revision',
-                    loadingLabel: 'Requesting...',
+                    label: t("request_student_revision"),
+                    loadingLabel: t("requesting"),
                     className: 'btn-revision',
-                    onClick: () => handleRevisionClick(form),
+                    onClick: () => handleRevisionClick(form)
                 },
                 {
-                    label: 'Reject Form',
-                    loadingLabel: 'Rejecting...',
+                    label: t("reject_form"),
+                    loadingLabel: t("rejecting"),
                     className: 'btn-reject',
-                    onClick: () => handleRejectClick(form),
-                },
-            ];
+                    onClick: () => handleRejectClick(form)
+                }];
+
         }
 
         // Instructor revision requested states: Instructor can submit revision, forward to student, or reject
         if (isInstructorRevisionRequested(form.state) && role === 'PROFESSOR') {
             return [
                 {
-                    label: 'Submit Revision',
-                    loadingLabel: 'Submitting...',
+                    label: t("submit_revision"),
+                    loadingLabel: t("submitting"),
                     className: 'btn-approve',
-                    onClick: () => handleSubmitRevisionClick(form),
+                    onClick: () => handleSubmitRevisionClick(form)
                 },
                 {
-                    label: 'Request Student Revision',
-                    loadingLabel: 'Requesting...',
+                    label: t("request_student_revision"),
+                    loadingLabel: t("requesting"),
                     className: 'btn-revision',
-                    onClick: () => handleRevisionClick(form),
+                    onClick: () => handleRevisionClick(form)
                 },
                 {
-                    label: 'Reject Form',
-                    loadingLabel: 'Rejecting...',
+                    label: t("reject_form"),
+                    loadingLabel: t("rejecting"),
                     className: 'btn-reject',
-                    onClick: () => handleRejectClick(form),
-                },
-            ];
+                    onClick: () => handleRejectClick(form)
+                }];
+
         }
 
         // ADMIN_APPROVED state: Only manager can approve (with jury selection), request revision, or reject
@@ -308,24 +310,24 @@ const ProfessorFormsPage: React.FC = () => {
             if (role === 'MANAGER') {
                 return [
                     {
-                        label: 'Approve & Assign Juries',
-                        loadingLabel: 'Processing...',
+                        label: t("approve_assign_juries"),
+                        loadingLabel: t("processing"),
                         className: 'btn-approve',
-                        onClick: () => handleManagerApproveClick(form),
+                        onClick: () => handleManagerApproveClick(form)
                     },
                     {
-                        label: 'Request Revision',
-                        loadingLabel: 'Requesting...',
+                        label: t("request_revision"),
+                        loadingLabel: t("requesting"),
                         className: 'btn-revision',
-                        onClick: () => handleRevisionClick(form),
+                        onClick: () => handleRevisionClick(form)
                     },
                     {
-                        label: 'Reject Form',
-                        loadingLabel: 'Rejecting...',
+                        label: t("reject_form"),
+                        loadingLabel: t("rejecting"),
                         className: 'btn-reject',
-                        onClick: () => handleRejectClick(form),
-                    },
-                ];
+                        onClick: () => handleRejectClick(form)
+                    }];
+
             }
         }
 
@@ -352,8 +354,8 @@ const ProfessorFormsPage: React.FC = () => {
                 FormState.ADMIN_REJECTED,
                 FormState.MANAGER_APPROVED,
                 FormState.MANAGER_REVISION_REQUESTED_FOR_INSTRUCTOR,
-                FormState.MANAGER_REJECTED,
-            ];
+                FormState.MANAGER_REJECTED];
+
         }
         return undefined; // Manager sees all statuses
     };
@@ -367,11 +369,11 @@ const ProfessorFormsPage: React.FC = () => {
                 error={error as Error}
                 selectedForm={selectedForm}
                 onSelectForm={setSelectedForm}
-                emptyMessage="No thesis forms pending your review"
+                emptyMessage={t("no_thesis_forms_pending_your_review")}
                 getActionsForForm={getActionsForForm}
                 actionLoading={actionLoading}
-                availableStatuses={getAvailableStatuses()}
-            />
+                availableStatuses={getAvailableStatuses()}/>
+
 
             {/* Rejection Modal */}
             <RejectionModal
@@ -379,8 +381,8 @@ const ProfessorFormsPage: React.FC = () => {
                 onClose={handleRejectModalClose}
                 onConfirm={handleRejectConfirm}
                 thesisTitle={formToReject?.title || ''}
-                isLoading={rejectMutation.isPending}
-            />
+                isLoading={rejectMutation.isPending}/>
+
 
             {/* Revision Request Modal */}
             <RevisionRequestModal
@@ -389,8 +391,8 @@ const ProfessorFormsPage: React.FC = () => {
                 onConfirm={handleRevisionConfirm}
                 thesisTitle={formToRequestRevision?.title || ''}
                 availableTargets={formToRequestRevision ? getRevisionTargets(formToRequestRevision) : []}
-                isLoading={revisionMutation.isPending}
-            />
+                isLoading={revisionMutation.isPending}/>
+
 
             {/* Submit Revision Modal */}
             <SubmitRevisionModal
@@ -401,22 +403,22 @@ const ProfessorFormsPage: React.FC = () => {
                 revisionMessage={formToSubmitRevision?.revisionMessage || ''}
                 requestedBy={formToSubmitRevision ? getRevisionRequester(formToSubmitRevision.state) : ''}
                 requestedAt={formToSubmitRevision?.revisionRequestedAt}
-                isLoading={submitRevisionMutation.isPending}
-            />
+                isLoading={submitRevisionMutation.isPending}/>
+
 
             {/* Jury Selection Modal */}
-            {formToApproveWithJury && (
+            {formToApproveWithJury &&
                 <JurySelectionModal
                     isOpen={juryModalOpen}
                     onClose={handleJuryModalClose}
                     meetingId={0}
                     formId={formToApproveWithJury.id}
                     instructorId={formToApproveWithJury.instructorId}
-                    onJuriesSelected={handleJuriesSelected}
-                />
-            )}
-        </>
-    );
+                    onJuriesSelected={handleJuriesSelected}/>
+
+            }
+        </>);
+
 };
 
 export default ProfessorFormsPage;

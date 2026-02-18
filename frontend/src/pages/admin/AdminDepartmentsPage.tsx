@@ -13,11 +13,14 @@ import {
     Edit2,
     Trash2,
     AlertTriangle
-} from 'lucide-react';
+} from
+        'lucide-react';
 import {format} from 'date-fns';
 import {DepartmentSummary} from "../../types";
+import {useTranslation} from "react-i18next";
 
 export const AdminDepartmentsPage: React.FC = () => {
+    const {t} = useTranslation("admin");
     const queryClient = useQueryClient();
     const [searchTerm, setSearchTerm] = useState('');
 
@@ -31,7 +34,7 @@ export const AdminDepartmentsPage: React.FC = () => {
 
     const {data: departments, isLoading} = useQuery({
         queryKey: ['departments'],
-        queryFn: adminAPI.getAllDepartments,
+        queryFn: adminAPI.getAllDepartments
     });
 
     const createMutation = useMutation({
@@ -39,16 +42,16 @@ export const AdminDepartmentsPage: React.FC = () => {
         onSuccess: () => {
             queryClient.invalidateQueries({queryKey: ['departments']});
             closeFormModal();
-        },
+        }
     });
 
     const updateMutation = useMutation({
-        mutationFn: (data: { id: number; name: string }) =>
+        mutationFn: (data: { id: number; name: string; }) =>
             adminAPI.updateDepartment(data.id, {name: data.name}),
         onSuccess: () => {
             queryClient.invalidateQueries({queryKey: ['departments']});
             closeFormModal();
-        },
+        }
     });
 
     const deleteMutation = useMutation({
@@ -56,7 +59,7 @@ export const AdminDepartmentsPage: React.FC = () => {
         onSuccess: () => {
             queryClient.invalidateQueries({queryKey: ['departments']});
             closeDeleteModal();
-        },
+        }
     });
 
     // --- Handlers ---
@@ -110,8 +113,8 @@ export const AdminDepartmentsPage: React.FC = () => {
         return (
             <div className="flex justify-center items-center h-64">
                 <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
-            </div>
-        );
+            </div>);
+
     }
 
     return (
@@ -119,12 +122,12 @@ export const AdminDepartmentsPage: React.FC = () => {
             {/* Header */}
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div>
-                    <h1 className="text-2xl font-bold text-gray-900">Departments</h1>
-                    <p className="text-sm text-gray-600 mt-1">Manage university departments and faculties.</p>
+                    <h1 className="text-2xl font-bold text-gray-900">{t("departments")}</h1>
+                    <p className="text-sm text-gray-600 mt-1">{t("manage_university_departments_and_faculties")}</p>
                 </div>
                 <Button onClick={handleOpenCreate} className="flex items-center gap-2">
-                    <Plus className="h-4 w-4"/>
-                    Add Department
+                    <Plus className="h-4 w-4"/>{t("add_department")}
+
                 </Button>
             </div>
 
@@ -135,33 +138,33 @@ export const AdminDepartmentsPage: React.FC = () => {
                         <Search className="absolute left-3 top-2.5 h-5 w-5 text-gray-400"/>
                         <input
                             type="text"
-                            placeholder="Search departments..."
+                            placeholder={t("search_departments")}
                             className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:ring-primary-500 focus:border-primary-500 bg-white"
                             value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                        />
+                            onChange={(e) => setSearchTerm(e.target.value)}/>
+
                     </div>
                 </div>
 
-                {filteredDepartments.length === 0 ? (
+                {filteredDepartments.length === 0 ?
                     <div className="p-12 text-center">
                         <Building2 className="mx-auto h-12 w-12 text-gray-300"/>
-                        <h3 className="mt-2 text-sm font-medium text-gray-900">No departments found</h3>
+                        <h3 className="mt-2 text-sm font-medium text-gray-900">{t("no_departments_found")}</h3>
                         <p className="mt-1 text-sm text-gray-500">
                             {searchTerm ? 'Try adjusting your search terms.' : 'Get started by adding a new department.'}
                         </p>
-                    </div>
-                ) : (
+                    </div> :
+
                     <div className="overflow-x-auto">
                         <table className="min-w-full divide-y divide-gray-200">
                             <thead className="bg-gray-50">
                             <tr>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{t("name")}</th>
+                                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">{t("actions")}</th>
                             </tr>
                             </thead>
                             <tbody className="bg-white divide-y divide-gray-200">
-                            {filteredDepartments.map((dept: DepartmentSummary) => (
+                            {filteredDepartments.map((dept: DepartmentSummary) =>
                                 <tr key={dept.id} className="hover:bg-gray-50 transition-colors">
                                     <td className="px-6 py-4 whitespace-nowrap">
                                         <div className="flex items-center">
@@ -179,50 +182,50 @@ export const AdminDepartmentsPage: React.FC = () => {
                                             <button
                                                 onClick={() => handleOpenEdit(dept)}
                                                 className="p-2 text-blue-600 hover:bg-blue-50 rounded-full transition-colors"
-                                                title="Edit Department"
-                                            >
+                                                title={t("edit_department")}>
+
                                                 <Edit2 className="h-4 w-4"/>
                                             </button>
                                             <button
                                                 onClick={() => handleOpenDelete(dept)}
                                                 className="p-2 text-red-600 hover:bg-red-50 rounded-full transition-colors"
-                                                title="Delete Department"
-                                            >
+                                                title={t("delete_department")}>
+
                                                 <Trash2 className="h-4 w-4"/>
                                             </button>
                                         </div>
                                     </td>
                                 </tr>
-                            ))}
+                            )}
                             </tbody>
                         </table>
                     </div>
-                )}
+                }
             </Card>
 
             {/* Create/Edit Modal */}
             <Modal
                 isOpen={isFormModalOpen}
                 onClose={closeFormModal}
-                title={selectedDepartment ? "Edit Department" : "Add Department"}
-            >
+                title={selectedDepartment ? "Edit Department" : "Add Department"}>
+
                 <form onSubmit={handleSubmit} className="space-y-4">
                     <Input
-                        label="Department Name"
-                        placeholder="e.g. Computer Science"
+                        label={t("department_name")}
+                        placeholder={t("eg_computer_science")}
                         value={formData.name}
                         onChange={(e) => setFormData({...formData, name: e.target.value})}
                         required
-                        autoFocus
-                    />
+                        autoFocus/>
+
                     <div className="flex justify-end gap-3 mt-6">
-                        <Button type="button" variant="secondary" onClick={closeFormModal}>
-                            Cancel
+                        <Button type="button" variant="secondary" onClick={closeFormModal}>{t("cancel")}
+
                         </Button>
                         <Button
                             type="submit"
-                            isLoading={createMutation.isPending || updateMutation.isPending}
-                        >
+                            isLoading={createMutation.isPending || updateMutation.isPending}>
+
                             {selectedDepartment ? "Save Changes" : "Create Department"}
                         </Button>
                     </div>
@@ -233,34 +236,34 @@ export const AdminDepartmentsPage: React.FC = () => {
             <Modal
                 isOpen={isDeleteModalOpen}
                 onClose={closeDeleteModal}
-                title="Confirm Deletion"
-            >
+                title={t("confirm_deletion")}>
+
                 <div className="space-y-4">
                     <div className="bg-red-50 p-4 rounded-md flex items-start gap-3">
                         <AlertTriangle className="h-5 w-5 text-red-600 mt-0.5"/>
                         <div>
-                            <h4 className="text-sm font-medium text-red-800">Warning</h4>
-                            <p className="text-sm text-red-700 mt-1">
-                                Are you sure you want to delete <strong>{selectedDepartment?.name}</strong>?
-                                This action cannot be undone and might affect students assigned to this department.
+                            <h4 className="text-sm font-medium text-red-800">{t("warning")}</h4>
+                            <p className="text-sm text-red-700 mt-1">{t("are_you_sure_you_want_to_delete")}
+                                <strong>{selectedDepartment?.name}</strong>{t("_this_action_cannot_be_undone_and_might_affect_stu")}
+
                             </p>
                         </div>
                     </div>
                     <div className="flex justify-end gap-3 mt-6">
-                        <Button type="button" variant="secondary" onClick={closeDeleteModal}>
-                            Cancel
+                        <Button type="button" variant="secondary" onClick={closeDeleteModal}>{t("cancel")}
+
                         </Button>
                         <Button
                             type="button"
                             className="bg-red-600 hover:bg-red-700 text-white"
                             onClick={() => selectedDepartment && deleteMutation.mutate(selectedDepartment.id)}
-                            isLoading={deleteMutation.isPending}
-                        >
-                            Delete Department
+                            isLoading={deleteMutation.isPending}>{t("delete_department")}
+
+
                         </Button>
                     </div>
                 </div>
             </Modal>
-        </div>
-    );
+        </div>);
+
 };

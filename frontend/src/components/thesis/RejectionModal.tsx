@@ -2,6 +2,7 @@
 
 import React, {useState, useEffect} from 'react';
 import {X, AlertTriangle} from 'lucide-react';
+import {useTranslation} from "react-i18next";
 
 interface RejectionModalProps {
     isOpen: boolean;
@@ -16,8 +17,9 @@ export const RejectionModal: React.FC<RejectionModalProps> = ({
                                                                   onClose,
                                                                   onConfirm,
                                                                   thesisTitle,
-                                                                  isLoading = false,
+                                                                  isLoading = false
                                                               }) => {
+    const {t} = useTranslation("thesis");
     const [rejectionReason, setRejectionReason] = useState('');
     const [error, setError] = useState('');
 
@@ -83,30 +85,30 @@ export const RejectionModal: React.FC<RejectionModalProps> = ({
     return (
         <div
             className="fixed inset-0 z-50 flex items-center justify-center"
-            onClick={handleBackdropClick}
-        >
+            onClick={handleBackdropClick}>
+
             {/* Backdrop */}
             <div className="absolute inset-0 bg-black bg-opacity-50 transition-opacity"/>
 
             {/* Modal */}
             <div
                 className="relative bg-white rounded-lg shadow-xl w-full max-w-md mx-4 transform transition-all"
-                onClick={(e) => e.stopPropagation()}
-            >
+                onClick={(e) => e.stopPropagation()}>
+
                 {/* Header */}
                 <div className="flex items-center justify-between p-4 border-b border-gray-200">
                     <div className="flex items-center space-x-2">
                         <AlertTriangle className="h-5 w-5 text-red-500"/>
-                        <h3 className="text-lg font-semibold text-gray-900">
-                            Reject Thesis Form
+                        <h3 className="text-lg font-semibold text-gray-900">{t("reject_thesis_form")}
+
                         </h3>
                     </div>
                     <button
                         onClick={onClose}
                         disabled={isLoading}
                         className="p-1 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                        aria-label="Close modal"
-                    >
+                        aria-label={t("close_modal")}>
+
                         <X className="h-5 w-5"/>
                     </button>
                 </div>
@@ -116,8 +118,8 @@ export const RejectionModal: React.FC<RejectionModalProps> = ({
                     <div className="p-4 space-y-4">
                         {/* Thesis Title Display */}
                         <div className="bg-gray-50 rounded-lg p-3">
-                            <p className="text-sm text-gray-600">
-                                You are about to reject:
+                            <p className="text-sm text-gray-600">{t("you_are_about_to_reject")}
+
                             </p>
                             <p className="font-medium text-gray-900 mt-1">
                                 {thesisTitle}
@@ -128,9 +130,9 @@ export const RejectionModal: React.FC<RejectionModalProps> = ({
                         <div>
                             <label
                                 htmlFor="rejection-reason"
-                                className="block text-sm font-medium text-gray-700 mb-2"
-                            >
-                                Rejection Reason <span className="text-red-500">*</span>
+                                className="block text-sm font-medium text-gray-700 mb-2">{t("rejection_reason")}
+
+                                <span className="text-red-500">*</span>
                             </label>
                             <textarea
                                 id="rejection-reason"
@@ -139,23 +141,23 @@ export const RejectionModal: React.FC<RejectionModalProps> = ({
                                     setRejectionReason(e.target.value);
                                     if (error) setError('');
                                 }}
-                                placeholder="Please provide a detailed reason for rejection..."
+                                placeholder={t("please_provide_a_detailed_reason_for_rejection")}
                                 rows={4}
                                 disabled={isLoading}
                                 className={`w-full px-3 py-2 border rounded-lg resize-none transition-colors
                                     focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent
                                     disabled:bg-gray-100 disabled:cursor-not-allowed
                                     ${error ? 'border-red-300 bg-red-50' : 'border-gray-300'}`}
-                                autoFocus
-                            />
-                            {error && (
+                                autoFocus/>
+
+                            {error &&
                                 <p className="mt-1 text-sm text-red-600 flex items-center">
                                     <AlertTriangle className="h-4 w-4 mr-1"/>
                                     {error}
                                 </p>
-                            )}
-                            <p className="mt-1 text-xs text-gray-500">
-                                Minimum 10 characters required
+                            }
+                            <p className="mt-1 text-xs text-gray-500">{t("minimum_10_characters_required")}
+
                             </p>
                         </div>
                     </div>
@@ -167,16 +169,16 @@ export const RejectionModal: React.FC<RejectionModalProps> = ({
                             type="button"
                             onClick={onClose}
                             disabled={isLoading}
-                            className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                        >
-                            Cancel
+                            className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">{t("cancel")}
+
+
                         </button>
                         <button
                             type="submit"
                             disabled={isLoading || !rejectionReason.trim()}
-                            className="px-4 py-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
-                        >
-                            {isLoading ? (
+                            className="px-4 py-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center">
+
+                            {isLoading ?
                                 <>
                                     <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none"
                                          viewBox="0 0 24 24">
@@ -185,17 +187,18 @@ export const RejectionModal: React.FC<RejectionModalProps> = ({
                                         <path className="opacity-75" fill="currentColor"
                                               d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"/>
                                     </svg>
-                                    Rejecting...
-                                </>
-                            ) : (
+                                    {t("rejecting")}
+
+                                </> :
+
                                 'Reject Form'
-                            )}
+                            }
                         </button>
                     </div>
                 </form>
             </div>
-        </div>
-    );
+        </div>);
+
 };
 
 export default RejectionModal;

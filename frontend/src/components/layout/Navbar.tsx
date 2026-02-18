@@ -9,7 +9,7 @@ import {useTranslation} from 'react-i18next';
 export const Navbar: React.FC = () => {
     const navigate = useNavigate();
     const {clearAuth, role, firstName, lastName} = useAuthStore();
-    const {t, i18n} = useTranslation();
+    const {t, i18n} = useTranslation("common");
 
     const isRTL = i18n.language === 'fa';
 
@@ -31,15 +31,15 @@ export const Navbar: React.FC = () => {
     const getRoleName = () => {
         switch (role) {
             case 'ADMIN':
-                return t('roles.admin');
+                return t('admin');
             case 'PROFESSOR':
-                return t('roles.professor');
+                return t('professor');
             case 'MANAGER':
-                return t('roles.manager');
+                return t('manager');
             case 'STUDENT':
-                return t('roles.student');
+                return t('student_');
             default:
-                return t('roles.user');
+                return t('user');
         }
     };
 
@@ -63,7 +63,7 @@ export const Navbar: React.FC = () => {
                             // Title text itself respects the language direction
                             dir={isRTL ? 'rtl' : 'ltr'}
                         >
-                            {t('navbar.title')}
+                            {t('navbar-title')}
                         </h1>
                     </div>
 
@@ -80,7 +80,7 @@ export const Navbar: React.FC = () => {
                         >
                             <Globe className="h-4 w-4 flex-shrink-0"/>
                             <span className="flex-shrink-0">
-                                {isRTL ? 'فارسی' : 'English'}
+                                {isRTL ? 'پارسی' : 'English'}
                             </span>
                         </Button>
 
@@ -113,7 +113,7 @@ export const Navbar: React.FC = () => {
                             className="flex items-center gap-2"
                         >
                             <LogOut className="h-4 w-4 flex-shrink-0"/>
-                            <span>{t('navbar.logout')}</span>
+                            <span>{t('logout')}</span>
                         </Button>
                     </div>
                 </div>
