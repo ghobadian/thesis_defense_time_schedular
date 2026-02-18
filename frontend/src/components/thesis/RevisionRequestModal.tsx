@@ -3,7 +3,11 @@
 import React, {useState, useEffect} from 'react';
 import {RevisionTarget} from '../../types';
 import {X, AlertCircle, Send} from 'lucide-react';
-import './RevisionRequestModal.css';//TODO remove css files
+import './RevisionRequestModal.css'; //TODO remove css files
+import i18n from "i18next";
+import {useTranslation} from "react-i18next";
+
+const t = i18n.t.bind(i18n);
 
 interface Props {
     isOpen: boolean;
@@ -17,13 +21,13 @@ interface Props {
 const TARGET_LABELS: Record<RevisionTarget, string> = {
     [RevisionTarget.STUDENT]: 'Student',
     [RevisionTarget.INSTRUCTOR]: 'Instructor',
-    [RevisionTarget.ADMIN]: 'Admin',
+    [RevisionTarget.ADMIN]: 'Admin'
 };
 
 const TARGET_DESCRIPTIONS: Record<RevisionTarget, string> = {
-    [RevisionTarget.STUDENT]: 'Request the student to revise and resubmit the form content.',
-    [RevisionTarget.INSTRUCTOR]: 'Request the instructor to re-review and re-approve the form.',
-    [RevisionTarget.ADMIN]: 'Request the admin to re-review and re-approve the form.',
+    [RevisionTarget.STUDENT]: t("request_the_student_to_revise_and_resubmit_the_for"),
+    [RevisionTarget.INSTRUCTOR]: t("request_the_instructor_to_rereview_and_reapprove_t"),
+    [RevisionTarget.ADMIN]: t("request_the_admin_to_rereview_and_reapprove_the_fo")
 };
 
 export const RevisionRequestModal: React.FC<Props> = ({
@@ -32,8 +36,9 @@ export const RevisionRequestModal: React.FC<Props> = ({
                                                           onConfirm,
                                                           thesisTitle,
                                                           availableTargets,
-                                                          isLoading,
+                                                          isLoading
                                                       }) => {
+    const {t} = useTranslation("thesis");
     const [selectedTarget, setSelectedTarget] = useState<RevisionTarget | null>(null);
     const [message, setMessage] = useState('');
     const [error, setError] = useState<string | null>(null);
@@ -76,13 +81,13 @@ export const RevisionRequestModal: React.FC<Props> = ({
             <div className="modal-content revision-modal" onClick={(e) => e.stopPropagation()}>
                 {/* Header */}
                 <div className="modal-header">
-                    <h2>Request Revision</h2>
+                    <h2>{t("request_revision")}</h2>
                     <button
                         className="modal-close-btn"
                         onClick={onClose}
                         disabled={isLoading}
-                        aria-label="Close modal"
-                    >
+                        aria-label={t("close_modal")}>
+
                         <X size={20}/>
                     </button>
                 </div>
@@ -91,30 +96,30 @@ export const RevisionRequestModal: React.FC<Props> = ({
                 <form onSubmit={handleSubmit} className="modal-body">
                     {/* Thesis Title Display */}
                     <div className="thesis-title-display">
-                        <span className="label">Thesis:</span>
+                        <span className="label">{t("thesis")}</span>
                         <span className="title">{thesisTitle}</span>
                     </div>
 
                     {/* Target Selection */}
-                    {availableTargets.length > 1 && (
+                    {availableTargets.length > 1 &&
                         <div className="form-group">
-                            <label className="form-label">
-                                Who should make the revision? <span className="required">*</span>
+                            <label className="form-label">{t("who_should_make_the_revision")}
+                                <span className="required">*</span>
                             </label>
                             <div className="target-options">
-                                {availableTargets.map((target) => (
+                                {availableTargets.map((target) =>
                                     <label
                                         key={target}
-                                        className={`target-option ${selectedTarget === target ? 'selected' : ''}`}
-                                    >
+                                        className={`target-option ${selectedTarget === target ? 'selected' : ''}`}>
+
                                         <input
                                             type="radio"
                                             name="revisionTarget"
                                             value={target}
                                             checked={selectedTarget === target}
                                             onChange={() => setSelectedTarget(target)}
-                                            disabled={isLoading}
-                                        />
+                                            disabled={isLoading}/>
+
                                         <div className="target-content">
                                             <span className="target-label">{TARGET_LABELS[target]}</span>
                                             <span className="target-description">
@@ -122,53 +127,53 @@ export const RevisionRequestModal: React.FC<Props> = ({
                                             </span>
                                         </div>
                                     </label>
-                                ))}
+                                )}
                             </div>
                         </div>
-                    )}
+                    }
 
                     {/* Single target info display */}
-                    {availableTargets.length === 1 && selectedTarget && (
+                    {availableTargets.length === 1 && selectedTarget &&
                         <div className="single-target-info">
-                            <span className="label">Revision will be requested from:</span>
+                            <span className="label">{t("revision_will_be_requested_from")}</span>
                             <span className="target-badge">{TARGET_LABELS[selectedTarget]}</span>
                             <p className="target-description">{TARGET_DESCRIPTIONS[selectedTarget]}</p>
                         </div>
-                    )}
+                    }
 
                     {/* Revision Message */}
                     <div className="form-group">
-                        <label htmlFor="revisionMessage" className="form-label">
-                            Revision Message <span className="required">*</span>
+                        <label htmlFor="revisionMessage" className="form-label">{t("revision_message")}
+                            <span className="required">*</span>
                         </label>
                         <textarea
                             id="revisionMessage"
                             className="form-textarea"
-                            placeholder="Please describe what needs to be revised and why..."
+                            placeholder={t("please_describe_what_needs_to_be_revised_and_why")}
                             value={message}
                             onChange={(e) => setMessage(e.target.value)}
                             disabled={isLoading}
                             rows={5}
-                            maxLength={1000}
-                        />
+                            maxLength={1000}/>
+
                         <div className="textarea-footer">
                             <span className="char-count">
-                                {message.length}/1000 characters
-                            </span>{message.length > 0 && message.length < 10 && (
-                            <span className="min-chars-warning">
-                                    Minimum 10 characters required
-                                </span>
-                        )}
+                                {message.length}{t("1000_characters")}
+              </span>{message.length > 0 && message.length < 10 &&
+                            <span className="min-chars-warning">{t("minimum_10_characters_required")}
+
+              </span>
+                        }
                         </div>
                     </div>
 
                     {/* Error Display */}
-                    {error && (
+                    {error &&
                         <div className="error-message">
                             <AlertCircle size={16}/>
                             <span>{error}</span>
                         </div>
-                    )}
+                    }
 
                     {/* Actions */}
                     <div className="modal-actions">
@@ -176,30 +181,30 @@ export const RevisionRequestModal: React.FC<Props> = ({
                             type="button"
                             className="btn-cancel"
                             onClick={onClose}
-                            disabled={isLoading}
-                        >
-                            Cancel
+                            disabled={isLoading}>{t("cancel")}
+
+
                         </button>
                         <button
                             type="submit"
                             className="btn-submit btn-revision"
-                            disabled={isLoading || !selectedTarget || message.trim().length < 10}
-                        >
-                            {isLoading ? (
+                            disabled={isLoading || !selectedTarget || message.trim().length < 10}>
+
+                            {isLoading ?
                                 <>
-                                    <span className="spinner"/>
-                                    Requesting...
-                                </>
-                            ) : (
+                                    <span className="spinner"/>{t("requesting")}
+
+                                </> :
+
                                 <>
-                                    <Send size={16}/>
-                                    Request Revision
+                                    <Send size={16}/>{t("request_revision")}
+
                                 </>
-                            )}
+                            }
                         </button>
                     </div>
                 </form>
             </div>
-        </div>
-    );
+        </div>);
+
 };

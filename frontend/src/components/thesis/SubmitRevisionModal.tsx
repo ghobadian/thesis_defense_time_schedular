@@ -2,7 +2,8 @@
 
 import React from 'react';
 import {X, CheckCircle, MessageSquare, Clock, User} from 'lucide-react';
-import './SubmitRevisionModal.css';//TODO remove css files
+import './SubmitRevisionModal.css'; //TODO remove css files
+import {useTranslation} from "react-i18next";
 
 interface Props {
     isOpen: boolean;
@@ -23,8 +24,9 @@ export const SubmitRevisionModal: React.FC<Props> = ({
                                                          revisionMessage,
                                                          requestedBy,
                                                          requestedAt,
-                                                         isLoading,
+                                                         isLoading
                                                      }) => {
+    const {t} = useTranslation("thesis");
     if (!isOpen) return null;
 
     const formatDate = (dateString?: string) => {
@@ -35,7 +37,7 @@ export const SubmitRevisionModal: React.FC<Props> = ({
                 month: 'short',
                 day: 'numeric',
                 hour: '2-digit',
-                minute: '2-digit',
+                minute: '2-digit'
             });
         } catch {
             return dateString;
@@ -47,13 +49,13 @@ export const SubmitRevisionModal: React.FC<Props> = ({
             <div className="modal-content submit-revision-modal" onClick={(e) => e.stopPropagation()}>
                 {/* Header */}
                 <div className="modal-header">
-                    <h2>Submit Revision</h2>
+                    <h2>{t("submit_revision")}</h2>
                     <button
                         className="modal-close-btn"
                         onClick={onClose}
                         disabled={isLoading}
-                        aria-label="Close modal"
-                    >
+                        aria-label={t("close_modal")}>
+
                         <X size={20}/>
                     </button>
                 </div>
@@ -62,7 +64,7 @@ export const SubmitRevisionModal: React.FC<Props> = ({
                 <div className="modal-body">
                     {/* Thesis Title Display */}
                     <div className="thesis-title-display">
-                        <span className="label">Thesis:</span>
+                        <span className="label">{t("thesis")}</span>
                         <span className="title">{thesisTitle}</span>
                     </div>
 
@@ -70,26 +72,26 @@ export const SubmitRevisionModal: React.FC<Props> = ({
                     <div className="revision-info-card">
                         <div className="revision-info-header">
                             <MessageSquare size={18}/>
-                            <span>Revision Request Details</span>
+                            <span>{t("revision_request_details")}</span>
                         </div>
 
                         <div className="revision-meta">
                             <div className="meta-item">
                                 <User size={14}/>
-                                <span className="meta-label">Requested by:</span>
+                                <span className="meta-label">{t("requested_by")}</span>
                                 <span className="meta-value">{requestedBy}</span>
                             </div>
-                            {requestedAt && (
+                            {requestedAt &&
                                 <div className="meta-item">
                                     <Clock size={14}/>
-                                    <span className="meta-label">Requested at:</span>
+                                    <span className="meta-label">{t("requested_at")}</span>
                                     <span className="meta-value">{formatDate(requestedAt)}</span>
                                 </div>
-                            )}
+                            }
                         </div>
 
                         <div className="revision-message-box">
-                            <span className="message-label">Message:</span>
+                            <span className="message-label">{t("message")}</span>
                             <p className="message-content">
                                 {revisionMessage || 'No specific message provided.'}
                             </p>
@@ -100,10 +102,10 @@ export const SubmitRevisionModal: React.FC<Props> = ({
                     <div className="confirmation-notice">
                         <CheckCircle size={18}/>
                         <div className="notice-content">
-                            <strong>Ready to submit your revision?</strong>
-                            <p>
-                                By clicking "Submit Revision", you confirm that you have addressed
-                                the requested changes. The form will be sent back for re-approval.
+                            <strong>{t("ready_to_submit_your_revision")}</strong>
+                            <p>{t("by_clicking_submit_revision_you_confirm_that_you_h")}
+
+
                             </p>
                         </div>
                     </div>
@@ -114,31 +116,31 @@ export const SubmitRevisionModal: React.FC<Props> = ({
                             type="button"
                             className="btn-cancel"
                             onClick={onClose}
-                            disabled={isLoading}
-                        >
-                            Cancel
+                            disabled={isLoading}>{t("cancel")}
+
+
                         </button>
                         <button
                             type="button"
                             className="btn-submit btn-approve"
                             onClick={onConfirm}
-                            disabled={isLoading}
-                        >
-                            {isLoading ? (
+                            disabled={isLoading}>
+
+                            {isLoading ?
                                 <>
-                                    <span className="spinner"/>
-                                    Submitting...
-                                </>
-                            ) : (
+                                    <span className="spinner"/>{t("submitting")}
+
+                                </> :
+
                                 <>
-                                    <CheckCircle size={16}/>
-                                    Submit Revision
+                                    <CheckCircle size={16}/>{t("submit_revision")}
+
                                 </>
-                            )}
+                            }
                         </button>
                     </div>
                 </div>
             </div>
-        </div>
-    );
+        </div>);
+
 };

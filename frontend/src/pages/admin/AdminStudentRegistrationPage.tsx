@@ -5,6 +5,7 @@ import {Button} from '../../components/common/Button';
 import {Input} from '../../components/common/Input';
 import {adminAPI} from '../../api/admin.api';
 import {Field, Professor, StudentType} from '../../types';
+import {useTranslation} from "react-i18next";
 
 interface ValidationErrors {
     email?: string;
@@ -66,10 +67,11 @@ const validators = {
     instructorId: (value: string): string | undefined => {
         if (!value) return 'Instructor is required';
         return undefined;
-    },
+    }
 };
 
 export const AdminStudentRegistrationPage: React.FC = () => {
+    const {t} = useTranslation("admin");
     const queryClient = useQueryClient();
     const [formData, setFormData] = useState({
         email: '',
@@ -81,24 +83,24 @@ export const AdminStudentRegistrationPage: React.FC = () => {
         studentType: StudentType.BACHELOR,
         departmentId: '',
         fieldId: '',
-        instructorId: '',
+        instructorId: ''
     });
     const [errors, setErrors] = useState<ValidationErrors>({});
     const [touched, setTouched] = useState<Record<string, boolean>>({});
 
     const {data: departments} = useQuery({
         queryKey: ['departments'],
-        queryFn: adminAPI.getAllDepartments,
+        queryFn: adminAPI.getAllDepartments
     });
 
     const {data: fields} = useQuery({
         queryKey: ['fields'],
-        queryFn: adminAPI.getAllFields,
+        queryFn: adminAPI.getAllFields
     });
 
     const {data: professors} = useQuery({
         queryKey: ['professors'],
-        queryFn: adminAPI.getAllProfessors,
+        queryFn: adminAPI.getAllProfessors
     });
 
     const registerMutation = useMutation({
@@ -116,14 +118,14 @@ export const AdminStudentRegistrationPage: React.FC = () => {
                 studentType: StudentType.BACHELOR,
                 departmentId: '',
                 fieldId: '',
-                instructorId: '',
+                instructorId: ''
             });
-            setErrors({});    // Add this
-            setTouched({});   // Add this
+            setErrors({}); // Add this
+            setTouched({}); // Add this
         },
         onError: (error: any) => {
             alert(error.response?.data?.message || 'Failed to register student');
-        },
+        }
     });
 
     // Validate single field
@@ -132,7 +134,7 @@ export const AdminStudentRegistrationPage: React.FC = () => {
         return validator ? validator(value) : undefined;
     };
 
-// Validate all fields
+    // Validate all fields
     const validateForm = (): ValidationErrors => {
         const newErrors: ValidationErrors = {};
         (Object.keys(validators) as Array<keyof ValidationErrors>).forEach((key) => {
@@ -142,19 +144,19 @@ export const AdminStudentRegistrationPage: React.FC = () => {
         return newErrors;
     };
 
-// Handle blur - mark touched and validate
+    // Handle blur - mark touched and validate
     const handleBlur = (name: keyof ValidationErrors) => {
-        setTouched(prev => ({...prev, [name]: true}));
+        setTouched((prev) => ({...prev, [name]: true}));
         const error = validateField(name, formData[name]);
-        setErrors(prev => ({...prev, [name]: error}));
+        setErrors((prev) => ({...prev, [name]: error}));
     };
 
-// Handle change with validation
+    // Handle change with validation
     const handleChange = (name: keyof typeof formData, value: string) => {
-        setFormData(prev => ({...prev, [name]: value}));
+        setFormData((prev) => ({...prev, [name]: value}));
         if (touched[name]) {
             const error = validateField(name as keyof ValidationErrors, value);
-            setErrors(prev => ({...prev, [name]: error}));
+            setErrors((prev) => ({...prev, [name]: error}));
         }
     };
 
@@ -182,154 +184,154 @@ export const AdminStudentRegistrationPage: React.FC = () => {
             studentNumber: parseInt(formData.studentNumber),
             departmentId: parseInt(formData.departmentId),
             fieldId: parseInt(formData.fieldId),
-            instructorId: parseInt(formData.instructorId),
+            instructorId: parseInt(formData.instructorId)
         }]);
     };
 
-    const ErrorMessage = ({error}: { error?: string }) => (
-        error ? <p className="mt-1 text-sm text-red-600">{error}</p> : null
-    );
+    const ErrorMessage = ({error}: { error?: string; }) =>
+        error ? <p className="mt-1 text-sm text-red-600">{error}</p> : null;
+
 
     return (
-        <Card title="Register New Student">
+        <Card title={t("register_new_student")}>
             <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                     <Input
-                        label="First Name"
+                        label={t("first_name_1")}
                         value={formData.firstName}
                         onChange={(e) => handleChange('firstName', e.target.value)}
                         onBlur={() => handleBlur('firstName')}
-                        required
-                    />
+                        required/>
+
                     {touched.firstName && <ErrorMessage error={errors.firstName}/>}
                     <Input
-                        label="Last Name"
+                        label={t("last_name_1")}
                         value={formData.lastName}
                         onChange={(e) => handleChange('lastName', e.target.value)}
                         onBlur={() => handleBlur('lastName')}
-                        required
-                    />
+                        required/>
+
                     {touched.lastName && <ErrorMessage error={errors.lastName}/>}
 
                 </div>
 
                 <Input
-                    label="Email"
+                    label={t("email_1")}
                     type="email"
                     value={formData.email}
                     onChange={(e) => handleChange('email', e.target.value)}
                     onBlur={() => handleBlur('email')}
-                    required
-                />
+                    required/>
+
                 {touched.email && <ErrorMessage error={errors.email}/>}
 
 
                 <Input
-                    label="Phone Number"
+                    label={t("phone_number_1")}
                     value={formData.phoneNumber}
                     onChange={(e) => handleChange('phoneNumber', e.target.value)}
                     onBlur={() => handleBlur('phoneNumber')}
-                    required
-                />
+                    required/>
+
                 {touched.phoneNumber && <ErrorMessage error={errors.phoneNumber}/>}
 
                 <Input
-                    label="Password"
+                    label={t("password_1")}
                     type="password"
                     value={formData.password}
                     onChange={(e) => handleChange('password', e.target.value)}
                     onBlur={() => handleBlur('password')}
-                    required
-                />
+                    required/>
+
                 {touched.password && <ErrorMessage error={errors.password}/>}
 
                 <Input
-                    label="Student Number"
+                    label={t("student_number")}
                     type="text"
                     value={formData.studentNumber}
                     onChange={(e) => handleChange('studentNumber', e.target.value)}
                     onBlur={() => handleBlur('studentNumber')}
-                    required
-                />
+                    required/>
+
                 {touched.studentNumber && <ErrorMessage error={errors.studentNumber}/>}
 
                 <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Student Type
+                    <label className="block text-sm font-medium text-gray-700 mb-1">{t("student_type")}
+
                     </label>
                     <select
                         value={formData.studentType}
                         onChange={(e) => setFormData({...formData, studentType: e.target.value as StudentType})}
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg"
-                        required
-                    >
-                        <option value={StudentType.BACHELOR}>Bachelor</option>
-                        <option value={StudentType.MASTER}>Master</option>
-                        <option value={StudentType.PHD}>PhD</option>
+                        required>
+
+                        <option value={StudentType.BACHELOR}>{t("bachelor")}</option>
+                        <option value={StudentType.MASTER}>{t("master")}</option>
+                        <option value={StudentType.PHD}>{t("phd")}</option>
                     </select>
                 </div>
 
                 <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Department
+                    <label className="block text-sm font-medium text-gray-700 mb-1">{t("department")}
+
                     </label>
                     <select
                         value={formData.departmentId}
                         onChange={(e) => setFormData({...formData, departmentId: e.target.value})}
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg"
-                        required
-                    >
-                        <option value="">Select Department</option>
-                        {departments?.map((dept: any) => (
+                        required>
+
+                        <option value="">{t("select_department")}</option>
+                        {departments?.map((dept: any) =>
                             <option key={dept.id} value={dept.id}>
                                 {dept.name}
                             </option>
-                        ))}
+                        )}
                     </select>
                 </div>
 
                 <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Field
+                    <label className="block text-sm font-medium text-gray-700 mb-1">{t("field")}
+
                     </label>
                     <select
                         value={formData.fieldId}
                         onChange={(e) => setFormData({...formData, fieldId: e.target.value})}
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg"
-                        required
-                    >
-                        <option value="">Select Field</option>
-                        {fields?.map((field: Field) => (
+                        required>
+
+                        <option value="">{t("select_field")}</option>
+                        {fields?.map((field: Field) =>
                             <option key={field.id} value={field.id}>
                                 {field.name}
                             </option>
-                        ))}
+                        )}
                     </select>
                 </div>
 
                 <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Instructor
+                    <label className="block text-sm font-medium text-gray-700 mb-1">{t("instructor")}
+
                     </label>
                     <select
                         value={formData.instructorId}
                         onChange={(e) => setFormData({...formData, instructorId: e.target.value})}
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg"
-                        required
-                    >
-                        <option value="">Select Instructor</option>
-                        {professors?.map((prof: Professor) => (
+                        required>
+
+                        <option value="">{t("select_instructor")}</option>
+                        {professors?.map((prof: Professor) =>
                             <option key={prof.id} value={prof.id}>
                                 {prof.firstName} {prof.lastName}
                             </option>
-                        ))}
+                        )}
                     </select>
                 </div>
 
-                <Button type="submit" isLoading={registerMutation.isPending} className="w-full">
-                    Register Student
+                <Button type="submit" isLoading={registerMutation.isPending} className="w-full">{t("register_student")}
+
                 </Button>
             </form>
-        </Card>
-    );
+        </Card>);
+
 };

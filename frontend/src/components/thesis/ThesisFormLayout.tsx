@@ -7,6 +7,8 @@ import {ActionButton, ThesisFormDetails} from './ThesisFormDetails';
 import {Calendar, Filter, Search, SortAsc, SortDesc, X} from 'lucide-react';
 
 // Sort options type
+import {useTranslation} from "react-i18next";
+
 type SortField = 'createdAt' | 'title' | 'studentName' | 'state';
 type SortDirection = 'asc' | 'desc';
 
@@ -50,8 +52,8 @@ const DEFAULT_STATUSES: FormState[] = [
     FormState.MANAGER_REVISION_REQUESTED_FOR_STUDENT,
     FormState.MANAGER_REVISION_REQUESTED_FOR_INSTRUCTOR,
     FormState.MANAGER_REVISION_REQUESTED_FOR_ADMIN,
-    FormState.MANAGER_REJECTED
-];
+    FormState.MANAGER_REJECTED];
+
 
 export const ThesisFormsLayout: React.FC<Props> = ({
                                                        title,
@@ -65,20 +67,21 @@ export const ThesisFormsLayout: React.FC<Props> = ({
                                                        actionLoading,
                                                        onRetry,
                                                        children,
-                                                       availableStatuses = DEFAULT_STATUSES,
+                                                       availableStatuses = DEFAULT_STATUSES
                                                    }) => {
+    const {t} = useTranslation("thesis");
     // Filter state
     const [filters, setFilters] = useState<FilterOptions>({
         searchTerm: '',
         statusFilter: 'ALL',
         dateFrom: '',
-        dateTo: '',
+        dateTo: ''
     });
 
     // Sort state
     const [sortOption, setSortOption] = useState<SortOption>({
         field: 'createdAt',
-        direction: 'desc',
+        direction: 'desc'
     });
 
     // Show/hide advanced filters
@@ -92,10 +95,7 @@ export const ThesisFormsLayout: React.FC<Props> = ({
     // Helper function to format status label
     const formatStatusLabel = (status: FormState | 'ALL'): string => {
         if (status === 'ALL') return 'All Statuses';
-        return status
-            .replace(/_/g, ' ')
-            .toLowerCase()
-            .replace(/\b\w/g, (char) => char.toUpperCase());
+        return status.replace(/_/g, ' ').toLowerCase().replace(/\b\w/g, (char) => char.toUpperCase());
     };
 
     // Filter and sort forms
@@ -173,7 +173,7 @@ export const ThesisFormsLayout: React.FC<Props> = ({
             searchTerm: '',
             statusFilter: 'ALL',
             dateFrom: '',
-            dateTo: '',
+            dateTo: ''
         });
     };
 
@@ -188,29 +188,29 @@ export const ThesisFormsLayout: React.FC<Props> = ({
     const handleSortChange = (field: SortField) => {
         setSortOption((prev) => ({
             field,
-            direction: prev.field === field && prev.direction === 'asc' ? 'desc' : 'asc',
+            direction: prev.field === field && prev.direction === 'asc' ? 'desc' : 'asc'
         }));
     };
 
     if (isLoading) {
         return (
             <div className="thesis-forms-container">
-                <div className="loading-spinner">Loading thesis forms...</div>
-            </div>
-        );
+                <div className="loading-spinner">{t("loading_thesis_forms")}</div>
+            </div>);
+
     }
 
     if (error) {
         return (
             <div className="thesis-forms-container">
                 <div className="error-message">{error.message || 'Failed to fetch forms'}</div>
-                {onRetry && (
-                    <button onClick={onRetry} className="btn-retry">
-                        Retry
+                {onRetry &&
+                    <button onClick={onRetry} className="btn-retry">{t("retry")}
+
                     </button>
-                )}
-            </div>
-        );
+                }
+            </div>);
+
     }
 
     return (
@@ -222,11 +222,11 @@ export const ThesisFormsLayout: React.FC<Props> = ({
                     <span className="stat-badge">
                         {forms.length} form{forms.length !== 1 ? 's' : ''} total
                     </span>
-                    {filteredAndSortedForms.length !== forms.length && (
+                    {filteredAndSortedForms.length !== forms.length &&
                         <span className="stat-badge stat-badge-filtered">
                             {filteredAndSortedForms.length} showing
                         </span>
-                    )}
+                    }
                 </div>
             </div>
 
@@ -238,30 +238,30 @@ export const ThesisFormsLayout: React.FC<Props> = ({
                         <Search className="search-icon" size={20}/>
                         <input
                             type="text"
-                            placeholder="Search by title, student name, or ID..."
+                            placeholder={t("search_by_title_student_name_or_id")}
                             value={filters.searchTerm}
                             onChange={(e) =>
                                 setFilters((prev) => ({...prev, searchTerm: e.target.value}))
                             }
-                            className="search-input"
-                        />
-                        {filters.searchTerm && (
+                            className="search-input"/>
+
+                        {filters.searchTerm &&
                             <button
                                 onClick={() => setFilters((prev) => ({...prev, searchTerm: ''}))}
-                                className="clear-search-btn"
-                            >
+                                className="clear-search-btn">
+
                                 <X size={16}/>
                             </button>
-                        )}
+                        }
                     </div>
 
                     {/* Advanced Filters Toggle */}
                     <button
                         onClick={() => setShowAdvancedFilters(!showAdvancedFilters)}
-                        className={`btn-advanced-filters ${showAdvancedFilters ? 'active' : ''}`}
-                    >
+                        className={`btn-advanced-filters ${showAdvancedFilters ? 'active' : ''}`}>
+
                         <Filter size={18}/>
-                        <span>Filters</span>
+                        <span>{t("filters")}</span>
                         {hasActiveFilters && <span className="filter-indicator"/>}
                     </button>
                 </div>
@@ -270,30 +270,30 @@ export const ThesisFormsLayout: React.FC<Props> = ({
                 <div className="status-filters">
                     <button
                         onClick={() => setFilters((prev) => ({...prev, statusFilter: 'ALL'}))}
-                        className={`status-pill ${filters.statusFilter === 'ALL' ? 'active' : ''}`}
-                    >
-                        All
+                        className={`status-pill ${filters.statusFilter === 'ALL' ? 'active' : ''}`}>{t("all")}
+
+
                         <span className="status-count">{statusCounts['ALL'] || 0}</span>
                     </button>
-                    {availableStatuses.map((status) => (
+                    {availableStatuses.map((status) =>
                         <button
                             key={status}
                             onClick={() => setFilters((prev) => ({...prev, statusFilter: status}))}
-                            className={`status-pill ${filters.statusFilter === status ? 'active' : ''} status-${status.toLowerCase()}`}
-                        >
+                            className={`status-pill ${filters.statusFilter === status ? 'active' : ''} status-${status.toLowerCase()}`}>
+
                             {formatStatusLabel(status)}
                             <span className="status-count">{statusCounts[status] || 0}</span>
                         </button>
-                    ))}
+                    )}
                 </div>
 
                 {/* Advanced Filters Panel */}
-                {showAdvancedFilters && (
+                {showAdvancedFilters &&
                     <div className="advanced-filters-panel">
                         <div className="filter-group">
                             <label>
-                                <Calendar size={16}/>
-                                Date Range
+                                <Calendar size={16}/>{t("date_range")}
+
                             </label>
                             <div className="date-range-inputs">
                                 <input
@@ -303,8 +303,8 @@ export const ThesisFormsLayout: React.FC<Props> = ({
                                         setFilters((prev) => ({...prev, dateFrom: e.target.value}))
                                     }
                                     className="date-input"
-                                    placeholder="From"
-                                />
+                                    placeholder={t("from")}/>
+
                                 <span className="date-separator">to</span>
                                 <input
                                     type="date"
@@ -313,88 +313,86 @@ export const ThesisFormsLayout: React.FC<Props> = ({
                                         setFilters((prev) => ({...prev, dateTo: e.target.value}))
                                     }
                                     className="date-input"
-                                    placeholder="To"
-                                />
+                                    placeholder={t("to")}/>
+
                             </div>
                         </div>
 
-                        {hasActiveFilters && (
+                        {hasActiveFilters &&
                             <button onClick={clearFilters} className="btn-clear-filters">
-                                <X size={16}/>
-                                Clear All Filters
+                                <X size={16}/>{t("clear_all_filters")}
+
                             </button>
-                        )}
+                        }
                     </div>
-                )}
+                }
 
                 {/* Sort Controls */}
                 <div className="sort-controls">
-                    <span className="sort-label">Sort by:</span>
+                    <span className="sort-label">{t("sort_by")}</span>
                     <div className="sort-buttons">
                         {[
-                            {field: 'createdAt' as SortField, label: 'Date'},
-                            {field: 'title' as SortField, label: 'Title'},
-                            {field: 'studentName' as SortField, label: 'Student'},
-                            {field: 'state' as SortField, label: 'Status'},
-                        ].map(({field, label}) => (
+                            {field: 'createdAt' as SortField, label: t("date")},
+                            {field: 'title' as SortField, label: t("title")},
+                            {field: 'studentName' as SortField, label: t("student_1")},
+                            {field: 'state' as SortField, label: t("status")}].map(({field, label}) =>
                             <button
                                 key={field}
                                 onClick={() => handleSortChange(field)}
-                                className={`sort-btn ${sortOption.field === field ? 'active' : ''}`}
-                            >
+                                className={`sort-btn ${sortOption.field === field ? 'active' : ''}`}>
+
                                 {label}
-                                {sortOption.field === field &&
-                                    (sortOption.direction === 'asc' ? (
-                                        <SortAsc size={14}/>
-                                    ) : (
-                                        <SortDesc size={14}/>
-                                    ))}
+                                {sortOption.field === field && (
+                                    sortOption.direction === 'asc' ?
+                                        <SortAsc size={14}/> :
+
+                                        <SortDesc size={14}/>)
+                                }
                             </button>
-                        ))}
+                        )}
                     </div>
                 </div>
             </div>
 
             {/* Forms List */}
-            {filteredAndSortedForms.length === 0 ? (
+            {filteredAndSortedForms.length === 0 ?
                 <div className="empty-state">
-                    {hasActiveFilters ? (
+                    {hasActiveFilters ?
                         <>
-                            <p>No forms match your current filters.</p>
-                            <button onClick={clearFilters} className="btn-clear-filters-empty">
-                                Clear Filters
+                            <p>{t("no_forms_match_your_current_filters")}</p>
+                            <button onClick={clearFilters} className="btn-clear-filters-empty">{t("clear_filters")}
+
                             </button>
-                        </>
-                    ) : (
+                        </> :
+
                         <p>{emptyMessage}</p>
-                    )}
-                </div>
-            ) : (
+                    }
+                </div> :
+
                 <div className="forms-layout">
                     <div className="forms-list">
-                        {filteredAndSortedForms.map((form) => (
+                        {filteredAndSortedForms.map((form) =>
                             <ThesisFormCard
                                 key={form.id}
                                 form={form}
                                 selected={selectedForm?.id === form.id}
-                                onSelect={() => onSelectForm(form)}
-                            />
-                        ))}
+                                onSelect={() => onSelectForm(form)}/>
+                        )}
                     </div>
 
-                    {selectedForm && (
+                    {selectedForm &&
                         <ThesisFormDetails
                             form={selectedForm}
                             onClose={() => onSelectForm(null)}
                             actions={getActionsForForm(selectedForm)}
-                            actionLoading={actionLoading}
-                        />
-                    )}
+                            actionLoading={actionLoading}/>
+
+                    }
                 </div>
-            )}
+            }
 
             {/* Slot for modals */}
             {children}
-        </div>
-    );
+        </div>);
+
 };

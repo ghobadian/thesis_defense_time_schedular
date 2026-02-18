@@ -7,7 +7,9 @@ import {
     getFullName,
     getStatusBadgeClass,
     getStatusLabel
-} from '../utils/ThesisFormUtils';
+} from
+        '../utils/ThesisFormUtils';
+import {useTranslation} from "react-i18next";
 
 interface Props {
     form: ThesisForm;
@@ -15,8 +17,10 @@ interface Props {
     onSelect: () => void;
 }
 
-export const ThesisFormCard: React.FC<Props> = ({form, selected, onSelect}) => (
-    <div className={`form-card ${selected ? 'selected' : ''}`} onClick={onSelect}>
+export const ThesisFormCard: React.FC<Props> = ({form, selected, onSelect}) =>
+{
+    const {t} = useTranslation("thesis");
+    return (<div className={`form-card ${selected ? 'selected' : ''}`} onClick={onSelect}>
         <div className="form-card-header">
             <h3>{form.title}</h3>
             <span className={`form-badge ${getStatusBadgeClass(form.state)}`}>
@@ -28,9 +32,9 @@ export const ThesisFormCard: React.FC<Props> = ({form, selected, onSelect}) => (
                 {form.abstractText.substring(0, 150)}...
             </p>
             <div className="form-meta">
-                <span>Student: {getFullName(form.studentFirstName, form.studentLastName)}</span>
-                <span>Submitted: {formatDate(form.createdAt)}</span>
+                <span>{t("student")}{getFullName(form.studentFirstName, form.studentLastName)}</span>
+                <span>{t("submitted")}{formatDate(form.createdAt)}</span>
             </div>
         </div>
-    </div>
-);
+    </div>)
+};

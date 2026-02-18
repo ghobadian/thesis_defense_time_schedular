@@ -9,122 +9,121 @@ import {Link} from 'react-router-dom';
 import {FileText, Clock, CheckCircle, XCircle, AlertCircle, Edit3, Send, ChevronDown, ChevronUp} from 'lucide-react';
 import {EditFormModal} from '../../components/thesis/EditFormModal';
 import {SubmitRevisionModal} from '../../components/thesis/SubmitRevisionModal';
-import {t} from "i18next";
+import {useTranslation} from "react-i18next";
 
-// Helper function to get status info
-const getStatusInfo = (state: FormState) => {
+const getStatusInfo = (state: FormState, t: (key: string) => string) => {
     const statusMap: Record<FormState, {
         label: string;
         bgColor: string;
         textColor: string;
         borderColor: string;
         icon: React.ReactNode;
-        description: string
+        description: string;
     }> = {
         [FormState.SUBMITTED]: {
-            label: 'Submitted',
+            label: t("submitted"),
             bgColor: 'bg-blue-50',
             textColor: 'text-blue-700',
             borderColor: 'border-blue-200',
             icon: <Clock size={16}/>,
-            description: 'Waiting for instructor review',
+            description: t("waiting_for_instructor_review")
         },
         [FormState.INSTRUCTOR_APPROVED]: {
-            label: 'Instructor Approved',
+            label: t("instructor_approved"),
             bgColor: 'bg-green-50',
             textColor: 'text-green-700',
             borderColor: 'border-green-200',
             icon: <CheckCircle size={16}/>,
-            description: 'Approved by instructor, waiting for admin review',
+            description: t("approved_by_instructor_waiting_for_admin_review")
         },
         [FormState.INSTRUCTOR_REJECTED]: {
-            label: 'Instructor Rejected',
+            label: t("instructor_rejected"),
             bgColor: 'bg-red-50',
             textColor: 'text-red-700',
             borderColor: 'border-red-200',
             icon: <XCircle size={16}/>,
-            description: 'Rejected by instructor',
+            description: t("rejected_by_instructor")
         },
         [FormState.INSTRUCTOR_REVISION_REQUESTED]: {
-            label: 'Revision Requested',
+            label: t("revision_requested"),
             bgColor: 'bg-amber-50',
             textColor: 'text-amber-700',
             borderColor: 'border-amber-200',
             icon: <AlertCircle size={16}/>,
-            description: 'Instructor requested changes to your form',
+            description: t("instructor_requested_changes_to_your_form")
         },
         [FormState.ADMIN_APPROVED]: {
-            label: 'Admin Approved',
+            label: t("admin_approved"),
             bgColor: 'bg-green-50',
             textColor: 'text-green-700',
             borderColor: 'border-green-200',
             icon: <CheckCircle size={16}/>,
-            description: 'Approved by admin, waiting for manager review',
+            description: t("approved_by_admin_waiting_for_manager_review")
         },
         [FormState.ADMIN_REJECTED]: {
-            label: 'Admin Rejected',
+            label: t("admin_rejected"),
             bgColor: 'bg-red-50',
             textColor: 'text-red-700',
             borderColor: 'border-red-200',
             icon: <XCircle size={16}/>,
-            description: 'Rejected by admin',
+            description: t("rejected_by_admin")
         },
         [FormState.ADMIN_REVISION_REQUESTED_FOR_STUDENT]: {
-            label: 'Revision Requested',
+            label: t("revision_requested"),
             bgColor: 'bg-amber-50',
             textColor: 'text-amber-700',
             borderColor: 'border-amber-200',
             icon: <AlertCircle size={16}/>,
-            description: 'Admin requested changes to your form',
+            description: t("admin_requested_changes_to_your_form")
         },
         [FormState.ADMIN_REVISION_REQUESTED_FOR_INSTRUCTOR]: {
-            label: 'Under Review',
+            label: t("under_review"),
             bgColor: 'bg-purple-50',
             textColor: 'text-purple-700',
             borderColor: 'border-purple-200',
             icon: <Clock size={16}/>,
-            description: 'Admin requested instructor to review',
+            description: t("admin_requested_instructor_to_review")
         },
         [FormState.MANAGER_APPROVED]: {
-            label: 'Manager Approved',
+            label: t("manager_approved"),
             bgColor: 'bg-emerald-50',
             textColor: 'text-emerald-700',
             borderColor: 'border-emerald-200',
             icon: <CheckCircle size={16}/>,
-            description: 'Fully approved! Defense meeting will be scheduled',
+            description: t("fully_approved_defense_meeting_will_be_scheduled")
         },
         [FormState.MANAGER_REJECTED]: {
-            label: 'Manager Rejected',
+            label: t("manager_rejected"),
             bgColor: 'bg-red-50',
             textColor: 'text-red-700',
             borderColor: 'border-red-200',
             icon: <XCircle size={16}/>,
-            description: 'Rejected by manager',
+            description: t("rejected_by_manager")
         },
         [FormState.MANAGER_REVISION_REQUESTED_FOR_STUDENT]: {
-            label: 'Revision Requested',
+            label: t("revision_requested"),
             bgColor: 'bg-amber-50',
             textColor: 'text-amber-700',
             borderColor: 'border-amber-200',
             icon: <AlertCircle size={16}/>,
-            description: 'Manager requested changes to your form',
+            description: t("manager_requested_changes_to_your_form")
         },
         [FormState.MANAGER_REVISION_REQUESTED_FOR_INSTRUCTOR]: {
-            label: 'Under Review',
+            label: t("under_review"),
             bgColor: 'bg-purple-50',
             textColor: 'text-purple-700',
             borderColor: 'border-purple-200',
             icon: <Clock size={16}/>,
-            description: 'Manager requested instructor to review',
+            description: t("manager_requested_instructor_to_review")
         },
         [FormState.MANAGER_REVISION_REQUESTED_FOR_ADMIN]: {
-            label: 'Under Review',
+            label: t("under_review"),
             bgColor: 'bg-purple-50',
             textColor: 'text-purple-700',
             borderColor: 'border-purple-200',
             icon: <Clock size={16}/>,
-            description: 'Manager requested admin to review',
-        },
+            description: t("manager_requested_admin_to_review")
+        }
     };
 
     return statusMap[state] || {
@@ -133,7 +132,7 @@ const getStatusInfo = (state: FormState) => {
         textColor: 'text-gray-700',
         borderColor: 'border-gray-200',
         icon: <FileText size={16}/>,
-        description: 'Unknown status',
+        description: t("unknown_status")
     };
 };
 
@@ -142,8 +141,7 @@ const isStudentRevisionRequested = (state: FormState): boolean => {
     return [
         FormState.INSTRUCTOR_REVISION_REQUESTED,
         FormState.ADMIN_REVISION_REQUESTED_FOR_STUDENT,
-        FormState.MANAGER_REVISION_REQUESTED_FOR_STUDENT,
-    ].includes(state);
+        FormState.MANAGER_REVISION_REQUESTED_FOR_STUDENT].includes(state);
 };
 
 // Get the requester name for display
@@ -177,12 +175,12 @@ export const StudentFormsPage: React.FC = () => {
     const {data: forms = [], isLoading, error, refetch} = useQuery({
         queryKey: ['student-forms'],
         queryFn: studentAPI.getMyThesisForms,
-        enabled: role === 'STUDENT',
+        enabled: role === 'STUDENT'
     });
 
     // Mutation for editing form
     const editFormMutation = useMutation({
-        mutationFn: ({formId, data}: { formId: number; data: ThesisFormInput }) =>
+        mutationFn: ({formId, data}: { formId: number; data: ThesisFormInput; }) =>
             studentAPI.editForm(formId, data),
         onSuccess: () => {
             queryClient.invalidateQueries({queryKey: ['student-forms']});
@@ -191,7 +189,7 @@ export const StudentFormsPage: React.FC = () => {
         },
         onError: (error: any) => {
             alert(error.response?.data?.message || 'Failed to update form');
-        },
+        }
     });
 
     // Mutation for submitting revision
@@ -204,7 +202,7 @@ export const StudentFormsPage: React.FC = () => {
         },
         onError: (error: any) => {
             alert(error.response?.data?.message || 'Failed to submit revision');
-        },
+        }
     });
 
     // Handle opening edit form modal
@@ -219,7 +217,7 @@ export const StudentFormsPage: React.FC = () => {
         if (formToEdit) {
             editFormMutation.mutate({
                 formId: formToEdit.id,
-                data,
+                data
             });
         }
     };
@@ -266,9 +264,10 @@ export const StudentFormsPage: React.FC = () => {
             month: 'short',
             day: 'numeric',
             hour: '2-digit',
-            minute: '2-digit',
+            minute: '2-digit'
         });
     };
+    const {t} = useTranslation("student");
 
     // Loading State
     if (isLoading) {
@@ -277,10 +276,10 @@ export const StudentFormsPage: React.FC = () => {
                 <div className="flex flex-col items-center gap-4">
                     <div
                         className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-                    <p className="text-gray-600 text-lg">Loading your thesis forms...</p>
+                    <p className="text-gray-600 text-lg">{t("loading_your_thesis_forms")}</p>
                 </div>
-            </div>
-        );
+            </div>);
+
     }
 
     // Error State
@@ -291,17 +290,17 @@ export const StudentFormsPage: React.FC = () => {
                     <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center">
                         <XCircle size={32} className="text-red-500"/>
                     </div>
-                    <h2 className="text-xl font-bold text-gray-800">Failed to load forms</h2>
+                    <h2 className="text-xl font-bold text-gray-800">{t("failed_to_load_forms")}</h2>
                     <p className="text-gray-600">{(error as Error).message || 'An error occurred'}</p>
                     <button
                         onClick={() => refetch()}
-                        className="px-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
-                    >
-                        Try Again
+                        className="px-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium">{t("try_again")}
+
+
                     </button>
                 </div>
-            </div>
-        );
+            </div>);
+
     }
 
     return (
@@ -310,44 +309,44 @@ export const StudentFormsPage: React.FC = () => {
             <div className="max-w-5xl mx-auto mb-8">
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                     <div>
-                        <h1 className="text-2xl sm:text-3xl font-bold text-gray-800">{t('form.thesis-forms')}</h1>
-                        <p className="text-gray-500 mt-1">{t('form.description')}</p>
+                        <h1 className="text-2xl sm:text-3xl font-bold text-gray-800">{t('thesis-forms')}</h1>
+                        <p className="text-gray-500 mt-1">{t('form-description')}</p>
                     </div>
                     <Link
                         to="/student/thesis/create"
-                        className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium shadow-sm"
-                    >
+                        className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium shadow-sm">
+
                         <FileText size={20}/>
-                        {t('form.create-new-form')}
+                        {t('create-new-form')}
                     </Link>
                 </div>
             </div>
 
             {/* Forms List */}
             <div className="max-w-5xl mx-auto">
-                {forms.length === 0 ? (
+                {forms.length === 0 ?
                     // Empty State
                     <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-12 text-center">
                         <div
                             className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
                             <FileText size={40} className="text-gray-400" strokeWidth={1.5}/>
                         </div>
-                        <h2 className="text-xl font-bold text-gray-800 mb-2">{t('form.errors.no-forms')}</h2>
+                        <h2 className="text-xl font-bold text-gray-800 mb-2">{t('no-forms')}</h2>
                         <p className="text-gray-500 mb-6 max-w-md mx-auto">
-                            {t('form.errors.no-forms-subtitle')}
+                            {t('no-forms-subtitle')}
                         </p>
                         <Link
                             to="/student/thesis/create"
-                            className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
-                        >
+                            className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium">
+
                             <FileText size={20}/>
-                            {t('form.create-first-form')}
+                            {t('create-first-form')}
                         </Link>
-                    </div>
-                ) : (
+                    </div> :
+
                     <div className="flex flex-col gap-4">
                         {forms.map((form: ThesisForm) => {
-                            const statusInfo = getStatusInfo(form.state);
+                            const statusInfo = getStatusInfo(form.state, t);
                             const isExpanded = expandedFormId === form.id;
                             const needsRevision = isStudentRevisionRequested(form.state);
 
@@ -359,18 +358,18 @@ export const StudentFormsPage: React.FC = () => {
                     ${needsRevision ? 'border-amber-300 ring-1 ring-amber-200' : 'border-gray-200'}
                     ${isExpanded ? 'shadow-md' : 'hover:shadow-md hover:border-gray-300'}
                   `}
-                                    onClick={() => toggleFormExpansion(form.id)}
-                                >
+                                    onClick={() => toggleFormExpansion(form.id)}>
+
                                     {/* Revision Alert Banner */}
-                                    {needsRevision && (
+                                    {needsRevision &&
                                         <div
                                             className="flex items-center gap-2 px-4 py-2.5 bg-amber-50 border-b border-amber-200 rounded-t-xl">
                                             <AlertCircle size={16} className="text-amber-600 flex-shrink-0"/>
                                             <span className="text-sm font-medium text-amber-700">
-                        {getRevisionRequester(form.state)} requested revisions to your form
-                      </span>
+                        {getRevisionRequester(form.state)}{t("requested_revisions_to_your_form")}
+                  </span>
                                         </div>
-                                    )}
+                                    }
 
                                     {/* Card Header */}
                                     <div className="p-4 sm:p-5">
@@ -391,8 +390,8 @@ export const StudentFormsPage: React.FC = () => {
                                                 className={`
                           inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium
                           ${statusInfo.bgColor} ${statusInfo.textColor} border ${statusInfo.borderColor}
-                        `}
-                                            >
+                        `}>
+
                                                 {statusInfo.icon}
                                                 <span>{statusInfo.label}</span>
                                             </div>
@@ -401,25 +400,25 @@ export const StudentFormsPage: React.FC = () => {
                                         {/* Card Summary */}
                                         <div className="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-3">
                                             <div className="flex flex-col">
-                        <span className="text-xs font-medium text-gray-400 uppercase tracking-wide">
-                          Instructor
-                        </span>
+                        <span className="text-xs font-medium text-gray-400 uppercase tracking-wide">{t("instructor")}
+
+                      </span>
                                                 <span className="text-sm font-medium text-gray-700 mt-0.5">
                           {form.instructorFirstName} {form.instructorLastName}
                         </span>
                                             </div>
                                             <div className="flex flex-col">
-                        <span className="text-xs font-medium text-gray-400 uppercase tracking-wide">
-                          Submitted
-                        </span>
+                        <span className="text-xs font-medium text-gray-400 uppercase tracking-wide">{t("submitted")}
+
+                      </span>
                                                 <span className="text-sm font-medium text-gray-700 mt-0.5">
                           {formatDate(form.createdAt)}
                         </span>
                                             </div>
                                             <div className="flex flex-col">
-                        <span className="text-xs font-medium text-gray-400 uppercase tracking-wide">
-                          Status
-                        </span>
+                        <span className="text-xs font-medium text-gray-400 uppercase tracking-wide">{t("status")}
+
+                      </span>
                                                 <span className="text-sm font-medium text-gray-700 mt-0.5">
                           {statusInfo.description}
                         </span>
@@ -428,40 +427,41 @@ export const StudentFormsPage: React.FC = () => {
                                     </div>
 
                                     {/* Expanded Content */}
-                                    {isExpanded && (
+                                    {isExpanded &&
                                         <div className="border-t border-gray-100 p-4 sm:p-5 bg-gray-50/50">
                                             {/* Abstract */}
                                             <div className="mb-5">
-                                                <h4 className="text-sm font-semibold text-gray-700 mb-2">Abstract</h4>
+                                                <h4 className="text-sm font-semibold text-gray-700 mb-2">{t("abstract")}</h4>
                                                 <p className="text-sm text-gray-600 leading-relaxed whitespace-pre-wrap">
                                                     {form.abstractText}
                                                 </p>
                                             </div>
 
                                             {/* Revision Message (if applicable) */}
-                                            {needsRevision && form.revisionMessage && (
+                                            {needsRevision && form.revisionMessage &&
                                                 <div className="mb-5">
-                                                    <h4 className="text-sm font-semibold text-amber-700 mb-2">
-                                                        Revision Request
+                                                    <h4 className="text-sm font-semibold text-amber-700 mb-2">{t("revision_request")}
+
                                                     </h4>
                                                     <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
                                                         <p className="text-sm text-amber-800 leading-relaxed">
                                                             {form.revisionMessage}
                                                         </p>
-                                                        {form.revisionRequestedAt && (
-                                                            <span className="block mt-2 text-xs text-amber-600">
-                                Requested on {formatDate(form.revisionRequestedAt)}
+                                                        {form.revisionRequestedAt &&
+                                                            <span
+                                                                className="block mt-2 text-xs text-amber-600">{t("requested_on")}
+                                                                {formatDate(form.revisionRequestedAt)}
                               </span>
-                                                        )}
+                                                        }
                                                     </div>
                                                 </div>
-                                            )}
+                                            }
 
                                             {/* Rejection Reason (if rejected) */}
-                                            {form.rejectionReason && (
+                                            {form.rejectionReason &&
                                                 <div className="mb-5">
-                                                    <h4 className="text-sm font-semibold text-red-700 mb-2">
-                                                        Rejection Reason
+                                                    <h4 className="text-sm font-semibold text-red-700 mb-2">{t("rejection_reason")}
+
                                                     </h4>
                                                     <div className="bg-red-50 border border-red-200 rounded-lg p-4">
                                                         <p className="text-sm text-red-800 leading-relaxed">
@@ -469,74 +469,74 @@ export const StudentFormsPage: React.FC = () => {
                                                         </p>
                                                     </div>
                                                 </div>
-                                            )}
+                                            }
 
                                             {/* Timeline */}
                                             <div className="mb-5">
-                                                <h4 className="text-sm font-semibold text-gray-700 mb-2">Timeline</h4>
+                                                <h4 className="text-sm font-semibold text-gray-700 mb-2">{t("timeline")}</h4>
                                                 <div className="flex flex-col gap-2">
                                                     <div className="flex items-center justify-between text-sm">
-                                                        <span className="text-gray-500">Created</span>
+                                                        <span className="text-gray-500">{t("created")}</span>
                                                         <span className="text-gray-700 font-medium">
                               {formatDate(form.createdAt)}
                             </span>
                                                     </div>
-                                                    {form.updatedAt && form.updatedAt !== form.createdAt && (
+                                                    {form.updatedAt && form.updatedAt !== form.createdAt &&
                                                         <div className="flex items-center justify-between text-sm">
-                                                            <span className="text-gray-500">Last Updated</span>
+                                                            <span className="text-gray-500">{t("last_updated")}</span>
                                                             <span className="text-gray-700 font-medium">
                                 {formatDate(form.updatedAt)}
                               </span>
                                                         </div>
-                                                    )}
+                                                    }
                                                 </div>
                                             </div>
 
                                             {/* Actions for Revision States */}
-                                            {needsRevision && (
+                                            {needsRevision &&
                                                 <div
                                                     className="flex flex-col sm:flex-row gap-3 pt-4 border-t border-gray-200">
                                                     <button
                                                         className="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 hover:border-gray-400 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                                                         onClick={(e) => handleEditClick(form, e)}
-                                                        disabled={editFormMutation.isPending || submitRevisionMutation.isPending}
-                                                    >
-                                                        <Edit3 size={16}/>
-                                                        Edit Form
+                                                        disabled={editFormMutation.isPending || submitRevisionMutation.isPending}>
+
+                                                        <Edit3 size={16}/>{t("edit_form")}
+
                                                     </button>
                                                     <button
                                                         className="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                                                         onClick={(e) => handleSubmitRevisionClick(form, e)}
-                                                        disabled={editFormMutation.isPending || submitRevisionMutation.isPending}
-                                                    >
-                                                        <Send size={16}/>
-                                                        Submit Revision
+                                                        disabled={editFormMutation.isPending || submitRevisionMutation.isPending}>
+
+                                                        <Send size={16}/>{t("submit_revision")}
+
                                                     </button>
                                                 </div>
-                                            )}
+                                            }
                                         </div>
-                                    )}
+                                    }
 
                                     {/* Expand Indicator */}
                                     <div
                                         className="flex items-center justify-center gap-1.5 py-2 border-t border-gray-100 text-gray-400 hover:text-gray-600 transition-colors">
-                                        {isExpanded ? (
+                                        {isExpanded ?
                                             <>
                                                 <ChevronUp size={16}/>
-                                                <span className="text-xs font-medium">Click to collapse</span>
-                                            </>
-                                        ) : (
+                                                <span className="text-xs font-medium">{t("click_to_collapse")}</span>
+                                            </> :
+
                                             <>
                                                 <ChevronDown size={16}/>
-                                                <span className="text-xs font-medium">Click to expand</span>
+                                                <span className="text-xs font-medium">{t("click_to_expand")}</span>
                                             </>
-                                        )}
+                                        }
                                     </div>
-                                </div>
-                            );
+                                </div>);
+
                         })}
                     </div>
-                )}
+                }
             </div>
 
             {/* Edit Form Modal */}
@@ -545,8 +545,8 @@ export const StudentFormsPage: React.FC = () => {
                 onClose={handleEditModalClose}
                 onSave={handleEditSave}
                 form={formToEdit}
-                isLoading={editFormMutation.isPending}
-            />
+                isLoading={editFormMutation.isPending}/>
+
 
             {/* Submit Revision Modal */}
             <SubmitRevisionModal
@@ -557,10 +557,10 @@ export const StudentFormsPage: React.FC = () => {
                 revisionMessage={formToSubmitRevision?.revisionMessage || ''}
                 requestedBy={formToSubmitRevision ? getRevisionRequester(formToSubmitRevision.state) : ''}
                 requestedAt={formToSubmitRevision?.revisionRequestedAt}
-                isLoading={submitRevisionMutation.isPending}
-            />
-        </div>
-    );
+                isLoading={submitRevisionMutation.isPending}/>
+
+        </div>);
+
 };
 
 export default StudentFormsPage;

@@ -7,6 +7,7 @@ import {Student, StudentType, Field, Professor, StudentUpdateRequest} from "../.
 import {Button} from "../../components/common/Button";
 import {Input} from "../../components/common/Input";
 import {Card} from "../../components/common/Card";
+import {useTranslation} from "react-i18next";
 
 interface ValidationErrors {
     email?: string;
@@ -70,11 +71,12 @@ const validators = {
     instructorId: (value: string): string | undefined => {
         if (!value) return 'Instructor is required';
         return undefined;
-    },
+    }
 };
 
 export default function AdminStudentEditPage() {
-    const {id} = useParams<{ id: string }>();
+    const {t} = useTranslation("admin");
+    const {id} = useParams<{ id: string; }>();
     const navigate = useNavigate();
     const queryClient = useQueryClient();
 
@@ -88,7 +90,7 @@ export default function AdminStudentEditPage() {
         studentType: StudentType.BACHELOR,
         departmentId: '',
         fieldId: '',
-        instructorId: '',
+        instructorId: ''
     });
     const [errors, setErrors] = useState<ValidationErrors>({});
     const [touched, setTouched] = useState<Record<string, boolean>>({});
@@ -98,25 +100,25 @@ export default function AdminStudentEditPage() {
     const {data: student, isLoading: isLoadingStudent} = useQuery({
         queryKey: ["student", id],
         queryFn: () => adminAPI.getStudentById(Number(id)),
-        enabled: !!id,
+        enabled: !!id
     });
 
     // Fetch departments
     const {data: departments} = useQuery({
         queryKey: ['departments'],
-        queryFn: adminAPI.getAllDepartments,
+        queryFn: adminAPI.getAllDepartments
     });
 
     // Fetch fields
     const {data: fields} = useQuery({
         queryKey: ['fields'],
-        queryFn: adminAPI.getAllFields,
+        queryFn: adminAPI.getAllFields
     });
 
     // Fetch professors
     const {data: professors} = useQuery({
         queryKey: ['professors'],
-        queryFn: adminAPI.getAllProfessors,
+        queryFn: adminAPI.getAllProfessors
     });
 
     // Populate form when student data loads
@@ -171,16 +173,16 @@ export default function AdminStudentEditPage() {
     };
 
     const handleBlur = (name: keyof ValidationErrors) => {
-        setTouched(prev => ({...prev, [name]: true}));
+        setTouched((prev) => ({...prev, [name]: true}));
         const error = validateField(name, formData[name]);
-        setErrors(prev => ({...prev, [name]: error}));
+        setErrors((prev) => ({...prev, [name]: error}));
     };
 
     const handleChange = (name: keyof typeof formData, value: string) => {
-        setFormData(prev => ({...prev, [name]: value}));
+        setFormData((prev) => ({...prev, [name]: value}));
         if (touched[name]) {
             const error = validateField(name as keyof ValidationErrors, value);
-            setErrors(prev => ({...prev, [name]: error}));
+            setErrors((prev) => ({...prev, [name]: error}));
         }
     };
 
@@ -212,15 +214,15 @@ export default function AdminStudentEditPage() {
             departmentId: parseInt(formData.departmentId),
             fieldId: parseInt(formData.fieldId),
             instructorId: parseInt(formData.instructorId),
-            password: formData.password,
+            password: formData.password
         };
 
         updateMutation.mutate(updateData);
     };
 
-    const ErrorMessage = ({error}: { error?: string }) => (
-        error ? <p className="mt-1 text-sm text-red-600">{error}</p> : null
-    );
+    const ErrorMessage = ({error}: { error?: string; }) =>
+        error ? <p className="mt-1 text-sm text-red-600">{error}</p> : null;
+
 
     // Loading state
     if (isLoadingStudent) {
@@ -228,10 +230,10 @@ export default function AdminStudentEditPage() {
             <div className="flex items-center justify-center min-h-[400px]">
                 <div className="flex flex-col items-center space-y-4">
                     <Loader2 className="h-8 w-8 animate-spin text-primary-600"/>
-                    <p className="text-gray-600">Loading student data...</p>
+                    <p className="text-gray-600">{t("loading_student_data")}</p>
                 </div>
-            </div>
-        );
+            </div>);
+
     }
 
     // Not found state
@@ -239,13 +241,13 @@ export default function AdminStudentEditPage() {
         return (
             <div className="flex items-center justify-center min-h-[400px]">
                 <div className="text-center">
-                    <p className="text-red-600 mb-4">Student not found</p>
-                    <Button variant="secondary" onClick={() => navigate('/admin/students')}>
-                        Back to Students
+                    <p className="text-red-600 mb-4">{t("student_not_found")}</p>
+                    <Button variant="secondary" onClick={() => navigate('/admin/students')}>{t("back_to_students")}
+
                     </Button>
                 </div>
-            </div>
-        );
+            </div>);
+
     }
 
     return (
@@ -254,41 +256,41 @@ export default function AdminStudentEditPage() {
             <div className="flex items-center space-x-4">
                 <button
                     onClick={() => navigate('/admin/students')}
-                    className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-                >
+                    className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+
                     <ArrowLeft className="h-5 w-5 text-gray-600"/>
                 </button>
                 <div>
-                    <h1 className="text-2xl font-bold text-gray-900">Edit Student</h1>
-                    <p className="text-sm text-gray-600">
-                        Editing: {student?.firstName} {student?.lastName} (#{student?.studentNumber})
+                    <h1 className="text-2xl font-bold text-gray-900">{t("edit_student")}</h1>
+                    <p className="text-sm text-gray-600">{t("editing")}
+                        {student?.firstName} {student?.lastName} (#{student?.studentNumber})
                     </p>
                 </div>
             </div>
 
             {/* Form */}
-            <Card title="Student Information">
+            <Card title={t("student_information")}>
                 <form onSubmit={handleSubmit} className="space-y-4">
                     {/* Name Row */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <Input
-                                label="First Name"
+                                label={t("first_name_1")}
                                 value={formData.firstName}
                                 onChange={(e) => handleChange('firstName', e.target.value)}
                                 onBlur={() => handleBlur('firstName')}
-                                required
-                            />
+                                required/>
+
                             {touched.firstName && <ErrorMessage error={errors.firstName}/>}
                         </div>
                         <div>
                             <Input
-                                label="Last Name"
+                                label={t("last_name_1")}
                                 value={formData.lastName}
                                 onChange={(e) => handleChange('lastName', e.target.value)}
                                 onBlur={() => handleBlur('lastName')}
-                                required
-                            />
+                                required/>
+
                             {touched.lastName && <ErrorMessage error={errors.lastName}/>}
                         </div>
                     </div>
@@ -296,116 +298,116 @@ export default function AdminStudentEditPage() {
                     {/* Email */}
                     <div>
                         <Input
-                            label="Email"
+                            label={t("email_1")}
                             type="email"
                             value={formData.email}
                             onChange={(e) => handleChange('email', e.target.value)}
                             onBlur={() => handleBlur('email')}
-                            required
-                        />
+                            required/>
+
                         {touched.email && <ErrorMessage error={errors.email}/>}
                     </div>
 
                     {/* Phone */}
                     <div>
                         <Input
-                            label="Phone Number"
+                            label={t("phone_number_1")}
                             value={formData.phoneNumber}
                             onChange={(e) => handleChange('phoneNumber', e.target.value)}
                             onBlur={() => handleBlur('phoneNumber')}
-                            required
-                        />
+                            required/>
+
                         {touched.phoneNumber && <ErrorMessage error={errors.phoneNumber}/>}
                     </div>
 
                     {/* Password - Optional for edit */}
                     <div>
                         <Input
-                            label="Password (leave empty to keep current)"
+                            label={t("password_leave_empty_to_keep_current")}
                             type="password"
                             value={formData.password}
                             onChange={(e) => handleChange('password', e.target.value)}
                             onBlur={() => handleBlur('password')}
-                            placeholder="Enter new password only if you want to change it"
-                        />
+                            placeholder={t("enter_new_password_only_if_you_want_to_change_it")}/>
+
                         {touched.password && <ErrorMessage error={errors.password}/>}
                     </div>
 
                     {/* Student Number */}
                     <div>
                         <Input
-                            label="Student Number"
+                            label={t("student_number")}
                             type="text"
                             value={formData.studentNumber}
                             onChange={(e) => handleChange('studentNumber', e.target.value)}
                             onBlur={() => handleBlur('studentNumber')}
-                            required
-                        />
+                            required/>
+
                         {touched.studentNumber && <ErrorMessage error={errors.studentNumber}/>}
                     </div>
 
                     {/* Department */}
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                            Department
+                        <label className="block text-sm font-medium text-gray-700 mb-1">{t("department")}
+
                         </label>
                         <select
                             value={formData.departmentId}
                             onChange={(e) => handleChange('departmentId', e.target.value)}
                             onBlur={() => handleBlur('departmentId')}
                             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
-                            required
-                        >
-                            <option value="">Select Department</option>
-                            {departments?.map((dept: any) => (
+                            required>
+
+                            <option value="">{t("select_department")}</option>
+                            {departments?.map((dept: any) =>
                                 <option key={dept.id} value={dept.id}>
                                     {dept.name}
                                 </option>
-                            ))}
+                            )}
                         </select>
                         {touched.departmentId && <ErrorMessage error={errors.departmentId}/>}
                     </div>
 
                     {/* Field */}
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                            Field
+                        <label className="block text-sm font-medium text-gray-700 mb-1">{t("field")}
+
                         </label>
                         <select
                             value={formData.fieldId}
                             onChange={(e) => handleChange('fieldId', e.target.value)}
                             onBlur={() => handleBlur('fieldId')}
                             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
-                            required
-                        >
-                            <option value="">Select Field</option>
-                            {fields?.map((field: Field) => (
+                            required>
+
+                            <option value="">{t("select_field")}</option>
+                            {fields?.map((field: Field) =>
                                 <option key={field.id} value={field.id}>
                                     {field.name}
                                 </option>
-                            ))}
+                            )}
                         </select>
                         {touched.fieldId && <ErrorMessage error={errors.fieldId}/>}
                     </div>
 
                     {/* Instructor */}
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                            Instructor
+                        <label className="block text-sm font-medium text-gray-700 mb-1">{t("instructor")}
+
                         </label>
                         <select
                             value={formData.instructorId}
                             onChange={(e) => handleChange('instructorId', e.target.value)}
                             onBlur={() => handleBlur('instructorId')}
                             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
-                            required
-                        >
-                            <option value="">Select Instructor</option>
-                            {professors?.map((prof: Professor) => (
+                            required>
+
+                            <option value="">{t("select_instructor")}</option>
+                            {professors?.map((prof: Professor) =>
                                 <option key={prof.id} value={prof.id}>
                                     {prof.firstName} {prof.lastName}
                                 </option>
-                            ))}
+                            )}
                         </select>
                         {touched.instructorId && <ErrorMessage error={errors.instructorId}/>}
                     </div>
@@ -415,20 +417,20 @@ export default function AdminStudentEditPage() {
                         <Button
                             type="button"
                             variant="secondary"
-                            onClick={() => navigate('/admin/students')}
-                        >
-                            Cancel
+                            onClick={() => navigate('/admin/students')}>{t("cancel")}
+
+
                         </Button>
                         <Button
                             type="submit"
-                            isLoading={updateMutation.isPending}
-                        >
-                            <Save className="h-4 w-4 mr-2"/>
-                            Save Changes
+                            isLoading={updateMutation.isPending}>
+
+                            <Save className="h-4 w-4 mr-2"/>{t("save_changes")}
+
                         </Button>
                     </div>
                 </form>
             </Card>
-        </div>
-    );
+        </div>);
+
 }

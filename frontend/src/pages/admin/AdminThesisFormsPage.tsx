@@ -8,11 +8,13 @@ import {useAuthStore} from '../../store/authStore';
 import {RejectionModal} from '../../components/thesis/RejectionModal';
 import {ActionButton} from '../../components/thesis/ThesisFormDetails';
 import {ThesisFormsLayout} from '../../components/thesis/ThesisFormLayout';
-import './AdminThesisFormsPage.css';//TODO remove css files
+import './AdminThesisFormsPage.css'; //TODO remove css files
 import {RevisionRequestModal} from "../../components/thesis/RevisionRequestModal";
 import {SubmitRevisionModal} from "../../components/thesis/SubmitRevisionModal";
+import {useTranslation} from "react-i18next";
 
 const AdminThesisFormsPage: React.FC = () => {
+    const {t} = useTranslation("admin");
     const {role} = useAuthStore();
     const queryClient = useQueryClient();
     const [selectedForm, setSelectedForm] = useState<ThesisForm | null>(null);
@@ -25,14 +27,14 @@ const AdminThesisFormsPage: React.FC = () => {
     const [revisionModalOpen, setRevisionModalOpen] = useState(false);
     const [formToRequestRevision, setFormToRequestRevision] = useState<ThesisForm | null>(null);
 
-// State for submit revision modal
+    // State for submit revision modal
     const [submitRevisionModalOpen, setSubmitRevisionModalOpen] = useState(false);
     const [formToSubmitRevision, setFormToSubmitRevision] = useState<ThesisForm | null>(null);
 
     const {data: forms = [], isLoading, error} = useQuery({
         queryKey: ['admin-forms'],
         queryFn: adminAPI.getForms,
-        enabled: role === 'ADMIN',
+        enabled: role === 'ADMIN'
     });
 
     const approveMutation = useMutation({
@@ -40,11 +42,11 @@ const AdminThesisFormsPage: React.FC = () => {
         onSuccess: () => {
             queryClient.invalidateQueries({queryKey: ['admin-forms']});
             setSelectedForm(null);
-        },
+        }
     });
 
     const rejectMutation = useMutation({
-        mutationFn: ({formId, rejectionReason}: { formId: number; rejectionReason: string }) =>
+        mutationFn: ({formId, rejectionReason}: { formId: number; rejectionReason: string; }) =>
             adminAPI.rejectForm(formId, rejectionReason),
         onSuccess: () => {
             queryClient.invalidateQueries({queryKey: ['admin-forms']});
@@ -53,12 +55,13 @@ const AdminThesisFormsPage: React.FC = () => {
             setFormToReject(null);
         },
         onError: () => {
+
             // Keep modal open on error so user can retry
-        },
+        }
     });
 
     const revisionMutation = useMutation({
-        mutationFn: ({formId, target, message}: { formId: number; target: RevisionTarget; message: string }) =>
+        mutationFn: ({formId, target, message}: { formId: number; target: RevisionTarget; message: string; }) =>
             adminAPI.requestRevision(formId, target, message),
         onSuccess: () => {
             queryClient.invalidateQueries({queryKey: ['admin-forms']});
@@ -68,7 +71,7 @@ const AdminThesisFormsPage: React.FC = () => {
         },
         onError: (error: any) => {
             alert(error.response?.data?.message || 'Failed to request revision');
-        },
+        }
     });
 
     const submitRevisionMutation = useMutation({
@@ -81,7 +84,7 @@ const AdminThesisFormsPage: React.FC = () => {
         },
         onError: (error: any) => {
             alert(error.response?.data?.message || 'Failed to submit revision');
-        },
+        }
     });
 
     const actionLoading = approveMutation.isPending || rejectMutation.isPending || revisionMutation.isPending || submitRevisionMutation.isPending;
@@ -97,7 +100,7 @@ const AdminThesisFormsPage: React.FC = () => {
         if (formToReject) {
             rejectMutation.mutate({
                 formId: formToReject.id,
-                rejectionReason: reason,
+                rejectionReason: reason
             });
         }
     };
@@ -116,18 +119,18 @@ const AdminThesisFormsPage: React.FC = () => {
         setRevisionModalOpen(true);
     };
 
-// Handle revision request confirmation
+    // Handle revision request confirmation
     const handleRevisionConfirm = (target: RevisionTarget, message: string) => {
         if (formToRequestRevision) {
             revisionMutation.mutate({
                 formId: formToRequestRevision.id,
                 target,
-                message,
+                message
             });
         }
     };
 
-// Handle revision modal close
+    // Handle revision modal close
     const handleRevisionModalClose = () => {
         if (!revisionMutation.isPending) {
             setRevisionModalOpen(false);
@@ -135,20 +138,20 @@ const AdminThesisFormsPage: React.FC = () => {
         }
     };
 
-// Handle opening submit revision modal
+    // Handle opening submit revision modal
     const handleSubmitRevisionClick = (form: ThesisForm) => {
         setFormToSubmitRevision(form);
         setSubmitRevisionModalOpen(true);
     };
 
-// Handle submit revision confirmation
+    // Handle submit revision confirmation
     const handleSubmitRevisionConfirm = () => {
         if (formToSubmitRevision) {
             submitRevisionMutation.mutate(formToSubmitRevision.id);
         }
     };
 
-// Handle submit revision modal close
+    // Handle submit revision modal close
     const handleSubmitRevisionModalClose = () => {
         if (!submitRevisionMutation.isPending) {
             setSubmitRevisionModalOpen(false);
@@ -156,7 +159,7 @@ const AdminThesisFormsPage: React.FC = () => {
         }
     };
 
-// Get revision targets for admin
+    // Get revision targets for admin
     const getRevisionTargets = (form: ThesisForm): RevisionTarget[] => {
         if (form.state === FormState.INSTRUCTOR_APPROVED || form.state === FormState.MANAGER_REVISION_REQUESTED_FOR_ADMIN) {
             return [RevisionTarget.STUDENT, RevisionTarget.INSTRUCTOR];
@@ -172,48 +175,48 @@ const AdminThesisFormsPage: React.FC = () => {
         if (form.state === FormState.INSTRUCTOR_APPROVED) {
             return [
                 {
-                    label: 'Approve Form',
-                    loadingLabel: 'Approving...',
+                    label: t("approve_form"),
+                    loadingLabel: t("approving"),
                     className: 'btn-approve',
-                    onClick: () => approveMutation.mutate(form.id),
+                    onClick: () => approveMutation.mutate(form.id)
                 },
                 {
-                    label: 'Request Revision',
-                    loadingLabel: 'Requesting...',
+                    label: t("request_revision"),
+                    loadingLabel: t("requesting"),
                     className: 'btn-revision',
-                    onClick: () => handleRevisionClick(form),
+                    onClick: () => handleRevisionClick(form)
                 },
                 {
-                    label: 'Reject Form',
-                    loadingLabel: 'Rejecting...',
+                    label: t("reject_form"),
+                    loadingLabel: t("rejecting"),
                     className: 'btn-reject',
-                    onClick: () => handleRejectClick(form),
-                },
-            ];
+                    onClick: () => handleRejectClick(form)
+                }];
+
         }
 
         // MANAGER_REVISION_REQUESTED_FOR_ADMIN: Admin needs to submit their revision
         if (form.state === FormState.MANAGER_REVISION_REQUESTED_FOR_ADMIN) {
             return [
                 {
-                    label: 'Submit Revision',
-                    loadingLabel: 'Submitting...',
+                    label: t("submit_revision"),
+                    loadingLabel: t("submitting"),
                     className: 'btn-approve',
-                    onClick: () => handleSubmitRevisionClick(form),
+                    onClick: () => handleSubmitRevisionClick(form)
                 },
                 {
-                    label: 'Request Revision',
-                    loadingLabel: 'Requesting...',
+                    label: t("request_revision"),
+                    loadingLabel: t("requesting"),
                     className: 'btn-revision',
-                    onClick: () => handleRevisionClick(form),
+                    onClick: () => handleRevisionClick(form)
                 },
                 {
-                    label: 'Reject Form',
-                    loadingLabel: 'Rejecting...',
+                    label: t("reject_form"),
+                    loadingLabel: t("rejecting"),
                     className: 'btn-reject',
-                    onClick: () => handleRejectClick(form),
-                },
-            ];
+                    onClick: () => handleRejectClick(form)
+                }];
+
         }
 
         return [];
@@ -237,25 +240,25 @@ const AdminThesisFormsPage: React.FC = () => {
     return (
         <>
             <ThesisFormsLayout
-                title="Thesis Forms - Admin Review"
+                title={t("thesis_forms_admin_review")}
                 forms={forms}
                 isLoading={isLoading}
                 error={error as Error}
                 selectedForm={selectedForm}
                 onSelectForm={setSelectedForm}
-                emptyMessage="No thesis forms pending admin review"
+                emptyMessage={t("no_thesis_forms_pending_admin_review")}
                 getActionsForForm={getActionsForForm}
                 actionLoading={actionLoading}
-                availableStatuses={getAvailableStatuses()}
-            />
+                availableStatuses={getAvailableStatuses()}/>
+
 
             <RejectionModal
                 isOpen={rejectionModalOpen}
                 onClose={handleModalClose}
                 onConfirm={handleRejectConfirm}
                 thesisTitle={formToReject?.title || ''}
-                isLoading={rejectMutation.isPending}
-            />
+                isLoading={rejectMutation.isPending}/>
+
 
             {/* Revision Request Modal */}
             <RevisionRequestModal
@@ -264,8 +267,8 @@ const AdminThesisFormsPage: React.FC = () => {
                 onConfirm={handleRevisionConfirm}
                 thesisTitle={formToRequestRevision?.title || ''}
                 availableTargets={formToRequestRevision ? getRevisionTargets(formToRequestRevision) : []}
-                isLoading={revisionMutation.isPending}
-            />
+                isLoading={revisionMutation.isPending}/>
+
 
             {/* Submit Revision Modal */}
             <SubmitRevisionModal
@@ -274,13 +277,13 @@ const AdminThesisFormsPage: React.FC = () => {
                 onConfirm={handleSubmitRevisionConfirm}
                 thesisTitle={formToSubmitRevision?.title || ''}
                 revisionMessage={formToSubmitRevision?.revisionMessage || ''}
-                requestedBy="Manager"
+                requestedBy={t("manager")}
                 requestedAt={formToSubmitRevision?.revisionRequestedAt}
-                isLoading={submitRevisionMutation.isPending}
-            />
+                isLoading={submitRevisionMutation.isPending}/>
 
-        </>
-    );
+
+        </>);
+
 };
 
 export default AdminThesisFormsPage;

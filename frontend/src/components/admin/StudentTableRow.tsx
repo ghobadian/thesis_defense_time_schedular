@@ -2,6 +2,7 @@
 import React from 'react';
 import {GraduationCap, Mail, Phone, Eye, Edit, Trash2} from 'lucide-react';
 import {Student, StudentType} from "../../types";
+import {useTranslation} from "react-i18next";
 
 interface StudentTableRowProps {
     student: Student;
@@ -16,6 +17,7 @@ export const StudentTableRow: React.FC<StudentTableRowProps> = ({
                                                                     onEdit,
                                                                     onDelete
                                                                 }) => {
+    const {t} = useTranslation("admin");
     const getStatusColor = (status: string) => {
         switch (status) {
             case 'ACTIVE':
@@ -34,27 +36,27 @@ export const StudentTableRow: React.FC<StudentTableRowProps> = ({
         switch (type) {
             case StudentType.BACHELOR:
                 return {
-                    label: 'Bachelor',
+                    label: t("bachelor"),
                     color: 'bg-indigo-100 text-indigo-800',
-                    shortLabel: 'BSc'
+                    shortLabel: t("bsc")
                 };
             case StudentType.MASTER:
                 return {
-                    label: 'Master',
+                    label: t("master"),
                     color: 'bg-purple-100 text-purple-800',
-                    shortLabel: 'MSc'
+                    shortLabel: t("msc")
                 };
             case StudentType.PHD:
                 return {
-                    label: 'PhD',
+                    label: t("phd"),
                     color: 'bg-amber-100 text-amber-800',
-                    shortLabel: 'PhD'
+                    shortLabel: t("phd")
                 };
             default:
                 return {
-                    label: 'Unknown',
+                    label: t("unknown"),
                     color: 'bg-gray-100 text-gray-800',
-                    shortLabel: 'N/A'
+                    shortLabel: t("na")
                 };
         }
     };
@@ -74,8 +76,8 @@ export const StudentTableRow: React.FC<StudentTableRowProps> = ({
                         <div className="text-sm font-medium text-gray-900">
                             {student.firstName} {student.lastName}
                         </div>
-                        <div className="text-sm text-gray-500">
-                            Student Number: {student.studentNumber}
+                        <div className="text-sm text-gray-500">{t("student_number")}
+                            {student.studentNumber}
                         </div>
                     </div>
                 </div>
@@ -105,19 +107,19 @@ export const StudentTableRow: React.FC<StudentTableRowProps> = ({
                     <a
                         href={`mailto:${student.email}`}
                         className="text-gray-500 hover:text-primary-600"
-                        title={student.email}
-                    >
+                        title={student.email}>
+
                         <Mail className="h-4 w-4"/>
                     </a>
-                    {student.phoneNumber && (
+                    {student.phoneNumber &&
                         <a
                             href={`tel:${student.phoneNumber}`}
                             className="text-gray-500 hover:text-primary-600"
-                            title={student.phoneNumber}
-                        >
+                            title={student.phoneNumber}>
+
                             <Phone className="h-4 w-4"/>
                         </a>
-                    )}
+                    }
                 </div>
             </td>
 
@@ -140,26 +142,26 @@ export const StudentTableRow: React.FC<StudentTableRowProps> = ({
                     <button
                         onClick={onView}
                         className="text-gray-500 hover:text-primary-600 p-1"
-                        title="View Details"
-                    >
+                        title={t("view_details")}>
+
                         <Eye className="h-4 w-4"/>
                     </button>
                     <button
                         onClick={onEdit}
                         className="text-gray-500 hover:text-primary-600 p-1"
-                        title="Edit"
-                    >
+                        title={t("edit")}>
+
                         <Edit className="h-4 w-4"/>
                     </button>
                     <button
                         onClick={onDelete}
                         className="text-gray-500 hover:text-red-600 p-1"
-                        title="Delete"
-                    >
+                        title={t("delete")}>
+
                         <Trash2 className="h-4 w-4"/>
                     </button>
                 </div>
             </td>
-        </tr>
-    );
+        </tr>);
+
 };

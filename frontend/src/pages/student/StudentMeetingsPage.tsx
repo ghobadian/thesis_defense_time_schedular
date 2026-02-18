@@ -5,11 +5,13 @@ import {studentAPI} from '../../api/student.api';
 import {MeetingView} from '../../components/common/meeting/MeetingView';
 import {TimeSlotSelection} from '../../components/student/TimeSlotSelection';
 import {Meeting, MeetingState} from '../../types';
+import {useTranslation} from "react-i18next";
 
 export const StudentMeetingsPage: React.FC = () => {
+    const {t} = useTranslation("student");
     const {data: meetings, isLoading, error} = useQuery({
         queryKey: ['studentMeetings'],
-        queryFn: studentAPI.getMeetings,
+        queryFn: studentAPI.getMeetings
     });
 
     const canSelectTime = (meeting: Meeting): boolean => {
@@ -26,17 +28,17 @@ export const StudentMeetingsPage: React.FC = () => {
     if (error) {
         return (
             <div className="flex items-center justify-center min-h-screen">
-                <div className="text-red-500">Failed to load meetings.</div>
-            </div>
-        );
+                <div className="text-red-500">{t("failed_to_load_meetings")}</div>
+            </div>);
+
     }
 
     return (
         <div className="space-y-6">
             <div>
-                <h1 className="text-3xl font-bold text-gray-900">My Defense Meetings</h1>
-                <p className="text-gray-600 mt-2">
-                    View your thesis defense meetings and select available time slots
+                <h1 className="text-3xl font-bold text-gray-900">{t("my_defense_meetings")}</h1>
+                <p className="text-gray-600 mt-2">{t("view_your_thesis_defense_meetings_and_select_avail")}
+
                 </p>
             </div>
 
@@ -51,8 +53,8 @@ export const StudentMeetingsPage: React.FC = () => {
                         return <TimeSlotSelection meetingId={meeting.id}/>;
                     }
                     return null;
-                }}
-            />
-        </div>
-    );
+                }}/>
+
+        </div>);
+
 };

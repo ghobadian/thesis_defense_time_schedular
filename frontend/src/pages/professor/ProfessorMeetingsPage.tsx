@@ -11,8 +11,10 @@ import {JurySelectionModal} from '../../components/common/JurySelectionModal';
 import {Meeting, MeetingState, UserRole} from '../../types';
 import {useAuthStore} from '../../store/authStore';
 import {Button} from '../../components/common/Button';
+import {useTranslation} from "react-i18next";
 
 export const ProfessorMeetingsPage: React.FC = () => {
+    const {t} = useTranslation("professor");
     const navigate = useNavigate();
     const {userId, role} = useAuthStore();
     const [scheduleMeetingModal, setScheduleMeetingModal] = useState<Meeting | null>(null);
@@ -20,7 +22,7 @@ export const ProfessorMeetingsPage: React.FC = () => {
 
     const {data: meetings, isLoading, error, refetch} = useQuery({
         queryKey: ['myMeetings'],
-        queryFn: professorAPI.getMyMeetings,
+        queryFn: professorAPI.getMyMeetings
     });
 
     // Cancel meeting mutation
@@ -35,12 +37,12 @@ export const ProfessorMeetingsPage: React.FC = () => {
                 error?.message ||
                 'Failed to cancel the meeting. Please try again.';
             alert(message);
-        },
+        }
     });
 
     // Reassign juries mutation
     const reassignJuriesMutation = useMutation({
-        mutationFn: ({meetingId, juryIds}: { meetingId: number; juryIds: number[] }) =>
+        mutationFn: ({meetingId, juryIds}: { meetingId: number; juryIds: number[]; }) =>
             professorAPI.reassignJuries(meetingId, juryIds),
         onSuccess: () => {
             setReassignMeeting(null);
@@ -52,7 +54,7 @@ export const ProfessorMeetingsPage: React.FC = () => {
                 error?.message ||
                 'Failed to reassign juries. Please try again.';
             alert(message);
-        },
+        }
     });
 
     const canSelectTime = (meeting: Meeting): boolean => {
@@ -61,7 +63,7 @@ export const ProfessorMeetingsPage: React.FC = () => {
 
     const isJuryMember = (meeting: Meeting): boolean => {
         if (!userId) return false;
-        return meeting.juryMembers?.some(jury => jury.id === userId) ?? false;
+        return meeting.juryMembers?.some((jury) => jury.id === userId) ?? false;
     };
 
     const canSpecifyTime = (meeting: Meeting): boolean => {
@@ -80,8 +82,7 @@ export const ProfessorMeetingsPage: React.FC = () => {
         return [
             MeetingState.JURIES_SPECIFIED_TIME,
             MeetingState.STUDENT_SPECIFIED_TIME,
-            MeetingState.SCHEDULED
-        ].includes(meeting.state);
+            MeetingState.SCHEDULED].includes(meeting.state);
     };
 
     const canCancelMeeting = (meeting: Meeting): boolean => {
@@ -96,8 +97,7 @@ export const ProfessorMeetingsPage: React.FC = () => {
         return [
             MeetingState.JURIES_SELECTED,
             MeetingState.JURIES_SPECIFIED_TIME,
-            MeetingState.STUDENT_SPECIFIED_TIME,
-        ].includes(meeting.state);
+            MeetingState.STUDENT_SPECIFIED_TIME].includes(meeting.state);
     };
 
     const handleCancelMeeting = (meeting: Meeting) => {
@@ -133,9 +133,9 @@ export const ProfessorMeetingsPage: React.FC = () => {
     if (error) {
         return (
             <div className="flex items-center justify-center min-h-screen">
-                <div className="text-red-500">Failed to load meetings.</div>
-            </div>
-        );
+                <div className="text-red-500">{t("failed_to_load_meetings")}</div>
+            </div>);
+
     }
 
     return (
@@ -148,31 +148,31 @@ export const ProfessorMeetingsPage: React.FC = () => {
                 showActionButton={canSelectTime}
                 userRole="professor"
                 canViewTimeSlots={canViewTimeSlots}
-                renderTimeSlotsComparison={(meeting) => (
+                renderTimeSlotsComparison={(meeting) =>
                     <TimeSlotsComparison meetingId={meeting.id}/>
-                )}
+                }
                 onCancelMeeting={handleCancelMeeting}
                 canCancelMeeting={canCancelMeeting}
                 isCancelling={cancelMeetingMutation.isPending}
                 onReassignJuries={(meeting) => setReassignMeeting(meeting)}
                 canReassignJuries={canReassignJuries}
-                renderAdditionalContent={(meeting, isExpanded) => (
+                renderAdditionalContent={(meeting, isExpanded) =>
                     <>
                         {/* Schedule Meeting Button for Manager */}
-                        {canScheduleMeeting(meeting) && (
+                        {canScheduleMeeting(meeting) &&
                             <div className="mt-4">
                                 <Button
                                     variant="primary"
-                                    onClick={() => setScheduleMeetingModal(meeting)}
-                                >
-                                    Schedule Meeting
+                                    onClick={() => setScheduleMeetingModal(meeting)}>{t("schedule_meeting")}
+
+
                                 </Button>
                             </div>
-                        )}
+                        }
 
                         {/* Jury Scores Panel - shows for SCHEDULED and COMPLETED */}
                         {(meeting.state === MeetingState.SCHEDULED ||
-                            meeting.state === MeetingState.COMPLETED) && (
+                                meeting.state === MeetingState.COMPLETED) &&
                             <JuryScoresPanel
                                 meetingId={meeting.id}
                                 meetingState={meeting.state}
@@ -180,35 +180,35 @@ export const ProfessorMeetingsPage: React.FC = () => {
                                 juriesScores={meeting.juriesScores || {}}
                                 finalScore={meeting.score}
                                 instructorId={meeting.thesis?.instructorId}
-                                onScoreSubmitted={() => refetch()}
-                            />
-                        )}
+                                onScoreSubmitted={() => refetch()}/>
+
+                        }
                     </>
-                )}
-            />
+                }/>
+
 
             {/* Schedule Meeting Modal */}
-            {scheduleMeetingModal && (
+            {scheduleMeetingModal &&
                 <ScheduleMeetingModal
                     isOpen={!!scheduleMeetingModal}
                     onClose={() => setScheduleMeetingModal(null)}
-                    meeting={scheduleMeetingModal}
-                />
-            )}
+                    meeting={scheduleMeetingModal}/>
+
+            }
 
             {/* Reassign Juries Modal */}
-            {reassignMeeting && (
+            {reassignMeeting &&
                 <JurySelectionModal
                     isOpen={!!reassignMeeting}
                     onClose={() => setReassignMeeting(null)}
                     meetingId={reassignMeeting.id}
                     formId={reassignMeeting.thesis?.id ?? 0}
                     onJuriesSelected={handleReassignJuries}
-                    instructorId={reassignMeeting.thesis?.instructorId}
-                />
-            )}
-        </>
-    );
+                    instructorId={reassignMeeting.thesis?.instructorId}/>
+
+            }
+        </>);
+
 };
 
 export default ProfessorMeetingsPage;

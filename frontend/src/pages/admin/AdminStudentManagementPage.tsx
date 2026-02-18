@@ -18,6 +18,8 @@ import {adminAPI} from '../../api/admin.api';
 import {Student, DepartmentSummary, StudentType} from '../../types';
 
 // --- Student Detail Modal Component ---
+import {useTranslation} from "react-i18next";
+
 interface StudentDetailModalProps {
     student: Student | null;
     isOpen: boolean;
@@ -25,6 +27,7 @@ interface StudentDetailModalProps {
 }
 
 const StudentDetailModal: React.FC<StudentDetailModalProps> = ({student, isOpen, onClose}) => {
+    const {t} = useTranslation("admin");
     if (!isOpen || !student) return null;
 
     const getStudentTypeLabel = (type: StudentType) => {
@@ -58,8 +61,8 @@ const StudentDetailModal: React.FC<StudentDetailModalProps> = ({student, isOpen,
             {/* Backdrop */}
             <div
                 className="fixed inset-0 bg-black bg-opacity-50 transition-opacity"
-                onClick={onClose}
-            />
+                onClick={onClose}/>
+
 
             {/* Modal */}
             <div className="flex min-h-full items-center justify-center p-4">
@@ -67,11 +70,11 @@ const StudentDetailModal: React.FC<StudentDetailModalProps> = ({student, isOpen,
                     {/* Header */}
                     <div
                         className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between rounded-t-xl">
-                        <h2 className="text-xl font-semibold text-gray-900">Student Details</h2>
+                        <h2 className="text-xl font-semibold text-gray-900">{t("student_details")}</h2>
                         <button
                             onClick={onClose}
-                            className="p-2 hover:bg-gray-100 rounded-full transition-colors"
-                        >
+                            className="p-2 hover:bg-gray-100 rounded-full transition-colors">
+
                             <X className="h-5 w-5 text-gray-500"/>
                         </button>
                     </div>
@@ -87,17 +90,17 @@ const StudentDetailModal: React.FC<StudentDetailModalProps> = ({student, isOpen,
                                 <h3 className="text-2xl font-bold text-gray-900">
                                     {student.firstName} {student.lastName}
                                 </h3>
-                                <p className="text-gray-500">Student ID: {student.studentNumber}</p>
+                                <p className="text-gray-500">{t("student_id")}{student.studentNumber}</p>
                                 <div className="flex items-center gap-2 mt-2">
                                     <span
                                         className={`px-3 py-1 rounded-full text-sm font-medium ${getStudentTypeColor(student.studentType)}`}>
                                         {getStudentTypeLabel(student.studentType)}
                                     </span>
                                     <span className={`px-3 py-1 rounded-full text-sm font-medium ${
-                                        student.isGraduated
-                                            ? 'bg-blue-100 text-blue-800'
-                                            : 'bg-green-100 text-green-800'
-                                    }`}>
+                                        student.isGraduated ?
+                                            'bg-blue-100 text-blue-800' :
+                                            'bg-green-100 text-green-800'}`
+                                    }>
                                         {student.isGraduated ? 'Graduated' : 'Active'}
                                     </span>
                                 </div>
@@ -106,8 +109,8 @@ const StudentDetailModal: React.FC<StudentDetailModalProps> = ({student, isOpen,
 
                         {/* Contact Information */}
                         <div className="bg-gray-50 rounded-lg p-4">
-                            <h4 className="text-sm font-semibold text-gray-700 uppercase tracking-wide mb-3">
-                                Contact Information
+                            <h4 className="text-sm font-semibold text-gray-700 uppercase tracking-wide mb-3">{t("contact_information")}
+
                             </h4>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div className="flex items-center space-x-3">
@@ -115,38 +118,38 @@ const StudentDetailModal: React.FC<StudentDetailModalProps> = ({student, isOpen,
                                         <Mail className="h-5 w-5 text-gray-500"/>
                                     </div>
                                     <div>
-                                        <p className="text-xs text-gray-500">Email</p>
+                                        <p className="text-xs text-gray-500">{t("email_1")}</p>
                                         <a
                                             href={`mailto:${student.email}`}
-                                            className="text-sm text-primary-600 hover:underline"
-                                        >
+                                            className="text-sm text-primary-600 hover:underline">
+
                                             {student.email}
                                         </a>
                                     </div>
                                 </div>
-                                {student.phoneNumber && (
+                                {student.phoneNumber &&
                                     <div className="flex items-center space-x-3">
                                         <div className="p-2 bg-white rounded-lg shadow-sm">
                                             <Phone className="h-5 w-5 text-gray-500"/>
                                         </div>
                                         <div>
-                                            <p className="text-xs text-gray-500">Phone</p>
+                                            <p className="text-xs text-gray-500">{t("phone")}</p>
                                             <a
                                                 href={`tel:${student.phoneNumber}`}
-                                                className="text-sm text-gray-900"
-                                            >
+                                                className="text-sm text-gray-900">
+
                                                 {student.phoneNumber}
                                             </a>
                                         </div>
                                     </div>
-                                )}
+                                }
                             </div>
                         </div>
 
                         {/* Academic Information */}
                         <div className="bg-gray-50 rounded-lg p-4">
-                            <h4 className="text-sm font-semibold text-gray-700 uppercase tracking-wide mb-3">
-                                Academic Information
+                            <h4 className="text-sm font-semibold text-gray-700 uppercase tracking-wide mb-3">{t("academic_information")}
+
                             </h4>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div className="flex items-center space-x-3">
@@ -154,7 +157,7 @@ const StudentDetailModal: React.FC<StudentDetailModalProps> = ({student, isOpen,
                                         <Building className="h-5 w-5 text-gray-500"/>
                                     </div>
                                     <div>
-                                        <p className="text-xs text-gray-500">Department</p>
+                                        <p className="text-xs text-gray-500">{t("department")}</p>
                                         <p className="text-sm text-gray-900 font-medium">
                                             {student.department?.name || 'N/A'}
                                         </p>
@@ -165,7 +168,7 @@ const StudentDetailModal: React.FC<StudentDetailModalProps> = ({student, isOpen,
                                         <BookOpen className="h-5 w-5 text-gray-500"/>
                                     </div>
                                     <div>
-                                        <p className="text-xs text-gray-500">Field of Study</p>
+                                        <p className="text-xs text-gray-500">{t("field_of_study")}</p>
                                         <p className="text-sm text-gray-900 font-medium">
                                             {student.field?.name || 'N/A'}
                                         </p>
@@ -176,11 +179,11 @@ const StudentDetailModal: React.FC<StudentDetailModalProps> = ({student, isOpen,
                                         <User className="h-5 w-5 text-gray-500"/>
                                     </div>
                                     <div>
-                                        <p className="text-xs text-gray-500">Instructor</p>
+                                        <p className="text-xs text-gray-500">{t("instructor")}</p>
                                         <p className="text-sm text-gray-900 font-medium">
-                                            {student.instructor
-                                                ? `${student.instructor.firstName} ${student.instructor.lastName}`
-                                                : 'N/A'
+                                            {student.instructor ?
+                                                `${student.instructor.firstName} ${student.instructor.lastName}` :
+                                                'N/A'
                                             }
                                         </p>
                                     </div>
@@ -190,7 +193,7 @@ const StudentDetailModal: React.FC<StudentDetailModalProps> = ({student, isOpen,
                                         <GraduationCap className="h-5 w-5 text-gray-500"/>
                                     </div>
                                     <div>
-                                        <p className="text-xs text-gray-500">Degree Program</p>
+                                        <p className="text-xs text-gray-500">{t("degree_program")}</p>
                                         <p className="text-sm text-gray-900 font-medium">
                                             {getStudentTypeLabel(student.studentType)}
                                         </p>
@@ -201,12 +204,12 @@ const StudentDetailModal: React.FC<StudentDetailModalProps> = ({student, isOpen,
 
                         {/* Registration Info */}
                         <div className="bg-gray-50 rounded-lg p-4">
-                            <h4 className="text-sm font-semibold text-gray-700 uppercase tracking-wide mb-3">
-                                Registration Details
+                            <h4 className="text-sm font-semibold text-gray-700 uppercase tracking-wide mb-3">{t("registration_details")}
+
                             </h4>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
-                                    <p className="text-xs text-gray-500">Registration Date</p>
+                                    <p className="text-xs text-gray-500">{t("registration_date")}</p>
                                     <p className="text-sm text-gray-900 font-medium">
                                         {new Date(student.creationDate).toLocaleDateString('en-US', {
                                             year: 'numeric',
@@ -216,7 +219,7 @@ const StudentDetailModal: React.FC<StudentDetailModalProps> = ({student, isOpen,
                                     </p>
                                 </div>
                                 <div>
-                                    <p className="text-xs text-gray-500">Student ID</p>
+                                    <p className="text-xs text-gray-500">{t("student_id_1")}</p>
                                     <p className="text-sm text-gray-900 font-medium">
                                         {student.id}
                                     </p>
@@ -228,18 +231,19 @@ const StudentDetailModal: React.FC<StudentDetailModalProps> = ({student, isOpen,
                     {/* Footer */}
                     <div
                         className="sticky bottom-0 bg-gray-50 border-t border-gray-200 px-6 py-4 flex justify-end rounded-b-xl">
-                        <Button variant="secondary" onClick={onClose}>
-                            Close
+                        <Button variant="secondary" onClick={onClose}>{t("close")}
+
                         </Button>
                     </div>
                 </div>
             </div>
-        </div>
-    );
+        </div>);
+
 };
 
 // --- Main Component ---
 export const AdminStudentManagementPage: React.FC = () => {
+    const {t} = useTranslation("admin");
     const navigate = useNavigate();
     const queryClient = useQueryClient();
 
@@ -260,7 +264,7 @@ export const AdminStudentManagementPage: React.FC = () => {
         isLoading: isLoadingDepts
     } = useQuery({
         queryKey: ['departments'],
-        queryFn: adminAPI.getDepartments,
+        queryFn: adminAPI.getDepartments
     });
 
     // 2. Fetch Students (with Search and Filters)
@@ -272,18 +276,18 @@ export const AdminStudentManagementPage: React.FC = () => {
         queryFn: () => adminAPI.getStudents({
             search: search || undefined,
             departmentId: selectedDeptId ? Number(selectedDeptId) : undefined,
-            studentType: selectedStudentType || undefined,
-        }),
+            studentType: selectedStudentType || undefined
+        })
     });
 
     // --- Data Extraction ---
-    const students: Student[] = Array.isArray(studentsResponse)
-        ? studentsResponse
-        : (studentsResponse?.data || []);
+    const students: Student[] = Array.isArray(studentsResponse) ?
+        studentsResponse :
+        studentsResponse?.data || [];
 
-    const departments: DepartmentSummary[] = Array.isArray(departmentsData)
-        ? departmentsData
-        : (departmentsData?.data || []);
+    const departments: DepartmentSummary[] = Array.isArray(departmentsData) ?
+        departmentsData :
+        departmentsData?.data || [];
 
     // --- Mutations ---
 
@@ -296,7 +300,7 @@ export const AdminStudentManagementPage: React.FC = () => {
         onError: (error) => {
             console.error('Failed to delete student', error);
             alert('Failed to delete student. Please try again.');
-        },
+        }
     });
 
     // --- Handlers ---
@@ -317,7 +321,10 @@ export const AdminStudentManagementPage: React.FC = () => {
     };
 
     const handleDeleteStudent = (student: Student) => {
-        if (window.confirm(`Are you sure you want to delete ${student.firstName} ${student.lastName}?`)) {
+        if (window.confirm(t("are_you_sure_you_want_to_delete_1", {
+            firstName: student.firstName,
+            lastName: student.lastName
+        }))) {
             deleteMutation.mutate(student.id);
         }
     };
@@ -334,7 +341,7 @@ export const AdminStudentManagementPage: React.FC = () => {
             return;
         }
 
-        const header = ['ID', 'Student Number', 'First Name', 'Last Name', 'Email', 'Department', 'Field', 'Student Type', 'Status'];
+        const header = ['ID', t("student_number"), t("first_name_1"), t("last_name_1"), t("email_1"), t("department"), t("field"), t("student_type"), t("status")];
         const rows = students.map((s: Student) => [
             s.id,
             s.studentNumber,
@@ -344,19 +351,18 @@ export const AdminStudentManagementPage: React.FC = () => {
             s.department?.name || 'N/A',
             s.field?.name || 'N/A',
             s.studentType || 'N/A',
-            s.isGraduated ? 'Graduated' : 'Active',
-        ]);
+            s.isGraduated ? 'Graduated' : 'Active']
+        );
 
         const csvContent = [
             header.join(','),
-            ...rows.map(row => row.join(','))
-        ].join('\n');
+            ...rows.map((row) => row.join(','))].join('\n');
 
         const blob = new Blob([csvContent], {type: 'text/csv;charset=utf-8;'});
         const url = URL.createObjectURL(blob);
         const link = document.createElement('a');
         link.href = url;
-        link.setAttribute('download', `students_export_${new Date().toISOString().split('T')[0]}.csv`);
+        link.setAttribute('download', t("studentsexportcsv", {val0: new Date().toISOString().split('T')[0]}));
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
@@ -372,32 +378,32 @@ export const AdminStudentManagementPage: React.FC = () => {
             <StudentDetailModal
                 student={selectedStudent}
                 isOpen={isViewModalOpen}
-                onClose={handleCloseViewModal}
-            />
+                onClose={handleCloseViewModal}/>
+
 
             {/* Page Header */}
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div>
-                    <h1 className="text-2xl font-bold text-gray-900">Student Management</h1>
-                    <p className="text-sm text-gray-600 mt-1">
-                        Manage registered students, track their progress, and oversee enrollment.
+                    <h1 className="text-2xl font-bold text-gray-900">{t("student_management")}</h1>
+                    <p className="text-sm text-gray-600 mt-1">{t("manage_registered_students_track_their_progress_an")}
+
                     </p>
                 </div>
                 <div className="flex gap-3">
                     <Button
                         variant="secondary"
                         onClick={handleExport}
-                        disabled={students.length === 0 || isLoadingStudents}
-                    >
-                        <Download className="h-4 w-4 mr-2"/>
-                        Export CSV
+                        disabled={students.length === 0 || isLoadingStudents}>
+
+                        <Download className="h-4 w-4 mr-2"/>{t("export_csv")}
+
                     </Button>
                     <Button
                         variant="primary"
-                        onClick={() => navigate('/admin/register-student')}
-                    >
-                        <UserPlus className="h-4 w-4 mr-2"/>
-                        Register Student
+                        onClick={() => navigate('/admin/register-student')}>
+
+                        <UserPlus className="h-4 w-4 mr-2"/>{t("register_student")}
+
                     </Button>
                 </div>
             </div>
@@ -409,85 +415,85 @@ export const AdminStudentManagementPage: React.FC = () => {
                         <StudentSearchBar
                             value={search}
                             onChange={setSearch}
-                            placeholder="Search by name, email, or student ID..."
-                        />
+                            placeholder={t("search_by_name_email_or_student_id")}/>
+
                     </div>
 
                     <div className="w-full lg:w-1/5">
                         <DepartmentFilter
                             value={selectedDeptId}
                             onChange={setSelectedDeptId}
-                            departments={departments}
-                        />
+                            departments={departments}/>
+
                     </div>
 
                     <div className="w-full lg:w-1/5">
                         <StudentTypeFilter
                             value={selectedStudentType}
-                            onChange={setSelectedStudentType}
-                        />
+                            onChange={setSelectedStudentType}/>
+
                     </div>
 
-                    {hasActiveFilters && (
+                    {hasActiveFilters &&
                         <div className="w-full lg:w-auto">
                             <button
                                 onClick={handleClearFilters}
-                                className="px-4 py-2 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
-                            >
-                                Clear Filters
+                                className="px-4 py-2 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors">{t("clear_filters")}
+
+
                             </button>
                         </div>
-                    )}
+                    }
                 </div>
 
-                {hasActiveFilters && (
+                {hasActiveFilters &&
                     <div className="mt-3 pt-3 border-t border-gray-200">
                         <div className="flex flex-wrap items-center gap-2">
-                            <span className="text-sm text-gray-500">Active filters:</span>
+                            <span className="text-sm text-gray-500">{t("active_filters")}</span>
 
-                            {search && (
+                            {search &&
                                 <span
-                                    className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                                    Search: "{search}"
+                                    className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">{t("search")}
+                                    {search}"
                                     <button onClick={() => setSearch('')}
                                             className="ml-1 hover:text-blue-600">×</button>
                                 </span>
-                            )}
+                            }
 
-                            {selectedDeptId && (
+                            {selectedDeptId &&
                                 <span
-                                    className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                                    Dept: {departments.find(d => d.id.toString() === selectedDeptId)?.name || selectedDeptId}
+                                    className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">{t("dept")}
+                                    {departments.find((d) => d.id.toString() === selectedDeptId)?.name || selectedDeptId}
                                     <button onClick={() => setSelectedDeptId('')}
                                             className="ml-1 hover:text-green-600">×</button>
                                 </span>
-                            )}
+                            }
 
-                            {selectedStudentType && (
+                            {selectedStudentType &&
                                 <span
-                                    className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
-                                    Type: {selectedStudentType}
+                                    className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">{t("type")}
+                                    {selectedStudentType}
                                     <button onClick={() => setSelectedStudentType('')}
                                             className="ml-1 hover:text-purple-600">×</button>
                                 </span>
-                            )}
+                            }
                         </div>
                     </div>
-                )}
+                }
             </Card>
 
             {/* Results Count */}
             <div className="flex items-center justify-between">
                 <p className="text-sm text-gray-600">
-                    {isLoadingStudents ? (
-                        'Loading...'
-                    ) : (
-                        <>
-                            Showing <span
-                            className="font-medium">{students.length}</span> student{students.length !== 1 ? 's' : ''}
+                    {isLoadingStudents ?
+                        'Loading...' :
+
+                        <>{t("showing")}
+                            <span
+                                className="font-medium">{students.length}</span> student{students.length !== 1 ? 's' : ''}
                             {hasActiveFilters && ' (filtered)'}
                         </>
-                    )}
+                    }
                 </p>
             </div>
 
@@ -497,8 +503,8 @@ export const AdminStudentManagementPage: React.FC = () => {
                 loading={isLoadingStudents}
                 onViewStudent={handleViewStudent}
                 onEditStudent={handleEditStudent}
-                onDeleteStudent={handleDeleteStudent}
-            />
-        </div>
-    );
+                onDeleteStudent={handleDeleteStudent}/>
+
+        </div>);
+
 };
