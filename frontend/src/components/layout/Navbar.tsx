@@ -1,15 +1,15 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { LogOut, User, Globe } from 'lucide-react';
-import { useAuthStore } from '../../store/authStore';
-import { authAPI } from '../../api/auth.api';
-import { Button } from '../common/Button';
-import { useTranslation } from 'react-i18next';
+import {useNavigate} from 'react-router-dom';
+import {LogOut, User, Globe} from 'lucide-react';
+import {useAuthStore} from '../../store/authStore';
+import {authAPI} from '../../api/auth.api';
+import {Button} from '../common/Button';
+import {useTranslation} from 'react-i18next';
 
 export const Navbar: React.FC = () => {
     const navigate = useNavigate();
-    const { clearAuth, role, firstName, lastName } = useAuthStore();
-    const { t, i18n } = useTranslation();
+    const {clearAuth, role, firstName, lastName} = useAuthStore();
+    const {t, i18n} = useTranslation();
 
     const isRTL = i18n.language === 'fa';
 
@@ -78,14 +78,14 @@ export const Navbar: React.FC = () => {
                             className="flex items-center gap-2 min-w-[110px] justify-center"
                             // ⬆️ min-w prevents width change between languages
                         >
-                            <Globe className="h-4 w-4 flex-shrink-0" />
+                            <Globe className="h-4 w-4 flex-shrink-0"/>
                             <span className="flex-shrink-0">
                                 {isRTL ? 'فارسی' : 'English'}
                             </span>
                         </Button>
 
                         {/* --- Separator --- */}
-                        <div className="h-8 w-px bg-gray-300" />
+                        <div className="h-8 w-px bg-gray-300"/>
 
                         {/* --- User Info (always same position) --- */}
                         <div
@@ -93,7 +93,7 @@ export const Navbar: React.FC = () => {
                             dir={isRTL ? 'rtl' : 'ltr'}
                             // ⬆️ Only the text content respects RTL, not its position
                         >
-                            <User className="h-5 w-5 flex-shrink-0" />
+                            <User className="h-5 w-5 flex-shrink-0"/>
                             <div className="flex flex-col">
                                 <span className="font-medium text-sm">{getRoleName()}</span>
                                 {getFullName() && (
@@ -103,7 +103,7 @@ export const Navbar: React.FC = () => {
                         </div>
 
                         {/* --- Separator --- */}
-                        <div className="h-8 w-px bg-gray-300" />
+                        <div className="h-8 w-px bg-gray-300"/>
 
                         {/* --- Logout Button (always same position) --- */}
                         <Button
@@ -112,7 +112,7 @@ export const Navbar: React.FC = () => {
                             onClick={handleLogout}
                             className="flex items-center gap-2"
                         >
-                            <LogOut className="h-4 w-4 flex-shrink-0" />
+                            <LogOut className="h-4 w-4 flex-shrink-0"/>
                             <span>{t('navbar.logout')}</span>
                         </Button>
                     </div>

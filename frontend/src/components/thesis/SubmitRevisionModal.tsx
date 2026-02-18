@@ -1,7 +1,7 @@
 // src/components/thesis/SubmitRevisionModal.tsx
 
 import React from 'react';
-import { X, CheckCircle, MessageSquare, Clock, User } from 'lucide-react';
+import {X, CheckCircle, MessageSquare, Clock, User} from 'lucide-react';
 import './SubmitRevisionModal.css';//TODO remove css files
 
 interface Props {
@@ -54,7 +54,7 @@ export const SubmitRevisionModal: React.FC<Props> = ({
                         disabled={isLoading}
                         aria-label="Close modal"
                     >
-                        <X size={20} />
+                        <X size={20}/>
                     </button>
                 </div>
 
@@ -69,19 +69,19 @@ export const SubmitRevisionModal: React.FC<Props> = ({
                     {/* Revision Request Info */}
                     <div className="revision-info-card">
                         <div className="revision-info-header">
-                            <MessageSquare size={18} />
+                            <MessageSquare size={18}/>
                             <span>Revision Request Details</span>
                         </div>
 
                         <div className="revision-meta">
                             <div className="meta-item">
-                                <User size={14} />
+                                <User size={14}/>
                                 <span className="meta-label">Requested by:</span>
                                 <span className="meta-value">{requestedBy}</span>
                             </div>
                             {requestedAt && (
                                 <div className="meta-item">
-                                    <Clock size={14} />
+                                    <Clock size={14}/>
                                     <span className="meta-label">Requested at:</span>
                                     <span className="meta-value">{formatDate(requestedAt)}</span>
                                 </div>
@@ -98,7 +98,7 @@ export const SubmitRevisionModal: React.FC<Props> = ({
 
                     {/* Confirmation Notice */}
                     <div className="confirmation-notice">
-                        <CheckCircle size={18} />
+                        <CheckCircle size={18}/>
                         <div className="notice-content">
                             <strong>Ready to submit your revision?</strong>
                             <p>
@@ -126,12 +126,12 @@ export const SubmitRevisionModal: React.FC<Props> = ({
                         >
                             {isLoading ? (
                                 <>
-                                    <span className="spinner" />
+                                    <span className="spinner"/>
                                     Submitting...
                                 </>
                             ) : (
                                 <>
-                                    <CheckCircle size={16} />
+                                    <CheckCircle size={16}/>
                                     Submit Revision
                                 </>
                             )}

@@ -1,10 +1,10 @@
 // components/professor/TimeSlotsComparison.tsx
 import React from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { Calendar, Clock, Users, CheckCircle } from 'lucide-react';
-import { Card } from '../common/Card';
-import { TimeSlot, TimePeriod, ProfessorTimeSlots } from '../../types';
-import { professorAPI } from '../../api/professor.api';
+import {useQuery} from '@tanstack/react-query';
+import {Calendar, Clock, Users, CheckCircle} from 'lucide-react';
+import {Card} from '../common/Card';
+import {TimeSlot, TimePeriod, ProfessorTimeSlots} from '../../types';
+import {professorAPI} from '../../api/professor.api';
 
 const periodLabels: Record<TimePeriod, string> = {
     [TimePeriod.PERIOD_7_30_9_00]: '7:30 - 9:00',
@@ -14,8 +14,8 @@ const periodLabels: Record<TimePeriod, string> = {
     [TimePeriod.PERIOD_15_30_17_00]: '15:30 - 17:00',
 };
 
-export const TimeSlotsComparison = ({ meetingId }: { meetingId: number }) => {
-    const { data, isLoading, error } = useQuery({
+export const TimeSlotsComparison = ({meetingId}: { meetingId: number }) => {
+    const {data, isLoading, error} = useQuery({
         queryKey: ['meetingTimeSlots', meetingId],
         queryFn: () => professorAPI.getMeetingTimeSlots(meetingId),
     });
@@ -67,7 +67,7 @@ export const TimeSlotsComparison = ({ meetingId }: { meetingId: number }) => {
         return null;
     }
 
-    const { juryMemberTimeSlots, intersections } = data;
+    const {juryMemberTimeSlots, intersections} = data;
 
     // Add null/undefined check
     if (!juryMemberTimeSlots || !Array.isArray(juryMemberTimeSlots)) {
@@ -99,7 +99,7 @@ export const TimeSlotsComparison = ({ meetingId }: { meetingId: number }) => {
             {intersections && intersections.length > 0 ? (
                 <Card className="bg-green-50 border-green-200">
                     <div className="flex items-start space-x-3">
-                        <CheckCircle className="h-6 w-6 text-green-600 mt-1" />
+                        <CheckCircle className="h-6 w-6 text-green-600 mt-1"/>
                         <div className="flex-1">
                             <h3 className="text-lg font-semibold text-green-900 mb-2">
                                 Common Available Times Found
@@ -139,13 +139,14 @@ export const TimeSlotsComparison = ({ meetingId }: { meetingId: number }) => {
             ) : (
                 <Card className="bg-yellow-50 border-yellow-200">
                     <div className="flex items-start space-x-3">
-                        <Clock className="h-6 w-6 text-yellow-600 mt-1" />
+                        <Clock className="h-6 w-6 text-yellow-600 mt-1"/>
                         <div>
                             <h3 className="text-lg font-semibold text-yellow-900 mb-1">
                                 No Common Time Slots
                             </h3>
                             <p className="text-sm text-yellow-700">
-                                {juryMemberTimeSlots.filter(p => p?.timeslots && p.timeslots.length > 0).length} of {juryMemberTimeSlots.length} jury members have submitted their availability.
+                                {juryMemberTimeSlots.filter(p => p?.timeslots && p.timeslots.length > 0).length} of {juryMemberTimeSlots.length} jury
+                                members have submitted their availability.
                                 Waiting for others or no overlapping times available.
                             </p>
                         </div>
@@ -156,7 +157,7 @@ export const TimeSlotsComparison = ({ meetingId }: { meetingId: number }) => {
             {/* Individual Professor Time Slots */}
             <Card>
                 <div className="flex items-center space-x-2 mb-4">
-                    <Users className="h-5 w-5 text-gray-600" />
+                    <Users className="h-5 w-5 text-gray-600"/>
                     <h3 className="text-lg font-semibold text-gray-900">
                         Individual Availability by Jury Member
                     </h3>
@@ -232,7 +233,7 @@ export const TimeSlotsComparison = ({ meetingId }: { meetingId: number }) => {
             {sortedDates.length > 0 && (
                 <Card>
                     <div className="flex items-center space-x-2 mb-4">
-                        <Calendar className="h-5 w-5 text-gray-600" />
+                        <Calendar className="h-5 w-5 text-gray-600"/>
                         <h3 className="text-lg font-semibold text-gray-900">
                             Availability Matrix
                         </h3>
@@ -246,7 +247,8 @@ export const TimeSlotsComparison = ({ meetingId }: { meetingId: number }) => {
                                     Date / Time
                                 </th>
                                 {Object.values(periodLabels).map(label => (
-                                    <th key={label} className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    <th key={label}
+                                        className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         {label}
                                     </th>
                                 ))}
@@ -272,11 +274,12 @@ export const TimeSlotsComparison = ({ meetingId }: { meetingId: number }) => {
                                         return (
                                             <td key={period} className="px-4 py-3 text-center">
                                                 {availableProfessors.length > 0 ? (
-                                                    <div className={`inline-flex items-center justify-center px-2 py-1 rounded text-xs font-medium ${
-                                                        isCommon
-                                                            ? 'bg-green-100 text-green-800 ring-2 ring-green-400'
-                                                            : 'bg-blue-100 text-blue-800'
-                                                    }`}>
+                                                    <div
+                                                        className={`inline-flex items-center justify-center px-2 py-1 rounded text-xs font-medium ${
+                                                            isCommon
+                                                                ? 'bg-green-100 text-green-800 ring-2 ring-green-400'
+                                                                : 'bg-blue-100 text-blue-800'
+                                                        }`}>
                                                         {availableProfessors.length}/{juryMemberTimeSlots.length}
                                                         {isCommon && ' ✓'}
                                                     </div>

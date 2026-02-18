@@ -1,5 +1,5 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import React, {createContext, useContext, useEffect, useState} from 'react';
+import {useTranslation} from 'react-i18next';
 
 interface LanguageContextType {
     language: string;
@@ -10,8 +10,8 @@ interface LanguageContextType {
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
-export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    const { i18n } = useTranslation();
+export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({children}) => {
+    const {i18n} = useTranslation();
     const [language, setLanguageState] = useState(i18n.language || 'en');
 
     const isRTL = language === 'fa' || language === 'ar';
@@ -41,7 +41,7 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     };
 
     return (
-        <LanguageContext.Provider value={{ language, isRTL, toggleLanguage, setLanguage }}>
+        <LanguageContext.Provider value={{language, isRTL, toggleLanguage, setLanguage}}>
             {children}
         </LanguageContext.Provider>
     );

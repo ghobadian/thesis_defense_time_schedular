@@ -1,24 +1,24 @@
 // src/pages/professor/MyMeetings.tsx
-import React, { useState } from 'react';
-import { useQuery, useMutation } from '@tanstack/react-query';
-import { useNavigate } from 'react-router-dom';
-import { professorAPI } from '../../api/professor.api';
-import { MeetingView } from '../../components/common/meeting/MeetingView';
-import { TimeSlotsComparison } from '../../components/professor/TimeSlotsComparison';
-import { JuryScoresPanel } from '../../components/professor/JuryScoresPanel';
-import { ScheduleMeetingModal } from '../../components/professor/ScheduleMeetingModal';
-import { JurySelectionModal } from '../../components/common/JurySelectionModal';
-import { Meeting, MeetingState, UserRole } from '../../types';
-import { useAuthStore } from '../../store/authStore';
-import { Button } from '../../components/common/Button';
+import React, {useState} from 'react';
+import {useQuery, useMutation} from '@tanstack/react-query';
+import {useNavigate} from 'react-router-dom';
+import {professorAPI} from '../../api/professor.api';
+import {MeetingView} from '../../components/common/meeting/MeetingView';
+import {TimeSlotsComparison} from '../../components/professor/TimeSlotsComparison';
+import {JuryScoresPanel} from '../../components/professor/JuryScoresPanel';
+import {ScheduleMeetingModal} from '../../components/professor/ScheduleMeetingModal';
+import {JurySelectionModal} from '../../components/common/JurySelectionModal';
+import {Meeting, MeetingState, UserRole} from '../../types';
+import {useAuthStore} from '../../store/authStore';
+import {Button} from '../../components/common/Button';
 
 export const ProfessorMeetingsPage: React.FC = () => {
     const navigate = useNavigate();
-    const { userId, role } = useAuthStore();
+    const {userId, role} = useAuthStore();
     const [scheduleMeetingModal, setScheduleMeetingModal] = useState<Meeting | null>(null);
     const [reassignMeeting, setReassignMeeting] = useState<Meeting | null>(null);
 
-    const { data: meetings, isLoading, error, refetch } = useQuery({
+    const {data: meetings, isLoading, error, refetch} = useQuery({
         queryKey: ['myMeetings'],
         queryFn: professorAPI.getMyMeetings,
     });
@@ -40,7 +40,7 @@ export const ProfessorMeetingsPage: React.FC = () => {
 
     // Reassign juries mutation
     const reassignJuriesMutation = useMutation({
-        mutationFn: ({ meetingId, juryIds }: { meetingId: number; juryIds: number[] }) =>
+        mutationFn: ({meetingId, juryIds}: { meetingId: number; juryIds: number[] }) =>
             professorAPI.reassignJuries(meetingId, juryIds),
         onSuccess: () => {
             setReassignMeeting(null);
@@ -127,7 +127,7 @@ export const ProfessorMeetingsPage: React.FC = () => {
 
     const handleReassignJuries = async (juryIds: number[]) => {
         if (!reassignMeeting) return;
-        reassignJuriesMutation.mutate({ meetingId: reassignMeeting.id, juryIds });
+        reassignJuriesMutation.mutate({meetingId: reassignMeeting.id, juryIds});
     };
 
     if (error) {
@@ -149,7 +149,7 @@ export const ProfessorMeetingsPage: React.FC = () => {
                 userRole="professor"
                 canViewTimeSlots={canViewTimeSlots}
                 renderTimeSlotsComparison={(meeting) => (
-                    <TimeSlotsComparison meetingId={meeting.id} />
+                    <TimeSlotsComparison meetingId={meeting.id}/>
                 )}
                 onCancelMeeting={handleCancelMeeting}
                 canCancelMeeting={canCancelMeeting}

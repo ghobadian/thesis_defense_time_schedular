@@ -1,14 +1,14 @@
 // src/pages/student/StudentThesisForms.tsx
 
-import React, { useState } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { studentAPI } from '../../api/student.api';
-import { ThesisForm, FormState, ThesisFormInput } from '../../types';
-import { useAuthStore } from '../../store/authStore';
-import { Link } from 'react-router-dom';
-import { FileText, Clock, CheckCircle, XCircle, AlertCircle, Edit3, Send, ChevronDown, ChevronUp } from 'lucide-react';
-import { EditFormModal } from '../../components/thesis/EditFormModal';
-import { SubmitRevisionModal } from '../../components/thesis/SubmitRevisionModal';
+import React, {useState} from 'react';
+import {useQuery, useMutation, useQueryClient} from '@tanstack/react-query';
+import {studentAPI} from '../../api/student.api';
+import {ThesisForm, FormState, ThesisFormInput} from '../../types';
+import {useAuthStore} from '../../store/authStore';
+import {Link} from 'react-router-dom';
+import {FileText, Clock, CheckCircle, XCircle, AlertCircle, Edit3, Send, ChevronDown, ChevronUp} from 'lucide-react';
+import {EditFormModal} from '../../components/thesis/EditFormModal';
+import {SubmitRevisionModal} from '../../components/thesis/SubmitRevisionModal';
 import {t} from "i18next";
 
 // Helper function to get status info
@@ -26,7 +26,7 @@ const getStatusInfo = (state: FormState) => {
             bgColor: 'bg-blue-50',
             textColor: 'text-blue-700',
             borderColor: 'border-blue-200',
-            icon: <Clock size={16} />,
+            icon: <Clock size={16}/>,
             description: 'Waiting for instructor review',
         },
         [FormState.INSTRUCTOR_APPROVED]: {
@@ -34,7 +34,7 @@ const getStatusInfo = (state: FormState) => {
             bgColor: 'bg-green-50',
             textColor: 'text-green-700',
             borderColor: 'border-green-200',
-            icon: <CheckCircle size={16} />,
+            icon: <CheckCircle size={16}/>,
             description: 'Approved by instructor, waiting for admin review',
         },
         [FormState.INSTRUCTOR_REJECTED]: {
@@ -42,7 +42,7 @@ const getStatusInfo = (state: FormState) => {
             bgColor: 'bg-red-50',
             textColor: 'text-red-700',
             borderColor: 'border-red-200',
-            icon: <XCircle size={16} />,
+            icon: <XCircle size={16}/>,
             description: 'Rejected by instructor',
         },
         [FormState.INSTRUCTOR_REVISION_REQUESTED]: {
@@ -50,7 +50,7 @@ const getStatusInfo = (state: FormState) => {
             bgColor: 'bg-amber-50',
             textColor: 'text-amber-700',
             borderColor: 'border-amber-200',
-            icon: <AlertCircle size={16} />,
+            icon: <AlertCircle size={16}/>,
             description: 'Instructor requested changes to your form',
         },
         [FormState.ADMIN_APPROVED]: {
@@ -58,7 +58,7 @@ const getStatusInfo = (state: FormState) => {
             bgColor: 'bg-green-50',
             textColor: 'text-green-700',
             borderColor: 'border-green-200',
-            icon: <CheckCircle size={16} />,
+            icon: <CheckCircle size={16}/>,
             description: 'Approved by admin, waiting for manager review',
         },
         [FormState.ADMIN_REJECTED]: {
@@ -66,7 +66,7 @@ const getStatusInfo = (state: FormState) => {
             bgColor: 'bg-red-50',
             textColor: 'text-red-700',
             borderColor: 'border-red-200',
-            icon: <XCircle size={16} />,
+            icon: <XCircle size={16}/>,
             description: 'Rejected by admin',
         },
         [FormState.ADMIN_REVISION_REQUESTED_FOR_STUDENT]: {
@@ -74,7 +74,7 @@ const getStatusInfo = (state: FormState) => {
             bgColor: 'bg-amber-50',
             textColor: 'text-amber-700',
             borderColor: 'border-amber-200',
-            icon: <AlertCircle size={16} />,
+            icon: <AlertCircle size={16}/>,
             description: 'Admin requested changes to your form',
         },
         [FormState.ADMIN_REVISION_REQUESTED_FOR_INSTRUCTOR]: {
@@ -82,7 +82,7 @@ const getStatusInfo = (state: FormState) => {
             bgColor: 'bg-purple-50',
             textColor: 'text-purple-700',
             borderColor: 'border-purple-200',
-            icon: <Clock size={16} />,
+            icon: <Clock size={16}/>,
             description: 'Admin requested instructor to review',
         },
         [FormState.MANAGER_APPROVED]: {
@@ -90,7 +90,7 @@ const getStatusInfo = (state: FormState) => {
             bgColor: 'bg-emerald-50',
             textColor: 'text-emerald-700',
             borderColor: 'border-emerald-200',
-            icon: <CheckCircle size={16} />,
+            icon: <CheckCircle size={16}/>,
             description: 'Fully approved! Defense meeting will be scheduled',
         },
         [FormState.MANAGER_REJECTED]: {
@@ -98,7 +98,7 @@ const getStatusInfo = (state: FormState) => {
             bgColor: 'bg-red-50',
             textColor: 'text-red-700',
             borderColor: 'border-red-200',
-            icon: <XCircle size={16} />,
+            icon: <XCircle size={16}/>,
             description: 'Rejected by manager',
         },
         [FormState.MANAGER_REVISION_REQUESTED_FOR_STUDENT]: {
@@ -106,7 +106,7 @@ const getStatusInfo = (state: FormState) => {
             bgColor: 'bg-amber-50',
             textColor: 'text-amber-700',
             borderColor: 'border-amber-200',
-            icon: <AlertCircle size={16} />,
+            icon: <AlertCircle size={16}/>,
             description: 'Manager requested changes to your form',
         },
         [FormState.MANAGER_REVISION_REQUESTED_FOR_INSTRUCTOR]: {
@@ -114,7 +114,7 @@ const getStatusInfo = (state: FormState) => {
             bgColor: 'bg-purple-50',
             textColor: 'text-purple-700',
             borderColor: 'border-purple-200',
-            icon: <Clock size={16} />,
+            icon: <Clock size={16}/>,
             description: 'Manager requested instructor to review',
         },
         [FormState.MANAGER_REVISION_REQUESTED_FOR_ADMIN]: {
@@ -122,7 +122,7 @@ const getStatusInfo = (state: FormState) => {
             bgColor: 'bg-purple-50',
             textColor: 'text-purple-700',
             borderColor: 'border-purple-200',
-            icon: <Clock size={16} />,
+            icon: <Clock size={16}/>,
             description: 'Manager requested admin to review',
         },
     };
@@ -132,7 +132,7 @@ const getStatusInfo = (state: FormState) => {
         bgColor: 'bg-gray-50',
         textColor: 'text-gray-700',
         borderColor: 'border-gray-200',
-        icon: <FileText size={16} />,
+        icon: <FileText size={16}/>,
         description: 'Unknown status',
     };
 };
@@ -161,7 +161,7 @@ const getRevisionRequester = (state: FormState): string => {
 };
 
 export const StudentFormsPage: React.FC = () => {
-    const { role } = useAuthStore();
+    const {role} = useAuthStore();
     const queryClient = useQueryClient();
     const [expandedFormId, setExpandedFormId] = useState<number | null>(null);
 
@@ -174,7 +174,7 @@ export const StudentFormsPage: React.FC = () => {
     const [formToSubmitRevision, setFormToSubmitRevision] = useState<ThesisForm | null>(null);
 
     // Fetch student's forms
-    const { data: forms = [], isLoading, error, refetch } = useQuery({
+    const {data: forms = [], isLoading, error, refetch} = useQuery({
         queryKey: ['student-forms'],
         queryFn: studentAPI.getMyThesisForms,
         enabled: role === 'STUDENT',
@@ -182,10 +182,10 @@ export const StudentFormsPage: React.FC = () => {
 
     // Mutation for editing form
     const editFormMutation = useMutation({
-        mutationFn: ({ formId, data }: { formId: number; data: ThesisFormInput }) =>
+        mutationFn: ({formId, data}: { formId: number; data: ThesisFormInput }) =>
             studentAPI.editForm(formId, data),
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['student-forms'] });
+            queryClient.invalidateQueries({queryKey: ['student-forms']});
             setEditModalOpen(false);
             setFormToEdit(null);
         },
@@ -198,7 +198,7 @@ export const StudentFormsPage: React.FC = () => {
     const submitRevisionMutation = useMutation({
         mutationFn: (formId: number) => studentAPI.submitRevision(formId),
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['student-forms'] });
+            queryClient.invalidateQueries({queryKey: ['student-forms']});
             setSubmitRevisionModalOpen(false);
             setFormToSubmitRevision(null);
         },
@@ -275,7 +275,8 @@ export const StudentFormsPage: React.FC = () => {
         return (
             <div className="min-h-screen bg-gray-50 flex items-center justify-center p-6">
                 <div className="flex flex-col items-center gap-4">
-                    <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+                    <div
+                        className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
                     <p className="text-gray-600 text-lg">Loading your thesis forms...</p>
                 </div>
             </div>
@@ -288,7 +289,7 @@ export const StudentFormsPage: React.FC = () => {
             <div className="min-h-screen bg-gray-50 flex items-center justify-center p-6">
                 <div className="flex flex-col items-center gap-4 text-center">
                     <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center">
-                        <XCircle size={32} className="text-red-500" />
+                        <XCircle size={32} className="text-red-500"/>
                     </div>
                     <h2 className="text-xl font-bold text-gray-800">Failed to load forms</h2>
                     <p className="text-gray-600">{(error as Error).message || 'An error occurred'}</p>
@@ -316,7 +317,7 @@ export const StudentFormsPage: React.FC = () => {
                         to="/student/thesis/create"
                         className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium shadow-sm"
                     >
-                        <FileText size={20} />
+                        <FileText size={20}/>
                         {t('form.create-new-form')}
                     </Link>
                 </div>
@@ -327,8 +328,9 @@ export const StudentFormsPage: React.FC = () => {
                 {forms.length === 0 ? (
                     // Empty State
                     <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-12 text-center">
-                        <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                            <FileText size={40} className="text-gray-400" strokeWidth={1.5} />
+                        <div
+                            className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                            <FileText size={40} className="text-gray-400" strokeWidth={1.5}/>
                         </div>
                         <h2 className="text-xl font-bold text-gray-800 mb-2">{t('form.errors.no-forms')}</h2>
                         <p className="text-gray-500 mb-6 max-w-md mx-auto">
@@ -338,7 +340,7 @@ export const StudentFormsPage: React.FC = () => {
                             to="/student/thesis/create"
                             className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
                         >
-                            <FileText size={20} />
+                            <FileText size={20}/>
                             {t('form.create-first-form')}
                         </Link>
                     </div>
@@ -361,8 +363,9 @@ export const StudentFormsPage: React.FC = () => {
                                 >
                                     {/* Revision Alert Banner */}
                                     {needsRevision && (
-                                        <div className="flex items-center gap-2 px-4 py-2.5 bg-amber-50 border-b border-amber-200 rounded-t-xl">
-                                            <AlertCircle size={16} className="text-amber-600 flex-shrink-0" />
+                                        <div
+                                            className="flex items-center gap-2 px-4 py-2.5 bg-amber-50 border-b border-amber-200 rounded-t-xl">
+                                            <AlertCircle size={16} className="text-amber-600 flex-shrink-0"/>
                                             <span className="text-sm font-medium text-amber-700">
                         {getRevisionRequester(form.state)} requested revisions to your form
                       </span>
@@ -371,13 +374,15 @@ export const StudentFormsPage: React.FC = () => {
 
                                     {/* Card Header */}
                                     <div className="p-4 sm:p-5">
-                                        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
+                                        <div
+                                            className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
                                             <div className="flex-1 min-w-0">
                                                 <div className="flex items-center gap-2 flex-wrap">
                                                     <h3 className="text-lg font-semibold text-gray-800 truncate">
                                                         {form.title}
                                                     </h3>
-                                                    <span className="text-xs font-medium text-gray-400 bg-gray-100 px-2 py-0.5 rounded">
+                                                    <span
+                                                        className="text-xs font-medium text-gray-400 bg-gray-100 px-2 py-0.5 rounded">
                             #{form.id}
                           </span>
                                                 </div>
@@ -489,13 +494,14 @@ export const StudentFormsPage: React.FC = () => {
 
                                             {/* Actions for Revision States */}
                                             {needsRevision && (
-                                                <div className="flex flex-col sm:flex-row gap-3 pt-4 border-t border-gray-200">
+                                                <div
+                                                    className="flex flex-col sm:flex-row gap-3 pt-4 border-t border-gray-200">
                                                     <button
                                                         className="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 hover:border-gray-400 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                                                         onClick={(e) => handleEditClick(form, e)}
                                                         disabled={editFormMutation.isPending || submitRevisionMutation.isPending}
                                                     >
-                                                        <Edit3 size={16} />
+                                                        <Edit3 size={16}/>
                                                         Edit Form
                                                     </button>
                                                     <button
@@ -503,7 +509,7 @@ export const StudentFormsPage: React.FC = () => {
                                                         onClick={(e) => handleSubmitRevisionClick(form, e)}
                                                         disabled={editFormMutation.isPending || submitRevisionMutation.isPending}
                                                     >
-                                                        <Send size={16} />
+                                                        <Send size={16}/>
                                                         Submit Revision
                                                     </button>
                                                 </div>
@@ -512,15 +518,16 @@ export const StudentFormsPage: React.FC = () => {
                                     )}
 
                                     {/* Expand Indicator */}
-                                    <div className="flex items-center justify-center gap-1.5 py-2 border-t border-gray-100 text-gray-400 hover:text-gray-600 transition-colors">
+                                    <div
+                                        className="flex items-center justify-center gap-1.5 py-2 border-t border-gray-100 text-gray-400 hover:text-gray-600 transition-colors">
                                         {isExpanded ? (
                                             <>
-                                                <ChevronUp size={16} />
+                                                <ChevronUp size={16}/>
                                                 <span className="text-xs font-medium">Click to collapse</span>
                                             </>
                                         ) : (
                                             <>
-                                                <ChevronDown size={16} />
+                                                <ChevronDown size={16}/>
                                                 <span className="text-xs font-medium">Click to expand</span>
                                             </>
                                         )}

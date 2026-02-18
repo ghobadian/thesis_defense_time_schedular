@@ -22,14 +22,14 @@ function App() {
         <QueryClientProvider client={queryClient}>
             <Router>
                 <Routes>
-                    <Route path="/login" element={<LoginPage />} />
+                    <Route path="/login" element={<LoginPage/>}/>
 
                     {/* Student Routes */}
                     <Route
                         path="/student/*"
                         element={
                             <ProtectedRoute allowedRoles={[UserRole.STUDENT]}>
-                                <StudentDashboard />
+                                <StudentDashboard/>
                             </ProtectedRoute>
                         }
                     />
@@ -39,7 +39,7 @@ function App() {
                         path="/professor/*"
                         element={
                             <ProtectedRoute allowedRoles={[UserRole.PROFESSOR, UserRole.MANAGER]}>
-                                <ProfessorDashboard />
+                                <ProfessorDashboard/>
                             </ProtectedRoute>
                         }
                     />
@@ -49,15 +49,15 @@ function App() {
                         path="/admin/*"
                         element={
                             <ProtectedRoute allowedRoles={[UserRole.ADMIN]}>
-                                <AdminDashboard />
+                                <AdminDashboard/>
                             </ProtectedRoute>
                         }
                     />
 
-                    <Route path="/" element={<Navigate to="/login" replace />} />
+                    <Route path="/" element={<Navigate to="/login" replace/>}/>
                 </Routes>
             </Router>
-            <ReactQueryDevtools initialIsOpen={false} />
+            <ReactQueryDevtools initialIsOpen={false}/>
         </QueryClientProvider>
     );
 }

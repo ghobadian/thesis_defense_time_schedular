@@ -1,13 +1,13 @@
 // MeetingsPage.tsx
 import React from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { studentAPI } from '../../api/student.api';
-import { MeetingView } from '../../components/common/meeting/MeetingView';
-import { TimeSlotSelection } from '../../components/student/TimeSlotSelection';
-import { Meeting, MeetingState } from '../../types';
+import {useQuery} from '@tanstack/react-query';
+import {studentAPI} from '../../api/student.api';
+import {MeetingView} from '../../components/common/meeting/MeetingView';
+import {TimeSlotSelection} from '../../components/student/TimeSlotSelection';
+import {Meeting, MeetingState} from '../../types';
 
 export const StudentMeetingsPage: React.FC = () => {
-    const { data: meetings, isLoading, error } = useQuery({
+    const {data: meetings, isLoading, error} = useQuery({
         queryKey: ['studentMeetings'],
         queryFn: studentAPI.getMeetings,
     });
@@ -48,7 +48,7 @@ export const StudentMeetingsPage: React.FC = () => {
                 actionButtonLabel={getActionButtonLabel}
                 renderAdditionalContent={(meeting) => {
                     if (canSelectTime(meeting)) {
-                        return <TimeSlotSelection meetingId={meeting.id} />;
+                        return <TimeSlotSelection meetingId={meeting.id}/>;
                     }
                     return null;
                 }}

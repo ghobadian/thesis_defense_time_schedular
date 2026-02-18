@@ -1,8 +1,8 @@
 // src/components/thesis/RevisionRequestModal.tsx
 
-import React, { useState, useEffect } from 'react';
-import { RevisionTarget } from '../../types';
-import { X, AlertCircle, Send } from 'lucide-react';
+import React, {useState, useEffect} from 'react';
+import {RevisionTarget} from '../../types';
+import {X, AlertCircle, Send} from 'lucide-react';
 import './RevisionRequestModal.css';//TODO remove css files
 
 interface Props {
@@ -83,7 +83,7 @@ export const RevisionRequestModal: React.FC<Props> = ({
                         disabled={isLoading}
                         aria-label="Close modal"
                     >
-                        <X size={20} />
+                        <X size={20}/>
                     </button>
                 </div>
 
@@ -165,7 +165,7 @@ export const RevisionRequestModal: React.FC<Props> = ({
                     {/* Error Display */}
                     {error && (
                         <div className="error-message">
-                            <AlertCircle size={16} />
+                            <AlertCircle size={16}/>
                             <span>{error}</span>
                         </div>
                     )}
@@ -187,12 +187,12 @@ export const RevisionRequestModal: React.FC<Props> = ({
                         >
                             {isLoading ? (
                                 <>
-                                    <span className="spinner" />
+                                    <span className="spinner"/>
                                     Requesting...
                                 </>
                             ) : (
                                 <>
-                                    <Send size={16} />
+                                    <Send size={16}/>
                                     Request Revision
                                 </>
                             )}

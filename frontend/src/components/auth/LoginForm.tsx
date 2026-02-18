@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useAuthStore } from '../../store/authStore';
-import { authAPI } from '../../api/auth.api';
-import { Button } from '../common/Button';
-import { Input } from '../common/Input';
-import { UserRole } from '../../types';
+import React, {useState} from 'react';
+import {useNavigate} from 'react-router-dom';
+import {useAuthStore} from '../../store/authStore';
+import {authAPI} from '../../api/auth.api';
+import {Button} from '../common/Button';
+import {Input} from '../common/Input';
+import {UserRole} from '../../types';
 
 export const LoginForm: React.FC = () => {
     const [email, setEmail] = useState('');
@@ -21,7 +21,7 @@ export const LoginForm: React.FC = () => {
         setIsLoading(true);
 
         try {
-            const response = await authAPI.login({ email, password });
+            const response = await authAPI.login({email, password});
 
             // Debug logging
             console.log('Full response:', response);
@@ -47,20 +47,20 @@ export const LoginForm: React.FC = () => {
                 switch (role) {
                     case UserRole.ADMIN:
                         console.log('Navigating to admin dashboard');
-                        navigate('/admin/dashboard', { replace: true });
+                        navigate('/admin/dashboard', {replace: true});
                         break;
                     case UserRole.PROFESSOR:
                     case UserRole.MANAGER:
                         console.log('Navigating to professor dashboard');
-                        navigate('/professor/dashboard', { replace: true });
+                        navigate('/professor/dashboard', {replace: true});
                         break;
                     case UserRole.STUDENT:
                         console.log('Navigating to student dashboard');
-                        navigate('/student/dashboard', { replace: true });
+                        navigate('/student/dashboard', {replace: true});
                         break;
                     default:
                         console.log('Unknown role, navigating to home');
-                        navigate('/', { replace: true });
+                        navigate('/', {replace: true});
                 }
             }, 100);
 
@@ -73,7 +73,8 @@ export const LoginForm: React.FC = () => {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-500 to-primary-700">
+        <div
+            className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-500 to-primary-700">
             <div className="bg-white p-8 rounded-lg shadow-2xl w-full max-w-4xl">
                 <h2 className="text-3xl font-bold text-center text-gray-800 mb-8">
                     Thesis Defense Scheduler

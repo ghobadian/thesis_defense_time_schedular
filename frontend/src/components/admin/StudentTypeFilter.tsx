@@ -1,6 +1,6 @@
 // src/components/admin/StudentTypeFilter.tsx
 import React from 'react';
-import { StudentType } from "../../types";
+import {StudentType} from "../../types";
 
 interface StudentTypeFilterProps {
     value: string;

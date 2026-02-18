@@ -1,6 +1,6 @@
-import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
-import { UserRole } from '../types';
+import {create} from 'zustand';
+import {persist} from 'zustand/middleware';
+import {UserRole} from '../types';
 
 interface AuthState {
     token: string | null;
@@ -45,7 +45,7 @@ export const useAuthStore = create<AuthState>()(
                 const firstName = decoded?.firstName || null;
                 const lastName = decoded?.lastName || null;
 
-                set({ token, role, userId, firstName, lastName });
+                set({token, role, userId, firstName, lastName});
             },
             clearAuth: () => set({
                 token: null,

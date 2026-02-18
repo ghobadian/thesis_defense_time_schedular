@@ -1,9 +1,9 @@
 // src/components/common/meeting/MeetingView.tsx
-import React, { useState } from 'react';
-import { AlertCircle } from 'lucide-react';
-import { Card } from '../Card';
-import { Meeting } from '../../../types';
-import { MeetingCard } from './MeetingCard';
+import React, {useState} from 'react';
+import {AlertCircle} from 'lucide-react';
+import {Card} from '../Card';
+import {Meeting} from '../../../types';
+import {MeetingCard} from './MeetingCard';
 
 export interface MeetingViewProps {
     meetings: Meeting[];
@@ -54,7 +54,7 @@ export const MeetingView: React.FC<MeetingViewProps> = ({
         return (
             <Card>
                 <div className="text-center py-12">
-                    <AlertCircle className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                    <AlertCircle className="w-12 h-12 text-gray-400 mx-auto mb-4"/>
                     <p className="text-gray-600">No meetings found.</p>
                 </div>
             </Card>

@@ -1,5 +1,5 @@
-import React, { useMemo, useState } from 'react';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import React, {useMemo, useState} from 'react';
+import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
 import {
     Users,
     Search,
@@ -17,19 +17,19 @@ import {
     Shield,
     UserCheck, ClipboardList
 } from 'lucide-react';
-import { adminAPI } from '../../api/admin.api';
-import { useTranslation } from 'react-i18next';
+import {adminAPI} from '../../api/admin.api';
+import {useTranslation} from 'react-i18next';
 import {Professor, DepartmentSummary, Field, ProfessorRegistrationInput} from '../../types';
 
 // Card component
-const Card = ({ children, className = '' }: { children: React.ReactNode; className?: string }) => (
+const Card = ({children, className = ''}: { children: React.ReactNode; className?: string }) => (
     <div className={`bg-white rounded-xl border border-gray-200 shadow-sm ${className}`}>
         {children}
     </div>
 );
 
 export const AdminProfessorManagementPage: React.FC = () => {
-    const { t } = useTranslation();
+    const {t} = useTranslation();
     const queryClient = useQueryClient();
 
     // State
@@ -54,7 +54,7 @@ export const AdminProfessorManagementPage: React.FC = () => {
     const [formErrors, setFormErrors] = useState<Record<string, string>>({});
 
     // --- Data Fetching ---
-    const { data: professors = [], isLoading: isLoadingProfessors } = useQuery({
+    const {data: professors = [], isLoading: isLoadingProfessors} = useQuery({
         queryKey: ['professors', searchTerm, selectedDeptFilter],
         queryFn: () => adminAPI.getProfessors({
             search: searchTerm || undefined,
@@ -62,12 +62,12 @@ export const AdminProfessorManagementPage: React.FC = () => {
         })
     });
 
-    const { data: departments = [] } = useQuery({
+    const {data: departments = []} = useQuery({
         queryKey: ['departments'],
         queryFn: adminAPI.getAllDepartments
     });
 
-    const { data: fields = [] } = useQuery({
+    const {data: fields = []} = useQuery({
         queryKey: ['fields'],
         queryFn: adminAPI.getAllFields
     });
@@ -86,7 +86,7 @@ export const AdminProfessorManagementPage: React.FC = () => {
             return await adminAPI.registerProfessor([newProfessor]); // API expects array
         },
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['professors'] });
+            queryClient.invalidateQueries({queryKey: ['professors']});
             closeModal();
             alert('Professor created successfully');
         },
@@ -100,7 +100,7 @@ export const AdminProfessorManagementPage: React.FC = () => {
             return await adminAPI.updateProfessor(data.id, data.professor);
         },
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['professors'] });
+            queryClient.invalidateQueries({queryKey: ['professors']});
             closeModal();
             alert('Professor updated successfully');
         },
@@ -114,7 +114,7 @@ export const AdminProfessorManagementPage: React.FC = () => {
             return await adminAPI.deleteProfessor(id);
         },
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['professors'] });
+            queryClient.invalidateQueries({queryKey: ['professors']});
             alert('Professor deleted successfully');
         },
         onError: (err: any) => {
@@ -221,7 +221,7 @@ export const AdminProfessorManagementPage: React.FC = () => {
         }
 
         if (editingProfessor) {
-            updateProfessorMutation.mutate({ id: editingProfessor.id, professor: payload });
+            updateProfessorMutation.mutate({id: editingProfessor.id, professor: payload});
         } else {
             createProfessorMutation.mutate(payload);
         }
@@ -248,7 +248,7 @@ export const AdminProfessorManagementPage: React.FC = () => {
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div>
                     <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-                        <Users className="h-7 w-7 text-purple-600" />
+                        <Users className="h-7 w-7 text-purple-600"/>
                         {t('users.admin.professors-management.title')}
                     </h1>
                     <p className="text-gray-500 mt-1">{t('users.admin.professors-management.desc')}</p>
@@ -257,7 +257,7 @@ export const AdminProfessorManagementPage: React.FC = () => {
                     onClick={() => handleOpenModal()}
                     className="flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors shadow-sm"
                 >
-                    <Plus className="h-5 w-5" />
+                    <Plus className="h-5 w-5"/>
                     ${t('users.admin.professors-management.add-professor')}
                 </button>
             </div>
@@ -271,7 +271,7 @@ export const AdminProfessorManagementPage: React.FC = () => {
                             <p className="text-2xl font-bold text-gray-900">{stats.total}</p>
                         </div>
                         <div className="p-3 bg-purple-100 rounded-full">
-                            <Users className="h-6 w-6 text-purple-600" />
+                            <Users className="h-6 w-6 text-purple-600"/>
                         </div>
                     </div>
                 </Card>
@@ -282,7 +282,7 @@ export const AdminProfessorManagementPage: React.FC = () => {
                             <p className="text-2xl font-bold text-blue-600">{stats.managers}</p>
                         </div>
                         <div className="p-3 bg-blue-100 rounded-full">
-                            <Shield className="h-6 w-6 text-blue-600" />
+                            <Shield className="h-6 w-6 text-blue-600"/>
                         </div>
                     </div>
                 </Card>
@@ -293,7 +293,7 @@ export const AdminProfessorManagementPage: React.FC = () => {
                             <p className="text-2xl font-bold text-green-600">{stats.regular}</p>
                         </div>
                         <div className="p-3 bg-green-100 rounded-full">
-                            <UserCheck className="h-6 w-6 text-green-600" />
+                            <UserCheck className="h-6 w-6 text-green-600"/>
                         </div>
                     </div>
                 </Card>
@@ -304,7 +304,7 @@ export const AdminProfessorManagementPage: React.FC = () => {
                 <div className="flex flex-col lg:flex-row gap-4">
                     {/* Search */}
                     <div className="relative flex-1">
-                        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400"/>
                         <input
                             type="text"
                             placeholder="Search by name or email..."
@@ -316,7 +316,8 @@ export const AdminProfessorManagementPage: React.FC = () => {
 
                     {/* Department Filter */}
                     <div className="relative">
-                        <Building2 className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                        <Building2
+                            className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400"/>
                         <select
                             value={selectedDeptFilter}
                             onChange={(e) => setSelectedDeptFilter(e.target.value)}
@@ -329,7 +330,8 @@ export const AdminProfessorManagementPage: React.FC = () => {
                                 </option>
                             ))}
                         </select>
-                        <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
+                        <ChevronDown
+                            className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none"/>
                     </div>
                 </div>
             </Card>
@@ -338,12 +340,12 @@ export const AdminProfessorManagementPage: React.FC = () => {
             <Card className="overflow-hidden">
                 {isLoadingProfessors ? (
                     <div className="flex items-center justify-center py-12">
-                        <Loader2 className="h-8 w-8 animate-spin text-purple-600" />
+                        <Loader2 className="h-8 w-8 animate-spin text-purple-600"/>
                         <span className="ml-2 text-gray-600">Loading professors...</span>
                     </div>
                 ) : professors.length === 0 ? (
                     <div className="text-center py-12">
-                        <Users className="h-12 w-12 text-gray-300 mx-auto mb-4" />
+                        <Users className="h-12 w-12 text-gray-300 mx-auto mb-4"/>
                         <p className="text-gray-500">No professors found</p>
                         {searchTerm && (
                             <button
@@ -384,7 +386,8 @@ export const AdminProfessorManagementPage: React.FC = () => {
                                 <tr key={professor.id} className="hover:bg-gray-50 transition-colors">
                                     <td className="px-6 py-4 whitespace-nowrap">
                                         <div className="flex items-center">
-                                            <div className="flex-shrink-0 h-10 w-10 bg-purple-100 rounded-full flex items-center justify-center">
+                                            <div
+                                                className="flex-shrink-0 h-10 w-10 bg-purple-100 rounded-full flex items-center justify-center">
                                                     <span className="text-purple-600 font-medium">
                                                         {professor.firstName[0]}{professor.lastName[0]}
                                                     </span>
@@ -401,24 +404,24 @@ export const AdminProfessorManagementPage: React.FC = () => {
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap">
                                         <div className="flex items-center text-sm text-gray-800">
-                                            <ClipboardList className="h-4 w-4 mr-2 text-gray-400" />
+                                            <ClipboardList className="h-4 w-4 mr-2 text-gray-400"/>
                                             {professor.field?.name ?? '—'}
                                         </div>
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap">
                                         <div className="flex items-center text-sm text-gray-900">
-                                            <Building2 className="h-4 w-4 mr-2 text-gray-400" />
+                                            <Building2 className="h-4 w-4 mr-2 text-gray-400"/>
                                             {professor.department.name}
                                         </div>
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap">
                                         <div className="flex items-center text-sm text-gray-500">
-                                            <Mail className="h-4 w-4 mr-2 text-gray-400" />
+                                            <Mail className="h-4 w-4 mr-2 text-gray-400"/>
                                             {professor.email}
                                         </div>
                                         {professor.phoneNumber && (
                                             <div className="flex items-center text-sm text-gray-500 mt-1">
-                                                <Phone className="h-4 w-4 mr-2 text-gray-400" />
+                                                <Phone className="h-4 w-4 mr-2 text-gray-400"/>
                                                 {professor.phoneNumber}
                                             </div>
                                         )}
@@ -439,14 +442,14 @@ export const AdminProfessorManagementPage: React.FC = () => {
                                                 className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
                                                 title="Edit"
                                             >
-                                                <Edit2 className="h-4 w-4" />
+                                                <Edit2 className="h-4 w-4"/>
                                             </button>
                                             <button
                                                 onClick={() => handleDelete(professor)}
                                                 className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                                                 title="Delete"
                                             >
-                                                <Trash2 className="h-4 w-4" />
+                                                <Trash2 className="h-4 w-4"/>
                                             </button>
                                         </div>
                                     </td>
@@ -461,24 +464,26 @@ export const AdminProfessorManagementPage: React.FC = () => {
             {/* Create/Edit Modal */}
             {isModalOpen && (
                 <div className="fixed inset-0 z-50 overflow-y-auto">
-                    <div className="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+                    <div
+                        className="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
                         <div
                             className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
                             onClick={closeModal}
                         />
 
-                        <div className="inline-block align-bottom bg-white rounded-xl text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+                        <div
+                            className="inline-block align-bottom bg-white rounded-xl text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
                             <div className="bg-white px-6 pt-6 pb-4">
                                 <div className="flex items-center justify-between mb-6">
                                     <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
-                                        <Users className="h-5 w-5 text-purple-600" />
+                                        <Users className="h-5 w-5 text-purple-600"/>
                                         {editingProfessor ? 'Edit Professor' : 'Add New Professor'}
                                     </h3>
                                     <button
                                         onClick={closeModal}
                                         className="text-gray-400 hover:text-gray-500 p-1"
                                     >
-                                        <X className="h-5 w-5" />
+                                        <X className="h-5 w-5"/>
                                     </button>
                                 </div>
 
@@ -492,7 +497,7 @@ export const AdminProfessorManagementPage: React.FC = () => {
                                             <input
                                                 type="text"
                                                 value={formData.firstName}
-                                                onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
+                                                onChange={(e) => setFormData({...formData, firstName: e.target.value})}
                                                 className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none ${
                                                     formErrors.firstName ? 'border-red-500' : 'border-gray-300'
                                                 }`}
@@ -508,7 +513,7 @@ export const AdminProfessorManagementPage: React.FC = () => {
                                             <input
                                                 type="text"
                                                 value={formData.lastName}
-                                                onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
+                                                onChange={(e) => setFormData({...formData, lastName: e.target.value})}
                                                 className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none ${
                                                     formErrors.lastName ? 'border-red-500' : 'border-gray-300'
                                                 }`}
@@ -527,7 +532,7 @@ export const AdminProfessorManagementPage: React.FC = () => {
                                         <input
                                             type="email"
                                             value={formData.email}
-                                            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                                            onChange={(e) => setFormData({...formData, email: e.target.value})}
                                             className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none ${
                                                 formErrors.email ? 'border-red-500' : 'border-gray-300'
                                             }`}
@@ -545,7 +550,7 @@ export const AdminProfessorManagementPage: React.FC = () => {
                                         <input
                                             type="tel"
                                             value={formData.phoneNumber}
-                                            onChange={(e) => setFormData({ ...formData, phoneNumber: e.target.value })}
+                                            onChange={(e) => setFormData({...formData, phoneNumber: e.target.value})}
                                             placeholder="+989123456789"
                                             className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none ${
                                                 formErrors.phoneNumber ? 'border-red-500' : 'border-gray-300'
@@ -591,7 +596,7 @@ export const AdminProfessorManagementPage: React.FC = () => {
                                         </label>
                                         <select
                                             value={formData.fieldId}
-                                            onChange={(e) => setFormData({ ...formData, fieldId: e.target.value })}
+                                            onChange={(e) => setFormData({...formData, fieldId: e.target.value})}
                                             className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none bg-white ${
                                                 formErrors.fieldId ? 'border-red-500' : 'border-gray-300'
                                             }`}
@@ -615,11 +620,12 @@ export const AdminProfessorManagementPage: React.FC = () => {
                                             type="checkbox"
                                             id="isManager"
                                             checked={formData.manager}
-                                            onChange={(e) => setFormData({ ...formData, manager: e.target.checked })}
+                                            onChange={(e) => setFormData({...formData, manager: e.target.checked})}
                                             className="w-4 h-4 text-purple-600 border-gray-300 rounded focus:ring-purple-500"
                                         />
-                                        <label htmlFor="isManager" className="flex items-center gap-2 text-sm font-medium text-gray-700 cursor-pointer">
-                                            <Shield className="h-4 w-4 text-blue-600" />
+                                        <label htmlFor="isManager"
+                                               className="flex items-center gap-2 text-sm font-medium text-gray-700 cursor-pointer">
+                                            <Shield className="h-4 w-4 text-blue-600"/>
                                             Assign as Department Manager
                                         </label>
                                     </div>
@@ -634,7 +640,10 @@ export const AdminProfessorManagementPage: React.FC = () => {
                                                 <input
                                                     type="password"
                                                     value={formData.password}
-                                                    onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                                                    onChange={(e) => setFormData({
+                                                        ...formData,
+                                                        password: e.target.value
+                                                    })}
                                                     className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none ${
                                                         formErrors.password ? 'border-red-500' : 'border-gray-300'
                                                     }`}
@@ -650,7 +659,10 @@ export const AdminProfessorManagementPage: React.FC = () => {
                                                 <input
                                                     type="password"
                                                     value={formData.confirmPassword}
-                                                    onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
+                                                    onChange={(e) => setFormData({
+                                                        ...formData,
+                                                        confirmPassword: e.target.value
+                                                    })}
                                                     className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none ${
                                                         formErrors.confirmPassword ? 'border-red-500' : 'border-gray-300'
                                                     }`}
@@ -677,9 +689,9 @@ export const AdminProfessorManagementPage: React.FC = () => {
                                             className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                                         >
                                             {isLoadingAction ? (
-                                                <Loader2 className="h-4 w-4 animate-spin" />
+                                                <Loader2 className="h-4 w-4 animate-spin"/>
                                             ) : (
-                                                <Save className="h-4 w-4" />
+                                                <Save className="h-4 w-4"/>
                                             )}
                                             {editingProfessor ? 'Save Changes' : 'Create Professor'}
                                         </button>

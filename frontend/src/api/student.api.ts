@@ -1,6 +1,6 @@
 import {RevisionTarget, ThesisFormInput, TimeSlotSelectionInput} from '../types';
 import axios from 'axios';
-import { API_BASE_URL } from './config';
+import {API_BASE_URL} from './config';
 
 
 const getApi = () => {
@@ -61,7 +61,7 @@ export const studentAPI = {
         return response.data;
     },
 
-    submitRevision: async (formId: number)=> {
+    submitRevision: async (formId: number) => {
         const response = await getApi().post(`/forms/${formId}/submit-revision`);
         return response.data;
     },

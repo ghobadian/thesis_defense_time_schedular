@@ -1,15 +1,15 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {
     Calendar, Clock, Users, ChevronDown, ChevronUp,
     MapPin, Eye, EyeOff, XCircle, RefreshCw,
 } from 'lucide-react';
-import { Card } from '../Card';
-import { Button } from '../Button';
-import { Meeting } from '../../../types';
-import { formatTimePeriod } from './meetingUtils';
-import { MeetingStatusBadge } from './MeetingStatusBadge';
-import { MeetingCancelConfirm } from './MeetingCancelConfirm';
-import { MeetingDetails } from './MeetingDetails';
+import {Card} from '../Card';
+import {Button} from '../Button';
+import {Meeting} from '../../../types';
+import {formatTimePeriod} from './meetingUtils';
+import {MeetingStatusBadge} from './MeetingStatusBadge';
+import {MeetingCancelConfirm} from './MeetingCancelConfirm';
+import {MeetingDetails} from './MeetingDetails';
 
 interface MeetingCardProps {
     meeting: Meeting;
@@ -77,31 +77,31 @@ export const MeetingCard: React.FC<MeetingCardProps> = ({
                                     Instructor: {meeting.thesis?.instructorFirstName} {meeting.thesis?.instructorLastName}
                                 </p>
                             </div>
-                            <MeetingStatusBadge state={meeting.state} userRole={userRole} />
+                            <MeetingStatusBadge state={meeting.state} userRole={userRole}/>
                         </div>
 
                         {/* Metadata grid */}
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm text-gray-600">
                             <div className="flex items-center">
-                                <Calendar className="h-4 w-4 mr-2 text-gray-400" />
+                                <Calendar className="h-4 w-4 mr-2 text-gray-400"/>
                                 {meeting.selectedTimeSlot
                                     ? new Date(meeting.selectedTimeSlot.date).toLocaleDateString()
                                     : <span className="text-yellow-600">Date pending</span>
                                 }
                             </div>
                             <div className="flex items-center">
-                                <Clock className="h-4 w-4 mr-2 text-gray-400" />
+                                <Clock className="h-4 w-4 mr-2 text-gray-400"/>
                                 {meeting.selectedTimeSlot?.timePeriod
                                     ? formatTimePeriod(meeting.selectedTimeSlot.timePeriod)
                                     : 'Time pending'
                                 }
                             </div>
                             <div className="flex items-center">
-                                <MapPin className="h-4 w-4 mr-2 text-gray-400" />
+                                <MapPin className="h-4 w-4 mr-2 text-gray-400"/>
                                 {meeting.location || 'Location TBD'}
                             </div>
                             <div className="flex items-center">
-                                <Users className="h-4 w-4 mr-2 text-gray-400" />
+                                <Users className="h-4 w-4 mr-2 text-gray-400"/>
                                 Jury Members: {meeting.juryMembers?.length || 0}
                             </div>
                         </div>
@@ -109,7 +109,7 @@ export const MeetingCard: React.FC<MeetingCardProps> = ({
                         {/* Action required banner */}
                         {shouldShowAction && actionLabel && (
                             <div className="flex items-center text-xs text-orange-600 bg-orange-50 px-3 py-2 rounded">
-                                <div className="w-2 h-2 bg-orange-500 rounded-full mr-2 animate-pulse" />
+                                <div className="w-2 h-2 bg-orange-500 rounded-full mr-2 animate-pulse"/>
                                 Action Required: {actionLabel}
                             </div>
                         )}
@@ -119,14 +119,15 @@ export const MeetingCard: React.FC<MeetingCardProps> = ({
                     <div className="flex flex-col space-y-2">
                         <Button onClick={onToggleExpand} variant="primary" className="whitespace-nowrap">
                             {isExpanded ? (
-                                <>Hide Details <ChevronUp className="h-4 w-4 ml-2" /></>
+                                <>Hide Details <ChevronUp className="h-4 w-4 ml-2"/></>
                             ) : (
-                                <>View Details <ChevronDown className="h-4 w-4 ml-2" /></>
+                                <>View Details <ChevronDown className="h-4 w-4 ml-2"/></>
                             )}
                         </Button>
 
                         {shouldShowAction && actionLabel && onMeetingAction && (
-                            <Button variant="secondary" onClick={() => onMeetingAction(meeting)} className="whitespace-nowrap">
+                            <Button variant="secondary" onClick={() => onMeetingAction(meeting)}
+                                    className="whitespace-nowrap">
                                 {actionLabel}
                             </Button>
                         )}
@@ -134,9 +135,9 @@ export const MeetingCard: React.FC<MeetingCardProps> = ({
                         {canViewSlots && renderTimeSlotsComparison && (
                             <Button variant="secondary" onClick={onToggleTimeSlots} className="whitespace-nowrap">
                                 {showTimeSlots ? (
-                                    <><EyeOff className="h-4 w-4 mr-2" /> Hide Time Slots</>
+                                    <><EyeOff className="h-4 w-4 mr-2"/> Hide Time Slots</>
                                 ) : (
-                                    <><Eye className="h-4 w-4 mr-2" /> View Time Slots</>
+                                    <><Eye className="h-4 w-4 mr-2"/> View Time Slots</>
                                 )}
                             </Button>
                         )}
@@ -147,7 +148,7 @@ export const MeetingCard: React.FC<MeetingCardProps> = ({
                                 onClick={() => onReassignJuries(meeting)}
                                 className="whitespace-nowrap"
                             >
-                                <RefreshCw className="h-4 w-4 mr-2" />
+                                <RefreshCw className="h-4 w-4 mr-2"/>
                                 Reassign Juries
                             </Button>
                         )}
@@ -159,7 +160,7 @@ export const MeetingCard: React.FC<MeetingCardProps> = ({
                                 disabled={isCancelling}
                                 className="whitespace-nowrap bg-red-50 text-red-700 border-red-300 hover:bg-red-100 hover:border-red-400"
                             >
-                                <XCircle className="h-4 w-4 mr-2" />
+                                <XCircle className="h-4 w-4 mr-2"/>
                                 Cancel Meeting
                             </Button>
                         )}

@@ -1,22 +1,22 @@
 // professor/SpecifyMeetingTimeSlots.tsx
-import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Card } from '../../components/common/Card';
-import { Button } from '../../components/common/Button';
-import { TimeSlotsComparison } from '../../components/professor/TimeSlotsComparison';
-import { professorAPI } from '../../api/professor.api';
-import { Calendar, Clock, ArrowLeft, Users, Plus, Trash2 } from 'lucide-react';
-import { TimePeriod, TimeSlot, TimeRange } from '../../types';
-import { useAuthStore } from '../../store/authStore';
+import React, {useState, useEffect} from 'react';
+import {useParams, useNavigate} from 'react-router-dom';
+import {useQuery, useMutation, useQueryClient} from '@tanstack/react-query';
+import {Card} from '../../components/common/Card';
+import {Button} from '../../components/common/Button';
+import {TimeSlotsComparison} from '../../components/professor/TimeSlotsComparison';
+import {professorAPI} from '../../api/professor.api';
+import {Calendar, Clock, ArrowLeft, Users, Plus, Trash2} from 'lucide-react';
+import {TimePeriod, TimeSlot, TimeRange} from '../../types';
+import {useAuthStore} from '../../store/authStore';
 
 type InputMode = 'slots' | 'ranges';
 
 export const ProfessorSpecifyMeetingTimeSlotsPage: React.FC = () => {
-    const { meetingId } = useParams<{ meetingId: string }>();
+    const {meetingId} = useParams<{ meetingId: string }>();
     const navigate = useNavigate();
     const queryClient = useQueryClient();
-    const { userId } = useAuthStore();
+    const {userId} = useAuthStore();
 
     // Input mode toggle
     const [inputMode, setInputMode] = useState<InputMode>('slots');
@@ -32,13 +32,13 @@ export const ProfessorSpecifyMeetingTimeSlotsPage: React.FC = () => {
     const [currentRangeTo, setCurrentRangeTo] = useState('');
 
     // Fetch meeting details
-    const { data: meeting, isLoading } = useQuery({
+    const {data: meeting, isLoading} = useQuery({
         queryKey: ['meeting', meetingId],
         queryFn: () => professorAPI.getMeetingById(Number(meetingId)),
     });
 
     // Fetch ONLY current professor's time slots for this meeting
-    const { data: myExistingTimeSlots, isLoading: isLoadingTimeSlots } = useQuery({
+    const {data: myExistingTimeSlots, isLoading: isLoadingTimeSlots} = useQuery({
         queryKey: ['myMeetingTimeSlots', meetingId, userId],
         queryFn: () => professorAPI.getMyMeetingTimeSlots(Number(meetingId)),
         enabled: !!meetingId && !!userId,
@@ -85,11 +85,11 @@ export const ProfessorSpecifyMeetingTimeSlotsPage: React.FC = () => {
     });
 
     const invalidateQueries = () => {
-        queryClient.invalidateQueries({ queryKey: ['myMeetings'] });
-        queryClient.invalidateQueries({ queryKey: ['meeting', meetingId] });
-        queryClient.invalidateQueries({ queryKey: ['myMeetingTimeSlots', meetingId, userId] });
-        queryClient.invalidateQueries({ queryKey: ['myTimeSlots'] });
-        queryClient.invalidateQueries({ queryKey: ['meetingTimeSlots', Number(meetingId)] });
+        queryClient.invalidateQueries({queryKey: ['myMeetings']});
+        queryClient.invalidateQueries({queryKey: ['meeting', meetingId]});
+        queryClient.invalidateQueries({queryKey: ['myMeetingTimeSlots', meetingId, userId]});
+        queryClient.invalidateQueries({queryKey: ['myTimeSlots']});
+        queryClient.invalidateQueries({queryKey: ['meetingTimeSlots', Number(meetingId)]});
     };
 
     const periodLabels: Record<TimePeriod, string> = {
@@ -161,7 +161,7 @@ export const ProfessorSpecifyMeetingTimeSlotsPage: React.FC = () => {
             return;
         }
 
-        setTimeRanges(prev => [...prev, { from: currentRangeFrom, to: currentRangeTo }]);
+        setTimeRanges(prev => [...prev, {from: currentRangeFrom, to: currentRangeTo}]);
         setCurrentRangeFrom('');
         setCurrentRangeTo('');
     };
@@ -232,7 +232,7 @@ export const ProfessorSpecifyMeetingTimeSlotsPage: React.FC = () => {
                     onClick={() => navigate('/professor/meetings')}
                     className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
                 >
-                    <ArrowLeft className="h-5 w-5 text-gray-600" />
+                    <ArrowLeft className="h-5 w-5 text-gray-600"/>
                 </button>
                 <div>
                     <h1 className="text-3xl font-bold text-gray-900">
@@ -251,17 +251,18 @@ export const ProfessorSpecifyMeetingTimeSlotsPage: React.FC = () => {
             {/* TIME SLOTS COMPARISON - NEW SECTION */}
             <Card className="bg-blue-50 border-blue-200">
                 <div className="flex items-start space-x-3 mb-4">
-                    <Users className="h-6 w-6 text-blue-600 mt-1" />
+                    <Users className="h-6 w-6 text-blue-600 mt-1"/>
                     <div>
                         <h2 className="text-xl font-semibold text-gray-900">
                             Other Jury Members' Availability
                         </h2>
                         <p className="text-sm text-gray-600 mt-1">
-                            See what time slots other jury members have already submitted to help coordinate your selection
+                            See what time slots other jury members have already submitted to help coordinate your
+                            selection
                         </p>
                     </div>
                 </div>
-                <TimeSlotsComparison meetingId={Number(meetingId)} />
+                <TimeSlotsComparison meetingId={Number(meetingId)}/>
             </Card>
 
             {/* Divider */}
@@ -288,7 +289,7 @@ export const ProfessorSpecifyMeetingTimeSlotsPage: React.FC = () => {
                                 : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
                         }`}
                     >
-                        <Clock className="h-4 w-4 inline mr-1.5" />
+                        <Clock className="h-4 w-4 inline mr-1.5"/>
                         Predefined Time Slots
                     </button>
                     <button
@@ -299,7 +300,7 @@ export const ProfessorSpecifyMeetingTimeSlotsPage: React.FC = () => {
                                 : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
                         }`}
                     >
-                        <Calendar className="h-4 w-4 inline mr-1.5" />
+                        <Calendar className="h-4 w-4 inline mr-1.5"/>
                         Custom Time Ranges
                     </button>
                 </div>
@@ -318,7 +319,7 @@ export const ProfessorSpecifyMeetingTimeSlotsPage: React.FC = () => {
                         <div className="space-y-4">
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                                    <Calendar className="inline h-4 w-4 mr-1" />
+                                    <Calendar className="inline h-4 w-4 mr-1"/>
                                     Select Date
                                 </label>
                                 <input
@@ -332,7 +333,7 @@ export const ProfessorSpecifyMeetingTimeSlotsPage: React.FC = () => {
 
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                                    <Clock className="inline h-4 w-4 mr-1" />
+                                    <Clock className="inline h-4 w-4 mr-1"/>
                                     Select Time Periods
                                 </label>
                                 <div className="grid grid-cols-1 gap-2">
@@ -347,7 +348,7 @@ export const ProfessorSpecifyMeetingTimeSlotsPage: React.FC = () => {
                                                     : 'border-gray-300 hover:border-gray-400'
                                             }`}
                                         >
-                                            <Clock className="h-4 w-4 inline mr-2" />
+                                            <Clock className="h-4 w-4 inline mr-2"/>
                                             {label}
                                         </button>
                                     ))}
@@ -369,7 +370,7 @@ export const ProfessorSpecifyMeetingTimeSlotsPage: React.FC = () => {
                     <Card title={`Selected Time Slots (${Object.keys(groupedSlots).length} dates)`}>
                         {Object.keys(groupedSlots).length === 0 ? (
                             <div className="text-center py-8 text-gray-500">
-                                <Clock className="h-12 w-12 mx-auto mb-3 text-gray-400" />
+                                <Clock className="h-12 w-12 mx-auto mb-3 text-gray-400"/>
                                 <p>No time slots added yet</p>
                                 <p className="text-sm mt-1">Add available dates and times from the form</p>
                             </div>
@@ -429,7 +430,7 @@ export const ProfessorSpecifyMeetingTimeSlotsPage: React.FC = () => {
                         <div className="space-y-4">
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                                    <Calendar className="inline h-4 w-4 mr-1" />
+                                    <Calendar className="inline h-4 w-4 mr-1"/>
                                     From (Date & Time)
                                 </label>
                                 <input
@@ -443,7 +444,7 @@ export const ProfessorSpecifyMeetingTimeSlotsPage: React.FC = () => {
 
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                                    <Calendar className="inline h-4 w-4 mr-1" />
+                                    <Calendar className="inline h-4 w-4 mr-1"/>
                                     To (Date & Time)
                                 </label>
                                 <input
@@ -461,7 +462,7 @@ export const ProfessorSpecifyMeetingTimeSlotsPage: React.FC = () => {
                                 variant="secondary"
                                 className="w-full"
                             >
-                                <Plus className="h-4 w-4 inline mr-1" />
+                                <Plus className="h-4 w-4 inline mr-1"/>
                                 Add Range to List
                             </Button>
                         </div>
@@ -471,7 +472,7 @@ export const ProfessorSpecifyMeetingTimeSlotsPage: React.FC = () => {
                     <Card title={`Selected Time Ranges (${timeRanges.length})`}>
                         {timeRanges.length === 0 ? (
                             <div className="text-center py-8 text-gray-500">
-                                <Calendar className="h-12 w-12 mx-auto mb-3 text-gray-400" />
+                                <Calendar className="h-12 w-12 mx-auto mb-3 text-gray-400"/>
                                 <p>No time ranges added yet</p>
                                 <p className="text-sm mt-1">Specify your available date-time ranges from the form</p>
                             </div>
@@ -482,7 +483,8 @@ export const ProfessorSpecifyMeetingTimeSlotsPage: React.FC = () => {
                                         <div className="flex items-start justify-between">
                                             <div className="flex-1">
                                                 <div className="flex items-center space-x-2 mb-1">
-                                                    <span className="text-xs font-semibold text-green-700 bg-green-100 px-2 py-0.5 rounded">
+                                                    <span
+                                                        className="text-xs font-semibold text-green-700 bg-green-100 px-2 py-0.5 rounded">
                                                         FROM
                                                     </span>
                                                     <span className="text-sm text-gray-900">
@@ -490,7 +492,8 @@ export const ProfessorSpecifyMeetingTimeSlotsPage: React.FC = () => {
                                                     </span>
                                                 </div>
                                                 <div className="flex items-center space-x-2">
-                                                    <span className="text-xs font-semibold text-red-700 bg-red-100 px-2 py-0.5 rounded">
+                                                    <span
+                                                        className="text-xs font-semibold text-red-700 bg-red-100 px-2 py-0.5 rounded">
                                                         TO
                                                     </span>
                                                     <span className="text-sm text-gray-900">
@@ -503,7 +506,7 @@ export const ProfessorSpecifyMeetingTimeSlotsPage: React.FC = () => {
                                                 className="text-red-600 hover:text-red-800 p-1 ml-2"
                                                 title="Remove range"
                                             >
-                                                <Trash2 className="h-4 w-4" />
+                                                <Trash2 className="h-4 w-4"/>
                                             </button>
                                         </div>
                                     </div>
@@ -520,14 +523,16 @@ export const ProfessorSpecifyMeetingTimeSlotsPage: React.FC = () => {
                     <div className="text-sm text-gray-600">
                         {inputMode === 'slots' ? (
                             <>
-                                <p>Total slots selected: <span className="font-semibold">{selectedSlots.length}</span></p>
+                                <p>Total slots selected: <span className="font-semibold">{selectedSlots.length}</span>
+                                </p>
                                 <p className="text-xs text-gray-500 mt-1">
                                     Students will be able to choose from these available time slots
                                 </p>
                             </>
                         ) : (
                             <>
-                                <p>Total ranges specified: <span className="font-semibold">{timeRanges.length}</span></p>
+                                <p>Total ranges specified: <span className="font-semibold">{timeRanges.length}</span>
+                                </p>
                                 <p className="text-xs text-gray-500 mt-1">
                                     The system will derive available time slots from your specified ranges
                                 </p>

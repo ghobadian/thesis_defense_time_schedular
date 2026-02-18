@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Card } from '../../components/common/Card';
-import { Button } from '../../components/common/Button';
-import { Input } from '../../components/common/Input';
-import { adminAPI } from '../../api/admin.api';
+import React, {useState} from 'react';
+import {useQuery, useMutation, useQueryClient} from '@tanstack/react-query';
+import {Card} from '../../components/common/Card';
+import {Button} from '../../components/common/Button';
+import {Input} from '../../components/common/Input';
+import {adminAPI} from '../../api/admin.api';
 import {Field, Professor, StudentType} from '../../types';
 
 interface ValidationErrors {
@@ -86,17 +86,17 @@ export const AdminStudentRegistrationPage: React.FC = () => {
     const [errors, setErrors] = useState<ValidationErrors>({});
     const [touched, setTouched] = useState<Record<string, boolean>>({});
 
-    const { data: departments } = useQuery({
+    const {data: departments} = useQuery({
         queryKey: ['departments'],
         queryFn: adminAPI.getAllDepartments,
     });
 
-    const { data: fields } = useQuery({
+    const {data: fields} = useQuery({
         queryKey: ['fields'],
         queryFn: adminAPI.getAllFields,
     });
 
-    const { data: professors } = useQuery ({
+    const {data: professors} = useQuery({
         queryKey: ['professors'],
         queryFn: adminAPI.getAllProfessors,
     });
@@ -104,7 +104,7 @@ export const AdminStudentRegistrationPage: React.FC = () => {
     const registerMutation = useMutation({
         mutationFn: adminAPI.registerStudent,
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['students'] });
+            queryClient.invalidateQueries({queryKey: ['students']});
             alert('Student registered successfully!');
             setFormData({
                 email: '',
@@ -144,17 +144,17 @@ export const AdminStudentRegistrationPage: React.FC = () => {
 
 // Handle blur - mark touched and validate
     const handleBlur = (name: keyof ValidationErrors) => {
-        setTouched(prev => ({ ...prev, [name]: true }));
+        setTouched(prev => ({...prev, [name]: true}));
         const error = validateField(name, formData[name]);
-        setErrors(prev => ({ ...prev, [name]: error }));
+        setErrors(prev => ({...prev, [name]: error}));
     };
 
 // Handle change with validation
     const handleChange = (name: keyof typeof formData, value: string) => {
-        setFormData(prev => ({ ...prev, [name]: value }));
+        setFormData(prev => ({...prev, [name]: value}));
         if (touched[name]) {
             const error = validateField(name as keyof ValidationErrors, value);
-            setErrors(prev => ({ ...prev, [name]: error }));
+            setErrors(prev => ({...prev, [name]: error}));
         }
     };
 
@@ -186,7 +186,7 @@ export const AdminStudentRegistrationPage: React.FC = () => {
         }]);
     };
 
-    const ErrorMessage = ({ error }: { error?: string }) => (
+    const ErrorMessage = ({error}: { error?: string }) => (
         error ? <p className="mt-1 text-sm text-red-600">{error}</p> : null
     );
 
@@ -201,7 +201,7 @@ export const AdminStudentRegistrationPage: React.FC = () => {
                         onBlur={() => handleBlur('firstName')}
                         required
                     />
-                    {touched.firstName && <ErrorMessage error={errors.firstName} />}
+                    {touched.firstName && <ErrorMessage error={errors.firstName}/>}
                     <Input
                         label="Last Name"
                         value={formData.lastName}
@@ -209,7 +209,7 @@ export const AdminStudentRegistrationPage: React.FC = () => {
                         onBlur={() => handleBlur('lastName')}
                         required
                     />
-                    {touched.lastName && <ErrorMessage error={errors.lastName} />}
+                    {touched.lastName && <ErrorMessage error={errors.lastName}/>}
 
                 </div>
 
@@ -221,7 +221,7 @@ export const AdminStudentRegistrationPage: React.FC = () => {
                     onBlur={() => handleBlur('email')}
                     required
                 />
-                {touched.email && <ErrorMessage error={errors.email} />}
+                {touched.email && <ErrorMessage error={errors.email}/>}
 
 
                 <Input
@@ -231,7 +231,7 @@ export const AdminStudentRegistrationPage: React.FC = () => {
                     onBlur={() => handleBlur('phoneNumber')}
                     required
                 />
-                {touched.phoneNumber && <ErrorMessage error={errors.phoneNumber} />}
+                {touched.phoneNumber && <ErrorMessage error={errors.phoneNumber}/>}
 
                 <Input
                     label="Password"
@@ -241,7 +241,7 @@ export const AdminStudentRegistrationPage: React.FC = () => {
                     onBlur={() => handleBlur('password')}
                     required
                 />
-                {touched.password && <ErrorMessage error={errors.password} />}
+                {touched.password && <ErrorMessage error={errors.password}/>}
 
                 <Input
                     label="Student Number"
@@ -251,7 +251,7 @@ export const AdminStudentRegistrationPage: React.FC = () => {
                     onBlur={() => handleBlur('studentNumber')}
                     required
                 />
-                {touched.studentNumber && <ErrorMessage error={errors.studentNumber} />}
+                {touched.studentNumber && <ErrorMessage error={errors.studentNumber}/>}
 
                 <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -259,7 +259,7 @@ export const AdminStudentRegistrationPage: React.FC = () => {
                     </label>
                     <select
                         value={formData.studentType}
-                        onChange={(e) => setFormData({ ...formData, studentType: e.target.value as StudentType })}
+                        onChange={(e) => setFormData({...formData, studentType: e.target.value as StudentType})}
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg"
                         required
                     >
@@ -275,7 +275,7 @@ export const AdminStudentRegistrationPage: React.FC = () => {
                     </label>
                     <select
                         value={formData.departmentId}
-                        onChange={(e) => setFormData({ ...formData, departmentId: e.target.value })}
+                        onChange={(e) => setFormData({...formData, departmentId: e.target.value})}
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg"
                         required
                     >
@@ -294,7 +294,7 @@ export const AdminStudentRegistrationPage: React.FC = () => {
                     </label>
                     <select
                         value={formData.fieldId}
-                        onChange={(e) => setFormData({ ...formData, fieldId: e.target.value })}
+                        onChange={(e) => setFormData({...formData, fieldId: e.target.value})}
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg"
                         required
                     >
@@ -313,7 +313,7 @@ export const AdminStudentRegistrationPage: React.FC = () => {
                     </label>
                     <select
                         value={formData.instructorId}
-                        onChange={(e) => setFormData({ ...formData, instructorId: e.target.value })}
+                        onChange={(e) => setFormData({...formData, instructorId: e.target.value})}
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg"
                         required
                     >

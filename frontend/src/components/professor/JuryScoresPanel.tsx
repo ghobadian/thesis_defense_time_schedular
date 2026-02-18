@@ -1,11 +1,11 @@
 // src/components/professor/JuryScoresPanel.tsx
 
-import React, { useState } from 'react';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { professorAPI } from '../../api/professor.api';
-import { useAuthStore } from '../../store/authStore';
-import { Button } from '../common/Button';
-import { Card } from '../common/Card';
+import React, {useState} from 'react';
+import {useMutation, useQueryClient} from '@tanstack/react-query';
+import {professorAPI} from '../../api/professor.api';
+import {useAuthStore} from '../../store/authStore';
+import {Button} from '../common/Button';
+import {Card} from '../common/Card';
 import {
     CheckCircle,
     Clock,
@@ -14,7 +14,7 @@ import {
     Send,
     AlertCircle
 } from 'lucide-react';
-import { MeetingState, SimpleUser } from '../../types';
+import {MeetingState, SimpleUser} from '../../types';
 
 interface JuryScoresPanelProps {
     meetingId: number;
@@ -35,7 +35,7 @@ export const JuryScoresPanel: React.FC<JuryScoresPanelProps> = ({
                                                                     instructorId,
                                                                     onScoreSubmitted
                                                                 }) => {
-    const { userId } = useAuthStore();
+    const {userId} = useAuthStore();
     const queryClient = useQueryClient();
     const [score, setScore] = useState<string>('');
     const [error, setError] = useState<string | null>(null);
@@ -49,9 +49,9 @@ export const JuryScoresPanel: React.FC<JuryScoresPanelProps> = ({
     // Submit score mutation
     const submitScoreMutation = useMutation({
         mutationFn: (scoreValue: number) =>
-            professorAPI.scoreMeeting({ meetingId, score: scoreValue }),
+            professorAPI.scoreMeeting({meetingId, score: scoreValue}),
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['myMeetings'] });
+            queryClient.invalidateQueries({queryKey: ['myMeetings']});
             setScore('');
             setError(null);
             onScoreSubmitted?.();
@@ -104,7 +104,7 @@ export const JuryScoresPanel: React.FC<JuryScoresPanelProps> = ({
     return (
         <div className="mt-6 space-y-4">
             <h4 className="text-lg font-semibold text-gray-900 flex items-center">
-                <Award className="h-5 w-5 mr-2 text-primary-600" />
+                <Award className="h-5 w-5 mr-2 text-primary-600"/>
                 Jury Scores & Evaluation
             </h4>
 
@@ -112,9 +112,9 @@ export const JuryScoresPanel: React.FC<JuryScoresPanelProps> = ({
             <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-lg">
                 <div className={`p-2 rounded-full ${allScored ? 'bg-green-100' : 'bg-yellow-100'}`}>
                     {allScored ? (
-                        <CheckCircle className="h-5 w-5 text-green-600" />
+                        <CheckCircle className="h-5 w-5 text-green-600"/>
                     ) : (
-                        <Clock className="h-5 w-5 text-yellow-600" />
+                        <Clock className="h-5 w-5 text-yellow-600"/>
                     )}
                 </div>
                 <div className="flex-1">
@@ -126,7 +126,7 @@ export const JuryScoresPanel: React.FC<JuryScoresPanelProps> = ({
                             className={`h-2 rounded-full transition-all ${
                                 allScored ? 'bg-green-500' : 'bg-yellow-500'
                             }`}
-                            style={{ width: `${totalJuries > 0 ? (scoredCount / totalJuries) * 100 : 0}%` }}
+                            style={{width: `${totalJuries > 0 ? (scoredCount / totalJuries) * 100 : 0}%`}}
                         />
                     </div>
                 </div>
@@ -170,18 +170,20 @@ export const JuryScoresPanel: React.FC<JuryScoresPanelProps> = ({
                                                 : isInstructor
                                                     ? 'text-yellow-600'
                                                     : 'text-gray-600'
-                                        }`} />
+                                        }`}/>
                                     </div>
                                     <div className="ml-3">
                                         <p className="font-medium text-gray-900 flex items-center gap-2">
                                             {jury.firstName} {jury.lastName}
                                             {isCurrentUser && (
-                                                <span className="text-xs bg-primary-100 text-primary-700 px-2 py-0.5 rounded-full">
+                                                <span
+                                                    className="text-xs bg-primary-100 text-primary-700 px-2 py-0.5 rounded-full">
                                                     You
                                                 </span>
                                             )}
                                             {isInstructor && (
-                                                <span className="text-xs bg-yellow-100 text-yellow-700 px-2 py-0.5 rounded-full">
+                                                <span
+                                                    className="text-xs bg-yellow-100 text-yellow-700 px-2 py-0.5 rounded-full">
                                                     Instructor
                                                 </span>
                                             )}
@@ -199,11 +201,11 @@ export const JuryScoresPanel: React.FC<JuryScoresPanelProps> = ({
                                                 </span>
                                                 <span className="text-sm text-gray-500 ml-1">/ 20</span>
                                             </div>
-                                            <CheckCircle className="h-5 w-5 text-green-500" />
+                                            <CheckCircle className="h-5 w-5 text-green-500"/>
                                         </div>
                                     ) : (
                                         <div className="flex items-center text-yellow-600">
-                                            <Clock className="h-5 w-5 mr-2" />
+                                            <Clock className="h-5 w-5 mr-2"/>
                                             <span className="text-sm font-medium">Pending</span>
                                         </div>
                                     )}
@@ -218,13 +220,13 @@ export const JuryScoresPanel: React.FC<JuryScoresPanelProps> = ({
             {canSubmitScore && (
                 <Card className="p-4 border-2 border-primary-200 bg-primary-50">
                     <h5 className="font-medium text-gray-900 mb-3 flex items-center">
-                        <Send className="h-4 w-4 mr-2 text-primary-600" />
+                        <Send className="h-4 w-4 mr-2 text-primary-600"/>
                         Submit Your Score
                     </h5>
 
                     {error && (
                         <div className="mb-3 flex items-center text-red-600 bg-red-50 p-3 rounded-lg">
-                            <AlertCircle className="h-4 w-4 mr-2" />
+                            <AlertCircle className="h-4 w-4 mr-2"/>
                             <span className="text-sm">{error}</span>
                         </div>
                     )}
@@ -254,7 +256,7 @@ export const JuryScoresPanel: React.FC<JuryScoresPanelProps> = ({
                             isLoading={submitScoreMutation.isPending}
                             disabled={!score || submitScoreMutation.isPending}
                         >
-                            <Send className="h-4 w-4 mr-2" />
+                            <Send className="h-4 w-4 mr-2"/>
                             Submit
                         </Button>
                     </div>
@@ -268,7 +270,7 @@ export const JuryScoresPanel: React.FC<JuryScoresPanelProps> = ({
             {/* Already Scored Message */}
             {isCurrentUserJury && hasCurrentUserScored && meetingState === MeetingState.SCHEDULED && (
                 <div className="flex items-center p-4 bg-green-50 border border-green-200 rounded-lg">
-                    <CheckCircle className="h-5 w-5 text-green-600 mr-3" />
+                    <CheckCircle className="h-5 w-5 text-green-600 mr-3"/>
                     <div>
                         <p className="font-medium text-green-800">
                             Your score submitted: {currentUserScore?.toFixed(1)} / 20
@@ -285,7 +287,7 @@ export const JuryScoresPanel: React.FC<JuryScoresPanelProps> = ({
             {/* Meeting Completed */}
             {meetingState === MeetingState.COMPLETED && finalScore !== null && (
                 <Card className="p-6 bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 text-center">
-                    <Award className="h-10 w-10 text-green-600 mx-auto mb-2" />
+                    <Award className="h-10 w-10 text-green-600 mx-auto mb-2"/>
                     <h5 className="text-lg font-semibold text-gray-900">Defense Completed</h5>
                     <p className="text-3xl font-bold text-green-600 mt-2">
                         {Number(finalScore).toFixed(2)} / 20

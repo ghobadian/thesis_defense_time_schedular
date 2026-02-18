@@ -1,19 +1,19 @@
 // src/pages/admin/AdminThesisFormsPage.tsx
 
-import React, { useState } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { adminAPI } from '../../api/admin.api';
+import React, {useState} from 'react';
+import {useQuery, useMutation, useQueryClient} from '@tanstack/react-query';
+import {adminAPI} from '../../api/admin.api';
 import {ThesisForm, FormState, RevisionTarget} from '../../types';
-import { useAuthStore } from '../../store/authStore';
-import { RejectionModal } from '../../components/thesis/RejectionModal';
-import { ActionButton } from '../../components/thesis/ThesisFormDetails';
-import { ThesisFormsLayout } from '../../components/thesis/ThesisFormLayout';
+import {useAuthStore} from '../../store/authStore';
+import {RejectionModal} from '../../components/thesis/RejectionModal';
+import {ActionButton} from '../../components/thesis/ThesisFormDetails';
+import {ThesisFormsLayout} from '../../components/thesis/ThesisFormLayout';
 import './AdminThesisFormsPage.css';//TODO remove css files
 import {RevisionRequestModal} from "../../components/thesis/RevisionRequestModal";
 import {SubmitRevisionModal} from "../../components/thesis/SubmitRevisionModal";
 
 const AdminThesisFormsPage: React.FC = () => {
-    const { role } = useAuthStore();
+    const {role} = useAuthStore();
     const queryClient = useQueryClient();
     const [selectedForm, setSelectedForm] = useState<ThesisForm | null>(null);
 
@@ -29,7 +29,7 @@ const AdminThesisFormsPage: React.FC = () => {
     const [submitRevisionModalOpen, setSubmitRevisionModalOpen] = useState(false);
     const [formToSubmitRevision, setFormToSubmitRevision] = useState<ThesisForm | null>(null);
 
-    const { data: forms = [], isLoading, error } = useQuery({
+    const {data: forms = [], isLoading, error} = useQuery({
         queryKey: ['admin-forms'],
         queryFn: adminAPI.getForms,
         enabled: role === 'ADMIN',
@@ -38,16 +38,16 @@ const AdminThesisFormsPage: React.FC = () => {
     const approveMutation = useMutation({
         mutationFn: (formId: number) => adminAPI.approveForm(formId),
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['admin-forms'] });
+            queryClient.invalidateQueries({queryKey: ['admin-forms']});
             setSelectedForm(null);
         },
     });
 
     const rejectMutation = useMutation({
-        mutationFn: ({ formId, rejectionReason }: { formId: number; rejectionReason: string }) =>
+        mutationFn: ({formId, rejectionReason}: { formId: number; rejectionReason: string }) =>
             adminAPI.rejectForm(formId, rejectionReason),
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['admin-forms'] });
+            queryClient.invalidateQueries({queryKey: ['admin-forms']});
             setSelectedForm(null);
             setRejectionModalOpen(false);
             setFormToReject(null);
@@ -58,10 +58,10 @@ const AdminThesisFormsPage: React.FC = () => {
     });
 
     const revisionMutation = useMutation({
-        mutationFn: ({ formId, target, message }: { formId: number; target: RevisionTarget; message: string }) =>
+        mutationFn: ({formId, target, message}: { formId: number; target: RevisionTarget; message: string }) =>
             adminAPI.requestRevision(formId, target, message),
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['admin-forms'] });
+            queryClient.invalidateQueries({queryKey: ['admin-forms']});
             setSelectedForm(null);
             setRevisionModalOpen(false);
             setFormToRequestRevision(null);
@@ -74,7 +74,7 @@ const AdminThesisFormsPage: React.FC = () => {
     const submitRevisionMutation = useMutation({
         mutationFn: (formId: number) => adminAPI.submitRevision(formId),
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['admin-forms'] });
+            queryClient.invalidateQueries({queryKey: ['admin-forms']});
             setSelectedForm(null);
             setSubmitRevisionModalOpen(false);
             setFormToSubmitRevision(null);
@@ -218,8 +218,6 @@ const AdminThesisFormsPage: React.FC = () => {
 
         return [];
     };
-
-
 
 
     const getAvailableStatuses = () => {

@@ -189,7 +189,9 @@
 .modal-actions {
     display: flex;
     justify-content: flex-end;
-    gap: 12px;padding-top: 16px;border-top: 1px solid var(--border-color, #e0e0e0);
+    gap: 12px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border-color, #e0e0e0);
 }
 
 .btn-cancel {
@@ -267,7 +269,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 1000;padding: 20px;
+    z-index: 1000;
+    padding: 20px;
 }
 
 .modal-content {

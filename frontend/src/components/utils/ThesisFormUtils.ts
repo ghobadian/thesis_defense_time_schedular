@@ -1,6 +1,6 @@
 // src/utils/thesisFormUtils.ts
 
-import { FormState } from '../../types';
+import {FormState} from '../../types';
 
 export const formatDate = (dateString: string): string =>
     new Date(dateString).toLocaleDateString('en-US', {

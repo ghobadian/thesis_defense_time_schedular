@@ -1,7 +1,7 @@
 // src/components/admin/students/StudentTable.tsx
 import React from 'react';
-import { StudentTableRow } from './StudentTableRow';
-import { Student } from "../../types";
+import {StudentTableRow} from './StudentTableRow';
+import {Student} from "../../types";
 
 interface StudentTableProps {
     students: Student[];
