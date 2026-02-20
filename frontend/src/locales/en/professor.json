@@ -112,7 +112,8 @@
   "submit-time-slots": "Submit Time Slots",
   "submit-time-ranges": "Submit Time Ranges",
   "thesis-forms-review-instructor": "Thesis Forms Review - Instructor",
-  "thesis-forms-review-manager": "Thesis Forms Review - Manager"
-
-
+  "thesis-forms-review-manager": "Thesis Forms Review - Manager",
+  "specify-my-available-time-slots": "Specify My Available Time Slots",
+  "update-my-available-time-slots": "Update My Available Time Slots",
+  "of": "of"
 }

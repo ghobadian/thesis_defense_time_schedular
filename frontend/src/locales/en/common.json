@@ -115,5 +115,7 @@
   "logout": "Logout",
   "yes_cancel_meeting": "Yes, Cancel Meeting",
   "thesis-forms": "Thesis Forms",
-  "meetings": "Meetings"
+  "meetings": "Meetings",
+  "assign-juries": "Assign Juries",
+  "assigning-juries": "Assigning..."
 }

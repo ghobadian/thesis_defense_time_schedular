@@ -112,7 +112,10 @@
   "submit-time-slots": "انتخاب زمان",
   "submit-time-ranges": "انتخاب بازه زمانی",
   "thesis-forms-review-instructor": "بررسی فرم ها توسط استاد مشاور",
-  "thesis-forms-review-manager": "بررسی فرم ها توسط مدیر گروه"
+  "thesis-forms-review-manager": "بررسی فرم ها توسط مدیر گروه",
+  "specify-my-available-time-slots": "تعیین زمان های خود",
+  "update-my-available-time-slots": "تغییر زمان های خود",
+  "of": "از"
 
 
 }

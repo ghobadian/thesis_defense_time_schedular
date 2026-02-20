@@ -145,7 +145,7 @@ export const TimeSlotsComparison = ({meetingId}: { meetingId: number; }) => {
 
                             </h3>
                             <p className="text-sm text-yellow-700">
-                                {juryMemberTimeSlots.filter((p) => p?.timeslots && p.timeslots.length > 0).length} of {juryMemberTimeSlots.length}{t("jury_members_have_submitted_their_availability_wai")}
+                                {juryMemberTimeSlots.filter((p) => p?.timeslots && p.timeslots.length > 0).length} {t('of')} {juryMemberTimeSlots.length} {t("jury_members_have_submitted_their_availability_wai")}
 
 
                             </p>
