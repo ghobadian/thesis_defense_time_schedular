@@ -220,7 +220,7 @@ export const ThesisFormsLayout: React.FC<Props> = ({
                 <h1>{title}</h1>
                 <div className="stats">
                     <span className="stat-badge">
-                        {forms.length} form{forms.length !== 1 ? 's' : ''} total
+                        {t('forms-total')} {forms.length}
                     </span>
                     {filteredAndSortedForms.length !== forms.length &&
                         <span className="stat-badge stat-badge-filtered">

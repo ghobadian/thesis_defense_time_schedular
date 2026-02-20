@@ -308,8 +308,8 @@ export const ProfessorSpecifyMeetingTimeSlotsPage: React.FC = () => {
                 </div>
                 <p className="text-xs text-gray-500 text-center mt-2">
                     {inputMode === 'slots' ?
-                        'Select from predefined time periods for specific dates.' :
-                        'Specify custom date-time ranges for your availability.'}
+                        t('select-from-predefined-time-periods') :
+                        t('specify-custom-data-time-ranges')}
                 </p>
             </Card>
 
@@ -553,7 +553,7 @@ export const ProfessorSpecifyMeetingTimeSlotsPage: React.FC = () => {
                             isLoading={isSubmitting}
                             disabled={!hasData}>
 
-                            {inputMode === 'slots' ? 'Submit Time Slots' : 'Submit Time Ranges'}
+                            {inputMode === 'slots' ? t('submit-time-slots') : t('submit-time-ranges')}
                         </Button>
                     </div>
                 </div>
