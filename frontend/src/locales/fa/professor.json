@@ -3,7 +3,7 @@
   "scores_submitted": "نمرات ثبت شده",
   "final_score": "نمره نهایی",
   "you": "شما",
-  "instructor": "استاد",
+  "instructor": "استاد مشاور",
   "pending": "در انتظار",
   "submit_your_score": "ثبت نمره شما",
   "score_020": "نمره (۰-۲۰)",
@@ -115,7 +115,9 @@
   "thesis-forms-review-manager": "بررسی فرم ها توسط مدیر گروه",
   "specify-my-available-time-slots": "تعیین زمان های خود",
   "update-my-available-time-slots": "تغییر زمان های خود",
-  "of": "از"
+  "of": "از",
+  "schedule-meeting": "نهایی کردن جلسه",
+  "scheduled": "نهایی شد!"
 
 
 }

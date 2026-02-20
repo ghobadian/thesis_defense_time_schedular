@@ -167,8 +167,8 @@ export const ScheduleMeetingModal: React.FC<ScheduleMeetingModalProps> = ({
                     </div> :
 
                     <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-                        <p className="text-yellow-800 text-center">{t("student_has_not_selected_a_time_slot_yet")}
-
+                        <p className="text-yellow-800 text-center">
+                            {t("student_has_not_selected_a_time_slot_yet")}
                         </p>
                     </div>
                 }
@@ -213,7 +213,7 @@ export const ScheduleMeetingModal: React.FC<ScheduleMeetingModalProps> = ({
                         disabled={!location.trim() || scheduleMutation.isPending || success || !studentSelectedSlot}
                         className="flex-1">
 
-                        {success ? 'Scheduled!' : 'Schedule Meeting'}
+                        {success ? t('scheduled') : t('schedule-meeting')}
                     </Button>
                 </div>
             </div>
