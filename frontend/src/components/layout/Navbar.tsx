@@ -1,17 +1,24 @@
-import React from 'react';
-import {useNavigate} from 'react-router-dom';
-import {LogOut, User, Globe} from 'lucide-react';
-import {useAuthStore} from '../../store/authStore';
-import {authAPI} from '../../api/auth.api';
-import {Button} from '../common/Button';
-import {useTranslation} from 'react-i18next';
+import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { LogOut, User, Globe } from 'lucide-react';
+import { useAuthStore } from '../../store/authStore';
+import { authAPI } from '../../api/auth.api';
+import { Button } from '../common/Button';
+import { useTranslation } from 'react-i18next';
 
 export const Navbar: React.FC = () => {
     const navigate = useNavigate();
-    const {clearAuth, role, firstName, lastName} = useAuthStore();
-    const {t, i18n} = useTranslation("common");
+    const { clearAuth, role, firstName, lastName } = useAuthStore();
+    const { t, i18n } = useTranslation("common");
 
     const isRTL = i18n.language === 'fa';
+
+    // ✅ FIX 1: Sync document direction immediately on load and when language changes
+    useEffect(() => {
+        document.documentElement.dir = isRTL ? 'rtl' : 'ltr';
+        document.documentElement.lang = i18n.language;
+        localStorage.setItem('language', i18n.language);
+    }, [isRTL, i18n.language]);
 
     const handleLogout = () => {
         authAPI.logout();
@@ -22,10 +29,6 @@ export const Navbar: React.FC = () => {
     const toggleLanguage = () => {
         const newLang = i18n.language === 'fa' ? 'en' : 'fa';
         i18n.changeLanguage(newLang);
-        // Update document direction for the rest of the app
-        document.documentElement.dir = newLang === 'fa' ? 'rtl' : 'ltr';
-        document.documentElement.lang = newLang;
-        localStorage.setItem('language', newLang);
     };
 
     const getRoleName = () => {
@@ -51,26 +54,28 @@ export const Navbar: React.FC = () => {
     };
 
     return (
-        // ⬇️ KEY: Force LTR on the navbar itself so controls never move
-        <nav className="bg-white shadow-md" dir="ltr">
+        // ✅ FIX 2: Removed 'dir="ltr"'.
+        // This allows the navbar to inherit 'rtl' from the document body,
+        // causing the Flexbox to naturally flip (Title on Right, Controls on Left) for Persian.
+        <nav className="bg-white shadow-md">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between h-16">
 
-                    {/* ===== LEFT SIDE: Title (always on the left) ===== */}
+                    {/* ===== Title Section ===== */}
                     <div className="flex items-center">
                         <h1
                             className="text-xl font-bold text-primary-600"
-                            // Title text itself respects the language direction
+                            // Keep specific text direction if needed, or remove to inherit
                             dir={isRTL ? 'rtl' : 'ltr'}
                         >
                             {t('navbar-title')}
                         </h1>
                     </div>
 
-                    {/* ===== RIGHT SIDE: Controls (always on the right) ===== */}
+                    {/* ===== Controls Section ===== */}
                     <div className="flex items-center gap-3">
 
-                        {/* --- Language Switch (always same position) --- */}
+                        {/* --- Language Switch --- */}
                         <Button
                             variant="secondary"
                             size="sm"
