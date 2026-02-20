@@ -105,5 +105,14 @@
   "id": "ID:",
   "thesis_forms": "Thesis Forms (",
   "my-students": "My Students",
-  "specify-availability": "Specify Availability"
+  "specify-availability": "Specify Availability",
+  "select-from-predefined-time-periods": "Select from predefined time periods for specific dates.",
+  "specify-custom-data-time-ranges": "Specify custom date-time ranges for your availability.",
+  "awaiting-response": "Awaiting response",
+  "submit-time-slots": "Submit Time Slots",
+  "submit-time-ranges": "Submit Time Ranges",
+  "thesis-forms-review-instructor": "Thesis Forms Review - Instructor",
+  "thesis-forms-review-manager": "Thesis Forms Review - Manager"
+
+
 }

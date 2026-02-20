@@ -184,7 +184,7 @@ export const TimeSlotsComparison = ({meetingId}: { meetingId: number; }) => {
                                                 length:
                                                 timeslots.timeslots.length
                                             }) :
-                                            'Awaiting response'}
+                                            t('awaiting-response')}
                                     </span>
                                 </div>
 

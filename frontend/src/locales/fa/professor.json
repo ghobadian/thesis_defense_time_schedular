@@ -74,7 +74,7 @@
   "specify_your_availability_below": "زمان‌های در دسترس خود را در زیر مشخص کنید",
   "input_mode": "روش ورود:",
   "predefined_time_slots": "زمان‌های از پیش تعریف شده",
-  "custom_time_ranges": "بازه‌های زمانی سفارشی",
+  "custom_time_ranges": "بازه‌های زمانی",
   "add_available_time_slots": "افزودن زمان‌های موجود",
   "select_date": "انتخاب تاریخ",
   "select_time_periods": "انتخاب بازه‌های زمانی",
@@ -101,9 +101,18 @@
   "my_students": "دانشجویان من",
   "total": "مجموع:",
   "no_students_assigned_yet": "هنوز دانشجویی تخصیص داده نشده است",
-  "students_will_appear_here_when_they_are_assigned_t": "دانشجویان پس از تخصیص به شما به عنوان استاد راهنما در اینجا نمایش داده می‌شوند",
+  "students_will_appear_here_when_they_are_assigned_t": "دانشجویان پس از تخصیص به شما به عنوان استاد مشاور در اینجا نمایش داده می‌شوند",
   "id": "شناسه:",
   "thesis_forms": "فرم‌های پایان‌نامه (",
   "my-students": "دانشجویان من",
-  "specify-availability": "انتخاب زمان"
+  "specify-availability": "انتخاب زمان",
+  "select-from-predefined-time-periods": "از زمان های از پیش تعریف شده انتخاب کنید.",
+  "specify-custom-data-time-ranges": "بازه زمانی مورد نظر را تعیین کنید.",
+  "awaiting-response": "منتظر انتخاب زمان",
+  "submit-time-slots": "انتخاب زمان",
+  "submit-time-ranges": "انتخاب بازه زمانی",
+  "thesis-forms-review-instructor": "بررسی فرم ها توسط استاد مشاور",
+  "thesis-forms-review-manager": "بررسی فرم ها توسط مدیر گروه"
+
+
 }

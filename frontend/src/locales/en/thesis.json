@@ -68,5 +68,6 @@
   "date": "Date",
   "student_1": "Student",
   "no_forms_match_your_current_filters": "No forms match your current filters.",
-  "clear_filters": "Clear Filters"
+  "clear_filters": "Clear Filters",
+  "forms-total": "Forms Total: "
 }

@@ -337,9 +337,9 @@ const ProfessorFormsPage: React.FC = () => {
     // Dynamic title based on role
     const getPageTitle = () => {
         if (role === 'MANAGER') {
-            return 'Thesis Forms Review - Manager';
+            return t('thesis-forms-review-manager');
         }
-        return 'Thesis Forms - Instructor Review';
+        return t('thesis-forms-review-instructor');
     };
 
     const getAvailableStatuses = (): FormState[] | undefined => {
