@@ -119,7 +119,7 @@ export const ProfessorMeetingsPage: React.FC = () => {
 
         if (meeting.state === MeetingState.JURIES_SELECTED ||
             meeting.state === MeetingState.JURIES_SPECIFIED_TIME) {
-            return 'Specify Availability';
+            return t('specify-availability');
         }
 
         return null;
