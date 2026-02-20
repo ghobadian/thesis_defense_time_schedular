@@ -115,5 +115,7 @@
   "thesis-forms-review-manager": "Thesis Forms Review - Manager",
   "specify-my-available-time-slots": "Specify My Available Time Slots",
   "update-my-available-time-slots": "Update My Available Time Slots",
-  "of": "of"
+  "of": "of",
+  "schedule-meeting": "Schedule Meeting",
+  "scheduled": "Scheduled!"
 }
