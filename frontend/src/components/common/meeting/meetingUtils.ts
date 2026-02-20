@@ -1,16 +1,13 @@
 // src/components/common/meeting/meetingUtils.ts
 import {MeetingState, TimePeriod} from '../../../types';
-import i18n from "i18next";
-
-const t = i18n.t.bind(i18n);
 
 export const NORMAL_FLOW_STEPS = [
-    {state: MeetingState.JURIES_SELECTED, label: t("jury_selected")},
-    {state: MeetingState.JURIES_SPECIFIED_TIME, label: t("jury_time_specified")},
-    {state: MeetingState.STUDENT_SPECIFIED_TIME, label: t("student_time_selected")},
-    {state: MeetingState.SCHEDULED, label: t("meeting_scheduled")},
-    {state: MeetingState.COMPLETED, label: t("meeting_completed")}];
-
+    {state: MeetingState.JURIES_SELECTED, labelKey: "jury_selected"},
+    {state: MeetingState.JURIES_SPECIFIED_TIME, labelKey: "jury_time_specified"},
+    {state: MeetingState.STUDENT_SPECIFIED_TIME, labelKey: "student_time_selected"},
+    {state: MeetingState.SCHEDULED, labelKey: "meeting_scheduled"},
+    {state: MeetingState.COMPLETED, labelKey: "meeting_completed"},
+];
 
 export const STATE_ORDER: Record<string, number> = {};
 NORMAL_FLOW_STEPS.forEach((step, idx) => {
