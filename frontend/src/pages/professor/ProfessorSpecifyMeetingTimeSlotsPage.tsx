@@ -239,8 +239,8 @@ export const ProfessorSpecifyMeetingTimeSlotsPage: React.FC = () => {
                 <div>
                     <h1 className="text-3xl font-bold text-gray-900">
                         {myExistingTimeSlots && myExistingTimeSlots.length > 0 ?
-                            'Update My Available Time Slots' :
-                            'Specify My Available Time Slots'}
+                            t('update-my-available-time-slots') :
+                            t('specify-my-available-time-slots')}
                     </h1>
                     {meeting &&
                         <p className="text-gray-600 mt-1">{t("for")}

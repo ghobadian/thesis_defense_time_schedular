@@ -281,7 +281,7 @@ export const JurySelectionModal: React.FC<JurySelectionModalProps> = ({
                         disabled={isSubmitDisabled}
                         className="flex-1">
 
-                        {isSubmitting ? 'Assigning...' : 'Assign Juries'}
+                        {isSubmitting ? t('assigning-juries') : t('assign-juries')}
                     </Button>
                 </div>
             </div>

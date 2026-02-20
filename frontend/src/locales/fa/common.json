@@ -64,7 +64,7 @@
   "student_profile": "پروفایل دانشجو",
   "professor_profile": "پروفایل استاد",
   "department_manager_profile": "پروفایل مدیر گروه",
-  "administrator_profile": "پروفایل مدیر سیستم",
+  "administrator_profile": "پروفایل کارشناس آموزش",
   "profile": "پروفایل",
   "failed_to_update_phone_number": "به‌روزرسانی شماره تلفن ناموفق بود",
   "failed_to_update_password_please_check_your_curren": "به‌روزرسانی رمز عبور ناموفق بود. لطفاً رمز عبور فعلی خود را بررسی کنید.",
@@ -84,8 +84,8 @@
   "thesis_instructor": "استاد مشاور پایان‌نامه",
   "graduation_status": "وضعیت فارغ‌التحصیلی",
   "role": "نقش",
-  "system_administrator": "مدیر سیستم",
-  "personal_information_can_only_be_modified_by_a_sys": "اطلاعات شخصی فقط توسط مدیر سیستم قابل تغییر است.",
+  "system_administrator": "کارشناس آموزش",
+  "personal_information_can_only_be_modified_by_a_sys": "اطلاعات شخصی فقط توسط کارشناس آموزش قابل تغییر است.",
   "phone_number": "شماره تلفن",
   "edit": "ویرایش",
   "current_phone_number": "شماره تلفن فعلی",
@@ -105,7 +105,7 @@
   "confirm_your_new_password": "رمز عبور جدید خود را تأیید کنید",
   "update_password": "به‌روزرسانی رمز عبور",
   "for_security_reasons_you_may_be_logged_out_after_c": "به دلایل امنیتی، ممکن است پس از تغییر رمز عبور از سیستم خارج شوید.",
-  "admin": "مدیر",
+  "admin": "کارشناس آموزش",
   "dashboard": "داشبورد",
   "navbar-title": "سامانه زمان‌بندی جلسات دفاع پایان‌نامه",
   "manager": "مدیر گروه",
@@ -115,5 +115,7 @@
   "logout": "خروج",
   "yes_cancel_meeting": "بله، جلسه را لغو کن",
   "thesis-forms": "فرم‌های پایان‌نامه",
-  "meetings": "جلسات"
+  "meetings": "جلسات",
+  "assign-juries": "انتخاب داوران",
+  "assigning-juries": "در حال انتخاب داوران..."
 }
