@@ -116,10 +116,10 @@ export const AdminProfessorManagementPage: React.FC = () => {
         },
         onSuccess: () => {
             queryClient.invalidateQueries({queryKey: ['professors']});
-            alert('Professor deleted successfully');
+            alert(t('professor-deleted-successfully'));
         },
         onError: (err: any) => {
-            alert(err.response?.data?.message || 'Failed to delete professor');
+            alert(err.response?.data?.message || t('professor-delete-failed'));
         }
     });
 
@@ -701,7 +701,7 @@ export const AdminProfessorManagementPage: React.FC = () => {
 
                                                 <Save className="h-4 w-4"/>
                                             }
-                                            {editingProfessor ? 'Save Changes' : 'Create Professor'}
+                                            {editingProfessor ? t('save-changes') : t('create-professor')}
                                         </button>
                                     </div>
                                 </form>

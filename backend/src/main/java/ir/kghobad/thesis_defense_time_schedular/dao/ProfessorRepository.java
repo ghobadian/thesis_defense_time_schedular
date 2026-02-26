@@ -3,18 +3,19 @@ package ir.kghobad.thesis_defense_time_schedular.dao;
 import ir.kghobad.thesis_defense_time_schedular.model.entity.user.Professor;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
 public interface ProfessorRepository extends JpaRepository<Professor, Long>, JpaSpecificationExecutor<Professor> {
-    @Query("SELECT p.manager FROM Professor p WHERE p.id = ?1")
+    @Query("SELECT p.manager FROM Professor p WHERE p.id = ?1 AND p.enabled = true")
     boolean isManager(Long instructorId);
-
 
     @Query("SELECT COUNT(DISTINCT p) FROM Professor p " +
             "JOIN ThesisForm tf ON tf.instructor = p " +
@@ -33,9 +34,15 @@ public interface ProfessorRepository extends JpaRepository<Professor, Long>, Jpa
             "(SELECT pp.department.id FROM Professor pp WHERE pp.id = :professorId)")
     List<Professor> findAllColleagues(Long professorId);
 
-    @Query("SELECT COUNT(p) > 0 FROM Professor p WHERE p.id = :professorId AND p.manager = true")
+    @Query("SELECT COUNT(p) > 0 FROM Professor p WHERE p.id = :professorId AND p.manager = true AND p.enabled = true")
     boolean existsManagerById(Long professorId);
 
     boolean existsByPhoneNumber(String phoneNumber);
     boolean existsByEmail(String email);
+
+
+    @Modifying
+    @Query("UPDATE Professor p SET p.enabled = false WHERE p.id = :id")
+    @Transactional
+    void disable(Long id);
 }

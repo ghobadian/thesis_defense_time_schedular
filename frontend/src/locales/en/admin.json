@@ -167,5 +167,9 @@
   "regular-professors": "Regular Professors",
   "total-professors": "Total Professors",
   "managers": "Managers",
-  "all-departments": "All Departments"
+  "all-departments": "All Departments",
+  "create-professor": "Create Professor",
+  "save-changes": "Save Changes",
+  "professor-deleted-successfully": "Professor deleted successfully",
+  "professor-delete-failed": "Failed to delete professor"
 }

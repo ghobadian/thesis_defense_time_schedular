@@ -6,6 +6,7 @@ import ir.kghobad.thesis_defense_time_schedular.model.dto.user.student.StudentRe
 import ir.kghobad.thesis_defense_time_schedular.model.entity.Department;
 import ir.kghobad.thesis_defense_time_schedular.model.entity.Field;
 import ir.kghobad.thesis_defense_time_schedular.model.entity.user.Professor;
+import ir.kghobad.thesis_defense_time_schedular.model.entity.user.User;
 import ir.kghobad.thesis_defense_time_schedular.model.entity.user.student.BachelorStudent;
 import ir.kghobad.thesis_defense_time_schedular.model.entity.user.student.MasterStudent;
 import ir.kghobad.thesis_defense_time_schedular.model.entity.user.student.PhDStudent;
@@ -143,12 +144,13 @@ public class AdminStudentService {
 
         return studentRepository.findAll(spec, pageable)
                 .stream()
+                .filter(User::isEnabled)
                 .map(StudentOutputDTO::from)
                 .toList();
     }
 
     public void deleteStudent(Long studentId) {
-        studentRepository.deleteById(studentId);
+        studentRepository.disable(studentId);
     }
 
     public StudentOutputDTO getStudent(Long studentId) {

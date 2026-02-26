@@ -167,5 +167,10 @@
   "regular-professors": "اساتید عادی",
   "total-professors": "مجموع اساتید",
   "managers": "مدیران",
-  "all-departments": "همه دپارتمان‌ها"
+  "all-departments": "همه دپارتمان‌ها",
+  "create-professor": "ایجاد استاد",
+  "save-changes": "ذخیره کردن تغییرات",
+  "professor-deleted-successfully": "استاد با موفقیت حذف شد",
+  "professor-delete-failed": "مشکل در حذف استاد"
+
 }
