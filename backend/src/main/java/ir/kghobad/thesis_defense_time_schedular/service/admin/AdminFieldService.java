@@ -49,6 +49,6 @@ public class AdminFieldService {
         if (!fieldRepository.existsById(id)) {
             throw new IllegalArgumentException("Field not found with ID: " + id);
         }
-        fieldRepository.deactivateField(id);
+        fieldRepository.disable(id);
     }
 }

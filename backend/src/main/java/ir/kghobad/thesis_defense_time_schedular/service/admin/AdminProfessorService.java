@@ -9,6 +9,7 @@ import ir.kghobad.thesis_defense_time_schedular.model.dto.user.professor.Profess
 import ir.kghobad.thesis_defense_time_schedular.model.entity.Department;
 import ir.kghobad.thesis_defense_time_schedular.model.entity.Field;
 import ir.kghobad.thesis_defense_time_schedular.model.entity.user.Professor;
+import ir.kghobad.thesis_defense_time_schedular.model.entity.user.User;
 import jakarta.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -128,12 +129,13 @@ public class AdminProfessorService {
 
         return professorRepository.findAll(spec, pageable)
                 .stream()
+                .filter(User::isEnabled)
                 .map(ProfessorOutputDTO::from)
                 .toList();
     }
 
     public void delete(Long id) {
-        professorRepository.deleteById(id);
+        professorRepository.disable(id);
     }
 
     public ProfessorOutputDTO get(Long id) {

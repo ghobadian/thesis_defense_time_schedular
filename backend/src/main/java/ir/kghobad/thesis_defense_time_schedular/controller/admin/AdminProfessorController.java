@@ -44,7 +44,7 @@ public class AdminProfessorController {
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id) {
         service.delete(id);
-        return ResponseEntity.ok("Professor deleted successfully");
+        return ResponseEntity.ok("Professor deleted successfully");//TODO support multiple languages in responses to frontend
     }
 
     @PutMapping("/{id}")
