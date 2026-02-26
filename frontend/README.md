@@ -181,10 +181,10 @@ Create a `.env` file in the root directory with the following variables:
 
 env
 # API Configuration
-REACT_APP_API_BASE_URL=http://localhost:8080/api
+VITE_API_BASE_URL=http://localhost:8080/api
 
 # Optional: Enable React Query Devtools in production
-REACT_APP_ENABLE_DEVTOOLS=false
+VITE_ENABLE_DEVTOOLS=false
 
 ---
 
