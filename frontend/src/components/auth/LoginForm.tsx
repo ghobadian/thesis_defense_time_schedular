@@ -77,7 +77,7 @@ export const LoginForm: React.FC = () => {
             className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-500 to-primary-700">
             <div className="bg-white p-8 rounded-lg shadow-2xl w-full max-w-4xl">
                 <h2 className="text-3xl font-bold text-center text-gray-800 mb-8">
-                    Thesis Defense Scheduler
+                    Thesis Defense Scheduler (v1.0.0)
                 </h2>
 
                 <form onSubmit={handleSubmit} className="space-y-6">
