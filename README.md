@@ -17,7 +17,7 @@ A comprehensive, full-stack web application designed to streamline thesis submis
 
 Watch the full system workflow from student submission to defense scheduling:
 
-[Demo Video](docs/thesis_presentation.mp4)
+<video src="https://github.com/user/repo/assets/path-to-video.mp4" width="600" controls></video>
 
 ---
 
