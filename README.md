@@ -6,6 +6,9 @@
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-14%2B-4169E1?logo=postgresql)
 ![License](https://img.shields.io/badge/License-MIT-green)
 
+<img width="1376" height="768" alt="2ca3e7ea-9c01-4f45-abf1-61274f529530" src="https://github.com/user-attachments/assets/6504447a-6d5d-4e78-806a-7c5d8b6684bc" />
+
+
 A comprehensive, full-stack web application designed to streamline thesis submissions, approvals, jury assignments, and the complex process of scheduling defense meetings based on intersecting availabilities.
 
 > **🏆 Bachelor Thesis Project**
