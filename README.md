@@ -15,7 +15,7 @@ A comprehensive, full-stack web application designed to streamline thesis submis
 
 ## 🎥 Project Demonstration
 Watch the full system workflow from student submission to defense scheduling:
-<video src="https://github.com/ghobadian/thesis_defense_time_schedular/raw/main/docs/thesis_presentation.mp4" width="600" controls></video>
+https://github.com/ghobadian/thesis_defense_time_schedular/raw/main/docs/thesis_presentation.mp4
 ***
 
 ## 📋 Table of Contents
