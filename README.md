@@ -14,13 +14,9 @@ A comprehensive, full-stack web application designed to streamline thesis submis
 > - 📊 [Bachelor Thesis Presentation (.pptm)](docs/presentation.pptm)
 
 ## 🎥 Project Demonstration
-
 Watch the full system workflow from student submission to defense scheduling:
-
 <video src="https://github.com/ghobadian/thesis_defense_time_schedular/raw/main/docs/thesis_presentation.mp4" width="600" controls></video>
-
-
----
+***
 
 ## 📋 Table of Contents
 - [Overview](#overview)
