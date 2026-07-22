@@ -140,7 +140,7 @@ npm start
 
 ## 📄 License & Contact
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License.
 
 **Developed by Koosha Ghobadian**
 - 🌐 Website: [kghobad.ir](https://kghobad.ir)
