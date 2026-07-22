@@ -10,8 +10,8 @@ A comprehensive, full-stack web application designed to streamline thesis submis
 
 > **🏆 Bachelor Thesis Project**
 > This project was developed as my official Bachelor Thesis. You can view the full academic documentation and presentation here:
-> - 📄 [Bachelor Thesis Document (.docx)](docs/thesis_document_ghobadian.docx)
-> - 📊 [Bachelor Thesis Presentation (.pptm)](docs/presentation.pptm)
+> - 📄 [Bachelor Thesis Document (.pdf)](https://github.com/user-attachments/files/30269428/thesis_document_ghobadian.pdf)
+> - 📊 [Bachelor Thesis Presentation (.pdf)](https://github.com/user-attachments/files/30269386/presentation.pdf)
 
 ## 🎥 Project Demonstration
 Watch the full system workflow from student submission to defense scheduling:
