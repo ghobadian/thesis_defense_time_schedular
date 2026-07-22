@@ -117,5 +117,6 @@
   "update-my-available-time-slots": "Update My Available Time Slots",
   "of": "of",
   "schedule-meeting": "Schedule Meeting",
-  "scheduled": "Scheduled!"
+  "scheduled": "Scheduled!",
+  "time-slot-update-success": "Time slots updated successfully!"
 }

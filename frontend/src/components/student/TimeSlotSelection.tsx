@@ -33,7 +33,7 @@ export const TimeSlotSelection: React.FC<TimeSlotSelectionProps> = ({meetingId})
         onSuccess: () => {
             queryClient.invalidateQueries({queryKey: ['studentMeetings']});
             queryClient.invalidateQueries({queryKey: ['availableTimeSlots', meetingId]});
-            alert('Time slot selected successfully!');
+            alert(t('time-slot-select-success'));
             setSelectedSlot(null);
         },
         onError: (error: any) => {
@@ -42,7 +42,7 @@ export const TimeSlotSelection: React.FC<TimeSlotSelectionProps> = ({meetingId})
     });
 
     const handleSelectSlot = (slotId: number) => {
-        if (window.confirm('Are you sure you want to select this time slot for your defense meeting?')) {
+        if (window.confirm(t('are-you-sure-defense-meeting'))) {
             selectSlotMutation.mutate({timeSlotId: slotId, meetingId});
         }
     };

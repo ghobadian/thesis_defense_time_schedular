@@ -117,7 +117,7 @@
   "update-my-available-time-slots": "تغییر زمان های خود",
   "of": "از",
   "schedule-meeting": "نهایی کردن جلسه",
-  "scheduled": "نهایی شد!"
-
+  "scheduled": "نهایی شد!",
+  "time-slot-update-success": "بازه زمانی با موفقیت تعیین شد!"
 
 }

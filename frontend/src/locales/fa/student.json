@@ -68,5 +68,9 @@
   "create-new-form": "ایجاد فرم جدید",
   "no-forms": "هنوز فرم پایان‌نامه‌ای وجود ندارد",
   "no-forms-subtitle": "شما هنوز هیچ فرم پایان‌نامه‌ای ارسال نکرده‌اید. با ایجاد اولین فرم خود شروع کنید.",
-  "create-first-form": "اولین فرم خود را ایجاد کنید"
+  "create-first-form": "اولین فرم خود را ایجاد کنید",
+  "thesis_form_created_successfully": "فرم با موفقیت ایجاد شد!",
+  "thesis-forms": "فرم ها",
+  "are-you-sure-defense-meeting": "آیا از زمان انتخاب شده برای جلسه دفاع مطمئن هستید؟",
+  "time-slot-select-success": "بازه زمانی با موفقیت انتخاب شد!"
 }

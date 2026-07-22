@@ -68,5 +68,10 @@
   "create-new-form": "Create New Form",
   "no-forms": "No Thesis Forms Yet",
   "no-forms-subtitle": "You haven't submitted any thesis forms. Start by creating your first form.",
-  "create-first-form": "Create Your First Form"
+  "create-first-form": "Create Your First Form",
+  "thesis_form_created_successfully": "Thesis form created successfully!",
+  "thesis-forms": "Thesis Forms",
+  "are-you-sure-defense-meeting": "Are you sure you want to select this time slot for your defense meeting?",
+  "time-slot-select-success": "Time slot selected successfully!"
+
 }

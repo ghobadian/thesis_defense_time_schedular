@@ -64,7 +64,7 @@ export const ProfessorSpecifyMeetingTimeSlotsPage: React.FC = () => {
             professorAPI.submitMeetingTimeSlots(availableTime),
         onSuccess: () => {
             invalidateQueries();
-            alert('Time slots updated successfully!');
+            alert(t("time-slot-update-success"));
             navigate(`/professor/meetings/${meetingId}/specify-time`);
         },
         onError: (error: any) => {

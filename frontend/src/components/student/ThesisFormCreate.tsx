@@ -35,7 +35,7 @@ export const ThesisFormCreate: React.FC = () => {
         mutationFn: studentAPI.createThesisForm,
         onSuccess: () => {
             queryClient.invalidateQueries({queryKey: ['myThesisForms']});
-            alert('Thesis form created successfully!');
+            alert(t('thesis_form_created_successfully'));
             // Navigate back to the thesis forms list
             navigate('/student/thesis');
         },
